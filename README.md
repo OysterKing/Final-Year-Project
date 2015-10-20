@@ -3,3 +3,6 @@ The aim of this project is to develop a GUI-based application allowing users to 
 
 19/10/15:
 Added a basic pcap file reader to learn how information is parsed.
+
+20/10/15:
+Added a line to parse the destination ip address of each packet and convert it to a string.
