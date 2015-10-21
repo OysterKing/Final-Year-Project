@@ -6,3 +6,6 @@ Added a basic pcap file reader to learn how information is parsed.
 
 20/10/15:
 Added a line to parse the destination ip address of each packet and convert it to a string.
+
+21/10/15:
+Made the pcap reader into a class to be used by the translator. Saved the source and destination ip addresses in lists.
