@@ -32,18 +32,23 @@ class PacketReader:
 				PacketReader.numberOfPackets += 1
 
 		f.close()
+		return
 
 	def printSrcIPAddrs(self):
 		print PacketReader.srcIP_list
+		return
 
 	def printDstIPAddrs(self):
 		print PacketReader.dstIP_list
+		return
 
 	def printNumPkts(self):
 		print "Number of packets = ", PacketReader.numberOfPackets
+		return
 
 reader = PacketReader("test.pcap")
 reader.openFile()
 reader.printSrcIPAddrs()
 print " "
 reader.printDstIPAddrs()
+reader.printNumPkts()

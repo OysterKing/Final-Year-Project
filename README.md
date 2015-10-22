@@ -9,3 +9,6 @@ Added a line to parse the destination ip address of each packet and convert it t
 
 21/10/15:
 Made the pcap reader into a class to be used by the translator. Saved the source and destination ip addresses in lists.
+
+22/10/15:
+Wrote a small translator class. At the moment it just extracts the last part of an ip address and prints it. Also added return statements to fucntions in pcapReader.
