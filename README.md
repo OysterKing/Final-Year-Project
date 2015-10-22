@@ -12,3 +12,5 @@ Made the pcap reader into a class to be used by the translator. Saved the source
 
 22/10/15:
 Wrote a small translator class. At the moment it just extracts the last part of an ip address and prints it. Also added return statements to fucntions in pcapReader.
+
+Updated the translator class so it now writes to an XML file that netanim can run. It writes a line for each packet. I need to figure out how to time each of the packets so the animation runs correctly.
