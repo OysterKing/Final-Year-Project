@@ -19,4 +19,4 @@ Updated the translator class so it now writes to an XML file that netanim can ru
 Updated the pcapReader class. It now reads the timestamps of the packets in the pcap file made by tcpdump and saves them in a list.
 
 24/10/15:
-The translator now writes the animation times to the XML file correctly. Pcap reader now converts the timestamps to packet times.
+The translator now writes the animation times to the XML file correctly using the times given by pcapreader. Pcap reader now converts the timestamps to packet times.
