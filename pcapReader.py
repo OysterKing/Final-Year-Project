@@ -22,21 +22,28 @@ class PacketReader:
 
 		for ts, buf in pcap:			
 			eth = dpkt.ethernet.Ethernet(buf)
-			ip = eth.data
+			pktData = eth.data
 
-			if type(ip) is dpkt.ip.IP:
+			if type(pktData) is dpkt.arp.ARP:
+				print "ARP"
+
+			if type(pktData) is dpkt.ip.IP:
+				ip = pktData
 				print ts
-				PacketReader.readPktTimes.append(ts)
+				if socket.inet_ntoa(ip.dst) != '255.255.255.255' or socket.inet_ntoa(ip.src) != '0.0.0.0':
+					PacketReader.readPktTimes.append(ts)
 
-				if PacketReader.pktCounter == 0 or PacketReader.pktCounter%2 == 0:
-					dst_ip_addr_str = socket.inet_ntoa(ip.dst)
-					src_ip_addr_str = socket.inet_ntoa(ip.src)
-					print src_ip_addr_str + " " + dst_ip_addr_str
-					PacketReader.srcIP_list.append(src_ip_addr_str)
-					PacketReader.dstIP_list.append(dst_ip_addr_str)
+					if PacketReader.pktCounter == 0 or PacketReader.pktCounter%2 == 0:
+						dst_ip_addr_str = socket.inet_ntoa(ip.dst)
+						src_ip_addr_str = socket.inet_ntoa(ip.src)
+						print src_ip_addr_str + " " + dst_ip_addr_str
+						PacketReader.srcIP_list.append(src_ip_addr_str)
+						PacketReader.dstIP_list.append(dst_ip_addr_str)
 
 			PacketReader.pktCounter+=1
 
+		print PacketReader.srcIP_list
+		print PacketReader.dstIP_list
 		f.close()
 		return
 
@@ -54,6 +61,7 @@ class PacketReader:
 			time = (PacketReader.readPktTimes[j+1] - PacketReader.readPktTimes[j]) * 1000
 			PacketReader.pktTimes.append(time)
 			j += 2
+		print PacketReader.pktTimes
 
 
 	def printTimes(self):
