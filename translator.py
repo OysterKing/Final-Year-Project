@@ -53,7 +53,7 @@ class Translator:
 
 #list1 = ["10.0.0.1", "10.0.0.2", "10.0.0.1"]
 #list2 = ["10.0.0.2", "10.0.0.1", "10.0.0.2"]
-packetReader = PacketReader("test2.pcap")
+packetReader = PacketReader("iperf.pcap")
 packetReader.openFile()
 packetReader.calculateTimes()
 translator = Translator(packetReader.srcIP_list, packetReader.dstIP_list, packetReader.pktTimes)

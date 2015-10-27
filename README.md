@@ -23,3 +23,6 @@ The translator now writes the animation times to the XML file correctly using th
 
 26/10/15:
 Edited the pcap reader to deal with error packets that are sent from address 0.0.0.0 to 255.255.255.255. I put in a small check to see if a packet is an ARP packet and I plan to accomodate these packets. The translator has been tested on a pcap file containing packets captured after a pingall command and works.
+
+27/10/15:
+Changed pcapReader so I can now parse packets caught during an iperf command and count how many are udp and tcp.

@@ -19,15 +19,36 @@ class PacketReader:
 	def openFile(self):
 		f = open(self.filename)
 		pcap = dpkt.pcap.Reader(f)
+		udpCount = 0
+		tcpCount = 0
+		icmpCount = 0
+		arpCount = 0
+#		tcpDPorts = []
+#		tcpSPorts = []
+#		tcpData = []
+#		tcpSeqNos = []
 
 		for ts, buf in pcap:			
 			eth = dpkt.ethernet.Ethernet(buf)
 			pktData = eth.data
+			tcp = pktData.data
+			
+			if type(tcp) is dpkt.tcp.TCP:
+#				tcpDPorts.append(tcp.dport)
+#				tcpSPorts.append(tcp.sport)
+#				tcpData.append(tcp.data)
+#				tcpSeqNos.append(tcp.seq)
+				tcpCount+=1
 
-			if type(pktData) is dpkt.arp.ARP:
-				print "ARP"
+			elif type(tcp) is dpkt.udp.UDP:
+				udpCount+=1
+
+#			if type(pktData) is dpkt.arp.ARP:
+#				print "ARP"
+#				arpCount+=1
 
 			if type(pktData) is dpkt.ip.IP:
+				icmpCount+=1
 				ip = pktData
 				print ts
 				if socket.inet_ntoa(ip.dst) != '255.255.255.255' or socket.inet_ntoa(ip.src) != '0.0.0.0':
@@ -44,6 +65,10 @@ class PacketReader:
 
 		print PacketReader.srcIP_list
 		print PacketReader.dstIP_list
+#		print tcpSeqNos
+		print "UDP pkts = " + str(udpCount/2)
+		print "TCP pkts = " + str(tcpCount/2)
+		print "ICMP pkts = " + str(icmpCount/2)
 		f.close()
 		return
 
@@ -72,7 +97,7 @@ class PacketReader:
 #		print "Number of packets = ", PacketReader.pktCounter/2
 #		return
 
-#reader = PacketReader("test3.pcap")
+#reader = PacketReader("iperf.pcap")
 #reader.openFile()
 #reader.calculateTimes()
 #reader.printSrcIPAddrs()
