@@ -26,3 +26,6 @@ Edited the pcap reader to deal with error packets that are sent from address 0.0
 
 27/10/15:
 Changed pcapReader so I can now parse packets caught during an iperf command and count how many are udp and tcp.
+
+30/10/15:
+Added the NetAnim files that I plan to extend.
