@@ -212,6 +212,7 @@ AnimatorMode::setVerticalToolbarWidgets ()
   m_verticalToolbar->addWidget (m_showPropertiesButton);
   m_verticalToolbar->addWidget (m_batteryCapacityButton);
   m_verticalToolbar->addWidget (m_mousePositionButton);
+  m_verticalToolbar->addWidget (m_mybutton);
 }
 
 void
@@ -438,6 +439,12 @@ AnimatorMode::initControls ()
   m_mousePositionButton->setIcon (QIcon (":/resources/animator_mouseposition.png"));
   m_mousePositionButton->setCheckable (true);
   connect (m_mousePositionButton, SIGNAL(clicked()), this, SLOT (enableMousePositionSlot()));
+
+  m_mybutton = new QToolButton;
+  m_mybutton->setToolTip ("This is a test button.");
+  m_mybutton->setText ("TEST");
+  m_mybutton->setCheckable (true);
+  connect (m_mybutton, SIGNAL (clicked()), this, SLOT (myButtonSlot()));
 
   m_parseProgressBar = new QProgressBar;
   //m_animationGroup  = new QParallelAnimationGroup;
@@ -1040,6 +1047,12 @@ void
       }
     AnimNodeMgr::getInstance ()->showRemainingBatteryCapacity (m_batteryCapacityButton->isChecked ());
  }
+
+void
+AnimatorMode::myButtonSlot()
+{
+    m_mybutton->setText("TESTED");
+}
 
 void
 AnimatorMode::updateTimelineSlot (int value)

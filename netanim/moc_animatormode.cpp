@@ -22,7 +22,7 @@ static const uint qt_meta_data_netanim__AnimatorMode[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      31,   14, // methods
+      32,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -61,6 +61,7 @@ static const uint qt_meta_data_netanim__AnimatorMode[] = {
      624,   22,   22,   22, 0x08,
      642,   22,   22,   22, 0x08,
      653,   22,   22,   22, 0x08,
+     679,   22,   22,   22, 0x08,
 
        0        // eod
 };
@@ -85,6 +86,7 @@ static const char qt_meta_stringdata_netanim__AnimatorMode[] = {
     "buttonAnimationGroupFinishedSlot()\0"
     "showPropertiesSlot()\0pauseAtTimeSlot()\0"
     "stepSlot()\0enableMousePositionSlot()\0"
+    "myButtonSlot()\0"
 };
 
 void netanim::AnimatorMode::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -124,6 +126,7 @@ void netanim::AnimatorMode::qt_static_metacall(QObject *_o, QMetaObject::Call _c
         case 28: _t->pauseAtTimeSlot(); break;
         case 29: _t->stepSlot(); break;
         case 30: _t->enableMousePositionSlot(); break;
+        case 31: _t->myButtonSlot(); break;
         default: ;
         }
     }
@@ -161,9 +164,9 @@ int netanim::AnimatorMode::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 31)
+        if (_id < 32)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 31;
+        _id -= 32;
     }
     return _id;
 }

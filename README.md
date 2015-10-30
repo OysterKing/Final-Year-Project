@@ -29,3 +29,5 @@ Changed pcapReader so I can now parse packets caught during an iperf command and
 
 30/10/15:
 Added the NetAnim files that I plan to extend.
+
+Added a test button to understand how the buttons are added to the GUI and how they are given functionality.

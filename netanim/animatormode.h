@@ -184,6 +184,7 @@ private:
   QLineEdit * m_pauseAtEdit;
   QToolButton * m_stepButton;
   QToolButton * m_mousePositionButton;
+  QToolButton * m_mybutton;
 
 
 
@@ -261,6 +262,7 @@ private slots:
   void pauseAtTimeSlot ();
   void stepSlot ();
   void enableMousePositionSlot ();
+  void myButtonSlot ();
 };
 
 
