@@ -31,3 +31,6 @@ Changed pcapReader so I can now parse packets caught during an iperf command and
 Added the NetAnim files that I plan to extend.
 
 Added a test button to understand how the buttons are added to the GUI and how they are given functionality.
+
+02/11/15:
+Added code to animatormode.cpp to run a c program with embedded python when the test button is clicked.

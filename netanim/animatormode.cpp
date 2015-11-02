@@ -27,7 +27,10 @@
 #include "animresource.h"
 #include "statsmode.h"
 #include "animpropertybrowser.h"
-
+#include <cstdlib>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 
 namespace netanim
@@ -1051,7 +1054,43 @@ void
 void
 AnimatorMode::myButtonSlot()
 {
-    m_mybutton->setText("TESTED");
+    pid_t child_pid;
+    char* child_args[] = {"/home/comhghall/pythonScriptRunner.exe", "pyExampleEmbed", "multiply", NULL};
+    int child_status;
+    pid_t wait_result;
+    child_pid = fork();
+
+    switch(child_pid){
+        case -1:
+            break;
+
+        case 0:
+            execv("/home/comhghall/pythonScriptRunner.exe", child_args);
+            abort();
+
+        default:
+            wait_result = waitpid(child_pid, &child_status, 0);
+            if(wait_result != child_pid){
+                //something went wrong
+//                m_mybutton->setToolTip("X");
+            }
+
+            else{
+                //child terminated successfully
+//                m_mybutton->setToolTip("Y");
+            }
+    }
+
+    wait_result = waitpid(child_pid, &child_status, WUNTRACED | WCONTINUED);
+    if(wait_result != child_pid){
+        //same as above
+  //      m_mybutton->setToolTip("Z");
+    }
+
+    if(WIFEXITED(child_status)){
+        //child's exit code = WEXITSTATUS(child_status);
+ //       m_mybutton->setToolTip("A");
+    }
 }
 
 void
