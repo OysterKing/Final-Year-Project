@@ -1055,7 +1055,7 @@ void
 AnimatorMode::myButtonSlot()
 {
     pid_t child_pid;
-    char* child_args[] = {"/home/comhghall/pythonScriptRunner.exe", "pyExampleEmbed", "multiply", NULL};
+    char* child_args[] = {"/usr/bin/python", "/home/comhghall/pyExampleEmbed.py", NULL};
     int child_status;
     pid_t wait_result;
     child_pid = fork();
@@ -1065,7 +1065,7 @@ AnimatorMode::myButtonSlot()
             break;
 
         case 0:
-            execv("/home/comhghall/pythonScriptRunner.exe", child_args);
+            execv("/usr/bin/python", child_args);
             abort();
 
         default:
