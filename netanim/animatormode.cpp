@@ -1055,7 +1055,7 @@ void
 AnimatorMode::myButtonSlot()
 {
     pid_t child_pid;
-    char* child_args[] = {"/usr/bin/python", "/home/comhghall/pyExampleEmbed.py", NULL};
+    char* child_args[] = {"usr/bin/xterm", "-e", "/usr/bin/sudo", "/usr/bin/python", "/home/comhghall/MN_Python_Scripts/week2/task_1-host-discovery.py", "300594", NULL};
     int child_status;
     pid_t wait_result;
     child_pid = fork();
@@ -1065,7 +1065,7 @@ AnimatorMode::myButtonSlot()
             break;
 
         case 0:
-            execv("/usr/bin/python", child_args);
+            execvp("/usr/bin/xterm", child_args);
             abort();
 
         default:

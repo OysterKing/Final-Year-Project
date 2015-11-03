@@ -36,3 +36,6 @@ Added a test button to understand how the buttons are added to the GUI and how t
 Added code to animatormode.cpp to run a c program with embedded python when the test button is clicked.
 
 Removed c file that has python embedded. I now run the python script directly from NetAnim using execv().
+
+03/11/15:
+The test button now runs the python script that Christian sent me (it opens terminals and starts mininet for each host). 
