@@ -39,3 +39,6 @@ Removed c file that has python embedded. I now run the python script directly fr
 
 03/11/15:
 The test button now runs the python script that Christian sent me (it opens terminals and starts mininet for each host). 
+
+08/11/15:
+Added drawmode class and drawview class and added functionality to netanim.cpp to initialise them as a new tab.

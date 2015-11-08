@@ -45,7 +45,9 @@ SOURCES += \
     graphpacket.cpp \
     table.cpp \
     countertablesscene.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    drawmode.cpp \
+    drawview.cpp
 HEADERS += \
     log.h \
     fatal-error.h \
@@ -144,7 +146,9 @@ HEADERS += \
     graphpacket.h \
     table.h \
     countertablesscene.h \
-    qcustomplot.h
+    qcustomplot.h \
+    drawmode.h \
+    drawview.h
 
 
 INCLUDEPATH += qtpropertybrowser/src
