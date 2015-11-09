@@ -42,3 +42,6 @@ The test button now runs the python script that Christian sent me (it opens term
 
 08/11/15:
 Added drawmode class and drawview class and added functionality to netanim.cpp to initialise them as a new tab.
+
+09/11/15:
+Added a toolbar to drawmode and a button labelled X. I also have a "view" box which I can hopefully later turn into the area where a user can drag and drop terminals and links to make a topology.

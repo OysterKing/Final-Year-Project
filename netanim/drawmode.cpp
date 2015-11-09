@@ -42,13 +42,21 @@ DrawMode::getTabName()
 void
 DrawMode::init()
 {
-//    m_state = INIT;
-    //DrawView::getInstance()->setScene(InterfaceStatsScene::getInstance());
+    m_state = INIT;
+//    DrawView::getInstance()->setScene(InterfaceStatsScene::getInstance());
+    initToolbars();
     m_hLayout = new QHBoxLayout;
+//    m_hLayout->addWidget(m_toolbarScrollArea);
+    m_hLayout->addWidget(DrawView::getInstance());
+
     m_vLayout = new QVBoxLayout;
+    m_vLayout->addWidget(m_topToolBar);
+    m_vLayout->addSpacing(0);
+    m_vLayout->addLayout(m_hLayout);
     m_centralWidget = new QWidget;
     m_centralWidget->setLayout(m_vLayout);
     setWindowTitle("NetAnim");
+
     initControls();
 }
 
@@ -56,6 +64,22 @@ void
 DrawMode::initControls()
 {
 
+}
+
+void
+DrawMode::initToolbars()
+{
+    initTopToolbar();
+}
+
+void
+DrawMode::initTopToolbar()
+{
+    m_topToolBar = new QToolBar;
+    m_testButton = new QToolButton;
+    m_testButton->setToolTip("TEST");
+    m_testButton->setText("X");
+    m_topToolBar->addWidget(m_testButton);
 }
 
 void
@@ -70,8 +94,8 @@ DrawMode::setFocus(bool focus)
 void
 DrawMode::systemReset()
 {
-//    m_state = INIT;
+    m_state = INIT;
     //perform some form of reset
-  //  m_state = READY;
+    m_state = READY;
 }
 }
