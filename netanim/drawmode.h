@@ -51,6 +51,9 @@ private:
     void initControls();
     void initToolbars();
     void initTopToolbar();
+
+private slots:
+    void testButtonSlot();
 };
 } //namespace netanim
 

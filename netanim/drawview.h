@@ -5,6 +5,7 @@
 #define DRAWVIEW_H
 
 #include "common.h"
+#include "drawscene.h"
 
 namespace netanim
 {
@@ -14,7 +15,8 @@ class DrawView:public QGraphicsView
 public:
     static DrawView * getInstance();
 private:
-    DrawView();
+    explicit DrawView(QGraphicsScene *);
+    DrawScene * getDrawScene();
 
 };
 

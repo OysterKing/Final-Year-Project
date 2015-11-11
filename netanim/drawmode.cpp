@@ -5,6 +5,7 @@
 #include "animatorscene.h"
 #include "drawmode.h"
 #include "drawview.h"
+#include "drawscene.h"
 //#include "drawingconstants.h"
 
 namespace netanim
@@ -79,6 +80,7 @@ DrawMode::initTopToolbar()
     m_testButton = new QToolButton;
     m_testButton->setToolTip("TEST");
     m_testButton->setText("X");
+    connect (m_testButton, SIGNAL(clicked()), this, SLOT (testButtonSlot()));
     m_topToolBar->addWidget(m_testButton);
 }
 
@@ -97,5 +99,11 @@ DrawMode::systemReset()
     m_state = INIT;
     //perform some form of reset
     m_state = READY;
+}
+
+void
+DrawMode::testButtonSlot()
+{
+    DrawScene::getInstance()->addGrid();
 }
 }

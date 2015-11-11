@@ -45,3 +45,6 @@ Added drawmode class and drawview class and added functionality to netanim.cpp t
 
 09/11/15:
 Added a toolbar to drawmode and a button labelled X. I also have a "view" box which I can hopefully later turn into the area where a user can drag and drop terminals and links to make a topology.
+
+11/11/15:
+Added code to the draw classes to give a tiny area similar to the simulation area in animator mode. Also added functionality to test button to show a grid. Only shows tiny black pixel in area.

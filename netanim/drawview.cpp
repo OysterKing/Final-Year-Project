@@ -8,7 +8,8 @@ namespace netanim
 
 DrawView * pDrawView = 0;
 
-DrawView::DrawView()
+DrawView::DrawView(QGraphicsScene * scene):
+    QGraphicsView(scene)
 {
 
 }
@@ -18,9 +19,13 @@ DrawView::getInstance()
 {
     if(!pDrawView)
     {
-        pDrawView = new DrawView;
+        pDrawView = new DrawView (DrawScene::getInstance());
     }
     return pDrawView;
 }
 
+DrawScene *
+DrawView::getDrawScene(){
+    return DrawScene::getInstance();
+}
 } //namespace netanim
