@@ -18,7 +18,7 @@ public:
     void addGrid();
 //    void setGridLinesCount(int nGridLines);
     QRectF getBoundaryRect();
-    void setSimulationBoundaries(QPointF minPoint, QPointF maxPoint);
+    void setCanvasBoundaries(QPointF minPoint, QPointF maxPoint);
 //    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 //    void addNode(qreal x, qreal y);
 //    void enableMousePositionLabel(bool show);

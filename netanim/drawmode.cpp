@@ -56,6 +56,12 @@ DrawMode::init()
     m_vLayout->addLayout(m_hLayout);
     m_centralWidget = new QWidget;
     m_centralWidget->setLayout(m_vLayout);
+    m_minPoint.setX(0.0);
+    m_minPoint.setY(0.0);
+    m_maxPoint.setX(1000.0);
+    m_maxPoint.setY(1000.0);
+    DrawScene::getInstance()->setCanvasBoundaries(m_minPoint, m_maxPoint);
+    DrawScene::getInstance()->addGrid();
     setWindowTitle("NetAnim");
 
     initControls();
@@ -104,6 +110,6 @@ DrawMode::systemReset()
 void
 DrawMode::testButtonSlot()
 {
-    DrawScene::getInstance()->addGrid();
+ //
 }
 }

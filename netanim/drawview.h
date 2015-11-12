@@ -14,10 +14,10 @@ class DrawView:public QGraphicsView
 {
 public:
     static DrawView * getInstance();
+
 private:
     explicit DrawView(QGraphicsScene *);
     DrawScene * getDrawScene();
-
 };
 
 } //namespace netanim

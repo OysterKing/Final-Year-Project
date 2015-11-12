@@ -28,4 +28,5 @@ DrawScene *
 DrawView::getDrawScene(){
     return DrawScene::getInstance();
 }
+
 } //namespace netanim

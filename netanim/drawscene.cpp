@@ -61,7 +61,7 @@ DrawScene::initGridCoordinates()
 }
 
 void
-DrawScene::setSimulationBoundaries(QPointF minPoint, QPointF maxPoint){
+DrawScene::setCanvasBoundaries(QPointF minPoint, QPointF maxPoint){
     m_minPoint = minPoint;
     m_maxPoint = maxPoint;
     qreal boundaryWidth = m_maxPoint.x() * 0.1;

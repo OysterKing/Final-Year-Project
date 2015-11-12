@@ -48,3 +48,6 @@ Added a toolbar to drawmode and a button labelled X. I also have a "view" box wh
 
 11/11/15:
 Added code to the draw classes to give a tiny area similar to the simulation area in animator mode. Also added functionality to test button to show a grid. Only shows tiny black pixel in area.
+
+12/11/15:
+Added code to drawscene and drawview to get a grid initialised in the draw tab. The function setCanvasBoundaries in drawscene instantiates the grid.

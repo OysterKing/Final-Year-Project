@@ -43,6 +43,8 @@ private:
     QToolBar * m_topToolBar;
     QToolButton * m_testButton;
     QScrollArea * m_toolbarScrollArea;
+    QPointF m_minPoint;
+    QPointF m_maxPoint;
 
     DrawModeState_t m_state;
 
