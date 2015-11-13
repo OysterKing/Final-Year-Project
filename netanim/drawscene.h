@@ -21,7 +21,8 @@ public:
     void setCanvasBoundaries(QPointF minPoint, QPointF maxPoint);
 //    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 //    void addNode(qreal x, qreal y);
-//    void enableMousePositionLabel(bool show);
+    void enableMousePositionLabel(bool show);
+    void mouseMoveEvent (QGraphicsSceneMouseEvent *event);
 
 private:
     typedef QVector <QGraphicsLineItem *>          LineItemVector_t;
@@ -42,8 +43,8 @@ private:
     void markGridCoordinates();
     void initGridCoordinates();
     QVector <QGraphicsSimpleTextItem*> getGridCoordinatesItems();
-//    void setMousePositionLabel(QPointF pos);
-//    void showMousePositionLabel(bool show);
+    void setMousePositionLabel(QPointF pos);
+    void showMousePositionLabel(bool show);
 
 };
 

@@ -86,6 +86,7 @@ DrawMode::initTopToolbar()
     m_testButton = new QToolButton;
     m_testButton->setToolTip("TEST");
     m_testButton->setText("X");
+    m_testButton->setCheckable(true);
     connect (m_testButton, SIGNAL(clicked()), this, SLOT (testButtonSlot()));
     m_topToolBar->addWidget(m_testButton);
 }
@@ -110,6 +111,6 @@ DrawMode::systemReset()
 void
 DrawMode::testButtonSlot()
 {
- //
+    DrawScene::getInstance()->enableMousePositionLabel(m_testButton->isChecked());
 }
 }

@@ -85,6 +85,53 @@ DrawScene::setCanvasBoundaries(QPointF minPoint, QPointF maxPoint){
 }
 
 void
+DrawScene::enableMousePositionLabel(bool enable)
+{
+    m_enableMousePositionLabel = enable;
+}
+
+void
+DrawScene::setMousePositionLabel (QPointF pos)
+{
+
+  //QString string = "    (" + QString::number (qRound (pos.x ())) + "," + QString::number (qRound (pos.y ())) + ")";
+  QString string = "    (" + QString::number ( (pos.x ())) + "," + QString::number ( (pos.y ())) + ")";
+
+  m_mousePositionLabel->setText (string);
+  m_mousePositionProxyWidget->setPos (pos.x (), pos.y ());
+  m_mousePositionLabel->adjustSize ();
+
+}
+
+void
+DrawScene::showMousePositionLabel (bool show)
+{
+  m_mousePositionProxyWidget->setVisible (show);
+}
+
+void
+DrawScene::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
+{
+  if (m_enableMousePositionLabel)
+    {
+      QPointF scenePos = event->scenePos ();
+    //   QString s = "Mouse:" + QString::number (event->scenePos ().x ()) + "," + QString::number (event->scenePos ().y ());
+    //   qDebug (s.toAscii ().data ());
+      setMousePositionLabel (scenePos);
+      if ((scenePos.x () < 0) ||
+          (scenePos.y () < 0))
+        {
+          showMousePositionLabel (false);
+        }
+      else
+        {
+          showMousePositionLabel (true);
+        }
+    }
+  return QGraphicsScene::mouseMoveEvent (event);
+}
+
+void
 DrawScene::markGridCoordinates(){
     QRectF simulationRect(m_minPoint, m_maxPoint);
     if((simulationRect.width() == 0) && (simulationRect.height() == 0)){

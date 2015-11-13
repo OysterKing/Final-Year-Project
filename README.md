@@ -51,3 +51,6 @@ Added code to the draw classes to give a tiny area similar to the simulation are
 
 12/11/15:
 Added code to drawscene and drawview to get a grid initialised in the draw tab. The function setCanvasBoundaries in drawscene instantiates the grid.
+
+13/11/15:
+Added code to draw scene and draw mode so that the test button now is checkable and, when checked, shows the position of the mouse in terms of x and y when moved over the grid.
