@@ -22,6 +22,8 @@ public:
 //    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 //    void addNode(qreal x, qreal y);
     void enableMousePositionLabel(bool show);
+    void enableElementAddition(bool enable);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent (QGraphicsSceneMouseEvent *event);
 
 private:
@@ -33,8 +35,11 @@ private:
     LineItemVector_t             m_gridLines;
     GridCoordinatesVector_t m_gridCoordinates;
     QLabel * m_mousePositionLabel;
+    QLabel * m_elementLabel;
     QGraphicsProxyWidget * m_mousePositionProxyWidget;
+//    QGraphicsWidget * m_elementWidget;
     bool m_enableMousePositionLabel;
+    bool m_enableElementAddition;
     QPointF m_minPoint;
     QPointF m_maxPoint;
     QPointF m_sceneMinPoint;
@@ -45,6 +50,7 @@ private:
     QVector <QGraphicsSimpleTextItem*> getGridCoordinatesItems();
     void setMousePositionLabel(QPointF pos);
     void showMousePositionLabel(bool show);
+    void addElement(QPointF pos);
 
 };
 

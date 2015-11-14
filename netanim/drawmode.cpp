@@ -83,12 +83,19 @@ void
 DrawMode::initTopToolbar()
 {
     m_topToolBar = new QToolBar;
-    m_testButton = new QToolButton;
-    m_testButton->setToolTip("TEST");
-    m_testButton->setText("X");
-    m_testButton->setCheckable(true);
-    connect (m_testButton, SIGNAL(clicked()), this, SLOT (testButtonSlot()));
-    m_topToolBar->addWidget(m_testButton);
+
+    m_addElementButton = new QToolButton;
+    m_addElementButton->setToolTip("Add node.");
+    m_addElementButton->setText("X");
+    m_addElementButton->setCheckable(true);
+    connect (m_addElementButton, SIGNAL(clicked()), this, SLOT (addElementButtonSlot()));
+    m_topToolBar->addWidget(m_addElementButton);
+
+    m_runButton = new QToolButton;
+    m_runButton->setToolTip("Run.");
+    m_runButton->setText("A");
+    connect (m_runButton, SIGNAL(clicked()), this, SLOT (runButtonSlot()));
+    m_topToolBar->addWidget(m_runButton);
 }
 
 void
@@ -109,8 +116,15 @@ DrawMode::systemReset()
 }
 
 void
-DrawMode::testButtonSlot()
+DrawMode::addElementButtonSlot()
 {
-    DrawScene::getInstance()->enableMousePositionLabel(m_testButton->isChecked());
+    DrawScene::getInstance()->enableMousePositionLabel(m_addElementButton->isChecked());
+    DrawScene::getInstance()->enableElementAddition(m_addElementButton->isChecked());
+}
+
+void
+DrawMode::runButtonSlot()
+{
+
 }
 }

@@ -91,6 +91,12 @@ DrawScene::enableMousePositionLabel(bool enable)
 }
 
 void
+DrawScene::enableElementAddition(bool enable)
+{
+    m_enableElementAddition = enable;
+}
+
+void
 DrawScene::setMousePositionLabel (QPointF pos)
 {
 
@@ -101,6 +107,20 @@ DrawScene::setMousePositionLabel (QPointF pos)
   m_mousePositionProxyWidget->setPos (pos.x (), pos.y ());
   m_mousePositionLabel->adjustSize ();
 
+}
+
+void
+DrawScene::addElement(QPointF pos)
+{
+    QString string = "    (" + QString::number ( (pos.x ())) + "," + QString::number ( (pos.y ())) + ")";
+//    DrawScene::addItem(m_elementItem);
+//    DrawScene::(m_elementWidget);
+//    DrawScene::addText(string);
+//    m_elementLabel->setText("TEST");
+//    m_elementProxyItem->setPos(pos.x(), pos.y());
+//    m_elementProxyItem->setVisible(true);
+//    m_elementProxyWidget->pos() = pos;
+//    m_elementText->setEnabled(true);
 }
 
 void
@@ -129,6 +149,18 @@ DrawScene::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
         }
     }
   return QGraphicsScene::mouseMoveEvent (event);
+}
+
+void
+DrawScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if(m_enableElementAddition){
+        QPointF scenePos = event->scenePos();
+        if((scenePos.x () > 0) && (scenePos.y () > 0)){
+            addElement(scenePos);
+        }
+    }
+    return QGraphicsScene::mousePressEvent(event);
 }
 
 void
@@ -200,25 +232,4 @@ DrawScene::getBoundaryRect ()
 //    update ();
 //}
 
-//void
-//DrawScene::enableMousePositionLabel(bool enable)
-//{
-//    m_enableMousePositionLabel = enable;
-//}
-
-//void
-//DrawScene::setMousePositionLabel(QPointF pos)
-//{
-//    QString string = "    (" + QString::number ( (pos.x ())) + "," + QString::number ( (pos.y ())) + ")";
-
-//    m_mousePositionLabel->setText(string);
-//    m_mousePositionProxyWidget->setPos(pos.x(), pos.y());
-//    m_mousePositionLabel->adjustSize();
-//}
-
-//void
-//DrawScene::showMousePositionLabel(bool show)
-//{
-//    m_mousePositionProxyWidget->setVisible(show);
-//}
 }

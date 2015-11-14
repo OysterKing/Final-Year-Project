@@ -54,3 +54,6 @@ Added code to drawscene and drawview to get a grid initialised in the draw tab. 
 
 13/11/15:
 Added code to draw scene and draw mode so that the test button now is checkable and, when checked, shows the position of the mouse in terms of x and y when moved over the grid.
+
+14/11/15:
+Added some calls to a mouse click event in drawscene to see if I could add an item to the grid that could later be made into a node. I think I have to make a node class first then write a method called "addItem" in drawscene before I can actually add a permanent graphics item.
