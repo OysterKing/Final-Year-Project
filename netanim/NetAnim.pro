@@ -48,7 +48,9 @@ SOURCES += \
     qcustomplot.cpp \
     drawmode.cpp \
     drawview.cpp \
-    drawscene.cpp
+    drawscene.cpp \
+    dnode.cpp \
+    item.cpp
 HEADERS += \
     log.h \
     fatal-error.h \
@@ -150,7 +152,9 @@ HEADERS += \
     qcustomplot.h \
     drawmode.h \
     drawview.h \
-    drawscene.h
+    drawscene.h \
+    dnode.h \
+    item.h
 
 
 INCLUDEPATH += qtpropertybrowser/src
