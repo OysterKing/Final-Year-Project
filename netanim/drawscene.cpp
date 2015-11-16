@@ -4,6 +4,7 @@
 #include "drawscene.h"
 #include "drawmode.h"
 #include "drawview.h"
+#include "dnode.h"
 #include "logqt.h"
 
 namespace netanim
@@ -113,6 +114,10 @@ void
 DrawScene::addElement(QPointF pos)
 {
     QString string = "    (" + QString::number ( (pos.x ())) + "," + QString::number ( (pos.y ())) + ")";
+    dNode * drawnode = 0;
+    drawnode = dNodeMgr::getInstance()->add(0, 0, pos.x(), pos.y(), string);
+    drawnode->setSize(100, 100);
+    DrawScene::getInstance()->addItem(drawnode);
 //    DrawScene::addItem(m_elementItem);
 //    DrawScene::(m_elementWidget);
 //    DrawScene::addText(string);

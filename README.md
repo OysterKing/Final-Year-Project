@@ -57,3 +57,9 @@ Added code to draw scene and draw mode so that the test button now is checkable 
 
 14/11/15:
 Added some calls to a mouse click event in drawscene to see if I could add an item to the grid that could later be made into a node. I think I have to make a node class first then write a method called "addItem" in drawscene before I can actually add a permanent graphics item.
+
+15/11/15:
+Added a new "item" class to define the widgets for nodes and switches. Added a dNode class which will be the drawing node that is added to the drawview. Also added a couple of new constants to animatorconstants.
+
+16/11/15:
+Managed to add a node when the mouse clicks the grid. Added calls to dNode and dNodeMgr to drawscene which allows the creation of nodes in the draw tab when the 'X' button is clicked.
