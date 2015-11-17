@@ -84,12 +84,12 @@ DrawMode::initTopToolbar()
 {
     m_topToolBar = new QToolBar;
 
-    m_addNodeButton = new QToolButton;
-    m_addNodeButton->setToolTip("Add node.");
-    m_addNodeButton->setText("X");
-    m_addNodeButton->setCheckable(true);
-    connect (m_addNodeButton, SIGNAL(clicked()), this, SLOT (addNodeButtonSlot()));
-    m_topToolBar->addWidget(m_addNodeButton);
+    m_addHostButton = new QToolButton;
+    m_addHostButton->setToolTip("Add node.");
+    m_addHostButton->setText("X");
+    m_addHostButton->setCheckable(true);
+    connect (m_addHostButton, SIGNAL(clicked()), this, SLOT (addHostButtonSlot()));
+    m_topToolBar->addWidget(m_addHostButton);
 
     m_addSwitchButton = new QToolButton;
     m_addSwitchButton->setToolTip("Add switch.");
@@ -123,9 +123,9 @@ DrawMode::systemReset()
 }
 
 void
-DrawMode::addNodeButtonSlot()
+DrawMode::addHostButtonSlot()
 {
-    if(m_addNodeButton->isChecked()){
+    if(m_addHostButton->isChecked()){
         m_addSwitchButton->setDisabled(true);
         m_runButton->setDisabled(true);
     }
@@ -134,20 +134,20 @@ DrawMode::addNodeButtonSlot()
         m_addSwitchButton->setEnabled(true);
         m_runButton->setEnabled(true);
     }
-    DrawScene::getInstance()->enableMousePositionLabel(m_addNodeButton->isChecked());
-    DrawScene::getInstance()->enableNodeAddition(m_addNodeButton->isChecked());
+    DrawScene::getInstance()->enableMousePositionLabel(m_addHostButton->isChecked());
+    DrawScene::getInstance()->enableHostAddition(m_addHostButton->isChecked());
 }
 
 void
 DrawMode::addSwitchButtonSlot()
 {
     if(m_addSwitchButton->isChecked()){
-        m_addNodeButton->setDisabled(true);
+        m_addHostButton->setDisabled(true);
         m_runButton->setDisabled(true);
     }
 
     else{
-        m_addNodeButton->setEnabled(true);
+        m_addHostButton->setEnabled(true);
         m_runButton->setEnabled(true);
     }
     DrawScene::getInstance()->enableMousePositionLabel(m_addSwitchButton->isChecked());

@@ -41,7 +41,7 @@ private:
     QHBoxLayout * m_hLayout;
     QVBoxLayout * m_vLayout;
     QToolBar * m_topToolBar;
-    QToolButton * m_addNodeButton;
+    QToolButton * m_addHostButton;
     QToolButton * m_addSwitchButton;
     QToolButton * m_runButton;
     QScrollArea * m_toolbarScrollArea;
@@ -57,7 +57,7 @@ private:
     void initTopToolbar();
 
 private slots:
-    void addNodeButtonSlot();
+    void addHostButtonSlot();
     void addSwitchButtonSlot();
     void runButtonSlot();
 };

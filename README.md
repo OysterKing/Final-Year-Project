@@ -70,3 +70,5 @@ Added a new "item" class to define the widgets for nodes and switches. Added a d
 
 17/11/15:
 Added a new button that, when clicked, adds a switch. For the moment switches are dNode objects, since nodes and switches, at least in this program, are very similar. I also added some extra functionality to the buttons; now when a button is checked the other buttons are disabled until the button is unchecked.
+Added a new class to define the link that will be used between the hosts and switches.
+Changed references to "node" in draw scene etc to "host" so now I have addHost and addSwitch instead of addNode and addSwitch.

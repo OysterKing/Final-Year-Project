@@ -38,7 +38,7 @@ static const uint qt_meta_data_netanim__DrawMode[] = {
 };
 
 static const char qt_meta_stringdata_netanim__DrawMode[] = {
-    "netanim::DrawMode\0\0addNodeButtonSlot()\0"
+    "netanim::DrawMode\0\0addHostButtonSlot()\0"
     "addSwitchButtonSlot()\0runButtonSlot()\0"
 };
 
@@ -48,7 +48,7 @@ void netanim::DrawMode::qt_static_metacall(QObject *_o, QMetaObject::Call _c, in
         Q_ASSERT(staticMetaObject.cast(_o));
         DrawMode *_t = static_cast<DrawMode *>(_o);
         switch (_id) {
-        case 0: _t->addNodeButtonSlot(); break;
+        case 0: _t->addHostButtonSlot(); break;
         case 1: _t->addSwitchButtonSlot(); break;
         case 2: _t->runButtonSlot(); break;
         default: ;

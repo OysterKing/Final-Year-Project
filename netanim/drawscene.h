@@ -22,7 +22,7 @@ public:
 //    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 //    void addNode(qreal x, qreal y);
     void enableMousePositionLabel(bool show);
-    void enableNodeAddition(bool enable);
+    void enableHostAddition(bool enable);
     void enableSwitchAddition(bool enable);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent (QGraphicsSceneMouseEvent *event);
@@ -38,9 +38,8 @@ private:
     QLabel * m_mousePositionLabel;
     QLabel * m_elementLabel;
     QGraphicsProxyWidget * m_mousePositionProxyWidget;
-//    QGraphicsWidget * m_elementWidget;
     bool m_enableMousePositionLabel;
-    bool m_enableNodeAddition;
+    bool m_enableHostAddition;
     bool m_enableSwitchAddition;
     QPointF m_minPoint;
     QPointF m_maxPoint;
@@ -52,7 +51,7 @@ private:
     QVector <QGraphicsSimpleTextItem*> getGridCoordinatesItems();
     void setMousePositionLabel(QPointF pos);
     void showMousePositionLabel(bool show);
-    void addNode(QPointF pos);
+    void addHost(QPointF pos);
     void addSwitch(QPointF pos);
 
 };

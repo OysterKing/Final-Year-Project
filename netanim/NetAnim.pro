@@ -50,7 +50,8 @@ SOURCES += \
     drawview.cpp \
     drawscene.cpp \
     dnode.cpp \
-    item.cpp
+    item.cpp \
+    dlink.cpp
 HEADERS += \
     log.h \
     fatal-error.h \
@@ -154,7 +155,8 @@ HEADERS += \
     drawview.h \
     drawscene.h \
     dnode.h \
-    item.h
+    item.h \
+    dlink.h
 
 
 INCLUDEPATH += qtpropertybrowser/src

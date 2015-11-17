@@ -16,7 +16,7 @@ DrawScene::DrawScene():
     QGraphicsScene(0, 0, 250, 250),
     m_enableMousePositionLabel(false),
     m_enableSwitchAddition(false),
-    m_enableNodeAddition(false)
+    m_enableHostAddition(false)
 {
     m_mousePositionLabel = new QLabel("");
     m_mousePositionLabel->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -94,9 +94,9 @@ DrawScene::enableMousePositionLabel(bool enable)
 }
 
 void
-DrawScene::enableNodeAddition(bool enable)
+DrawScene::enableHostAddition(bool enable)
 {
-    m_enableNodeAddition = enable;
+    m_enableHostAddition = enable;
 }
 
 void
@@ -118,27 +118,19 @@ DrawScene::setMousePositionLabel (QPointF pos)
 }
 
 void
-DrawScene::addNode(QPointF pos)
+DrawScene::addHost(QPointF pos)
 {
-    QString string = "    (" + QString::number ( (pos.x ())) + "," + QString::number ( (pos.y ())) + ")";
+    QString string = "Host";
     dNode * drawnode = 0;
     drawnode = dNodeMgr::getInstance()->add(0, 0, pos.x(), pos.y(), string);
     drawnode->setSize(50, 50);
     DrawScene::getInstance()->addItem(drawnode);
-//    DrawScene::addItem(m_elementItem);
-//    DrawScene::(m_elementWidget);
-//    DrawScene::addText(string);
-//    m_elementLabel->setText("TEST");
-//    m_elementProxyItem->setPos(pos.x(), pos.y());
-//    m_elementProxyItem->setVisible(true);
-//    m_elementProxyWidget->pos() = pos;
-//    m_elementText->setEnabled(true);
 }
 
 void
 DrawScene::addSwitch(QPointF pos)
 {
-    QString string = "    (" + QString::number ( (pos.x ())) + "," + QString::number ( (pos.y ())) + ")";
+    QString string = "Switch";
     dNode * drawnode = 0;
     drawnode = dNodeMgr::getInstance()->add(0, 0, pos.x(), pos.y(), string);
     drawnode->setSize(100, 100);
@@ -177,10 +169,10 @@ DrawScene::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
 void
 DrawScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if(m_enableNodeAddition){
+    if(m_enableHostAddition){
         QPointF scenePos = event->scenePos();
         if((scenePos.x () > 0) && (scenePos.y () > 0)){
-            addNode(scenePos);
+            addHost(scenePos);
         }
     }
 
