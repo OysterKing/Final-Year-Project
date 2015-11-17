@@ -84,12 +84,19 @@ DrawMode::initTopToolbar()
 {
     m_topToolBar = new QToolBar;
 
-    m_addElementButton = new QToolButton;
-    m_addElementButton->setToolTip("Add node.");
-    m_addElementButton->setText("X");
-    m_addElementButton->setCheckable(true);
-    connect (m_addElementButton, SIGNAL(clicked()), this, SLOT (addElementButtonSlot()));
-    m_topToolBar->addWidget(m_addElementButton);
+    m_addNodeButton = new QToolButton;
+    m_addNodeButton->setToolTip("Add node.");
+    m_addNodeButton->setText("X");
+    m_addNodeButton->setCheckable(true);
+    connect (m_addNodeButton, SIGNAL(clicked()), this, SLOT (addNodeButtonSlot()));
+    m_topToolBar->addWidget(m_addNodeButton);
+
+    m_addSwitchButton = new QToolButton;
+    m_addSwitchButton->setToolTip("Add switch.");
+    m_addSwitchButton->setText("Y");
+    m_addSwitchButton->setCheckable(true);
+    connect (m_addSwitchButton, SIGNAL(clicked()), this, SLOT (addSwitchButtonSlot()));
+    m_topToolBar->addWidget(m_addSwitchButton);
 
     m_runButton = new QToolButton;
     m_runButton->setToolTip("Run.");
@@ -116,10 +123,35 @@ DrawMode::systemReset()
 }
 
 void
-DrawMode::addElementButtonSlot()
+DrawMode::addNodeButtonSlot()
 {
-    DrawScene::getInstance()->enableMousePositionLabel(m_addElementButton->isChecked());
-    DrawScene::getInstance()->enableElementAddition(m_addElementButton->isChecked());
+    if(m_addNodeButton->isChecked()){
+        m_addSwitchButton->setDisabled(true);
+        m_runButton->setDisabled(true);
+    }
+
+    else{
+        m_addSwitchButton->setEnabled(true);
+        m_runButton->setEnabled(true);
+    }
+    DrawScene::getInstance()->enableMousePositionLabel(m_addNodeButton->isChecked());
+    DrawScene::getInstance()->enableNodeAddition(m_addNodeButton->isChecked());
+}
+
+void
+DrawMode::addSwitchButtonSlot()
+{
+    if(m_addSwitchButton->isChecked()){
+        m_addNodeButton->setDisabled(true);
+        m_runButton->setDisabled(true);
+    }
+
+    else{
+        m_addNodeButton->setEnabled(true);
+        m_runButton->setEnabled(true);
+    }
+    DrawScene::getInstance()->enableMousePositionLabel(m_addSwitchButton->isChecked());
+    DrawScene::getInstance()->enableSwitchAddition(m_addSwitchButton->isChecked());
 }
 
 void

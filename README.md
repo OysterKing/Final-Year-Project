@@ -67,3 +67,6 @@ Managed to add a node when the mouse clicks the grid. Added calls to dNode and d
 =======
 Added a new "item" class to define the widgets for nodes and switches. Added a dNode class which will be the drawing node that is added to the drawview. Also added a couple of new constants to animatorconstants.
 >>>>>>> 04c17a200d8707ddbc0744ece207d1e7301ed43d
+
+17/11/15:
+Added a new button that, when clicked, adds a switch. For the moment switches are dNode objects, since nodes and switches, at least in this program, are very similar. I also added some extra functionality to the buttons; now when a button is checked the other buttons are disabled until the button is unchecked.

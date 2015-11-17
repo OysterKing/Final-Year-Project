@@ -14,7 +14,9 @@ DrawScene * pDrawScene = 0;
 
 DrawScene::DrawScene():
     QGraphicsScene(0, 0, 250, 250),
-    m_enableMousePositionLabel(false)
+    m_enableMousePositionLabel(false),
+    m_enableSwitchAddition(false),
+    m_enableNodeAddition(false)
 {
     m_mousePositionLabel = new QLabel("");
     m_mousePositionLabel->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -92,9 +94,14 @@ DrawScene::enableMousePositionLabel(bool enable)
 }
 
 void
-DrawScene::enableElementAddition(bool enable)
+DrawScene::enableNodeAddition(bool enable)
 {
-    m_enableElementAddition = enable;
+    m_enableNodeAddition = enable;
+}
+
+void
+DrawScene::enableSwitchAddition(bool enable){
+    m_enableSwitchAddition = enable;
 }
 
 void
@@ -111,12 +118,12 @@ DrawScene::setMousePositionLabel (QPointF pos)
 }
 
 void
-DrawScene::addElement(QPointF pos)
+DrawScene::addNode(QPointF pos)
 {
     QString string = "    (" + QString::number ( (pos.x ())) + "," + QString::number ( (pos.y ())) + ")";
     dNode * drawnode = 0;
     drawnode = dNodeMgr::getInstance()->add(0, 0, pos.x(), pos.y(), string);
-    drawnode->setSize(100, 100);
+    drawnode->setSize(50, 50);
     DrawScene::getInstance()->addItem(drawnode);
 //    DrawScene::addItem(m_elementItem);
 //    DrawScene::(m_elementWidget);
@@ -126,6 +133,17 @@ DrawScene::addElement(QPointF pos)
 //    m_elementProxyItem->setVisible(true);
 //    m_elementProxyWidget->pos() = pos;
 //    m_elementText->setEnabled(true);
+}
+
+void
+DrawScene::addSwitch(QPointF pos)
+{
+    QString string = "    (" + QString::number ( (pos.x ())) + "," + QString::number ( (pos.y ())) + ")";
+    dNode * drawnode = 0;
+    drawnode = dNodeMgr::getInstance()->add(0, 0, pos.x(), pos.y(), string);
+    drawnode->setSize(100, 100);
+    drawnode->setColor(0, 255, 0);
+    DrawScene::getInstance()->addItem(drawnode);
 }
 
 void
@@ -159,10 +177,17 @@ DrawScene::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
 void
 DrawScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if(m_enableElementAddition){
+    if(m_enableNodeAddition){
         QPointF scenePos = event->scenePos();
         if((scenePos.x () > 0) && (scenePos.y () > 0)){
-            addElement(scenePos);
+            addNode(scenePos);
+        }
+    }
+
+    else if(m_enableSwitchAddition){
+        QPointF scenePos = event->scenePos();
+        if((scenePos.x () > 0) && (scenePos.y () > 0)){
+            addSwitch(scenePos);
         }
     }
     return QGraphicsScene::mousePressEvent(event);
