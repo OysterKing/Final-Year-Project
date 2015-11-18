@@ -72,3 +72,4 @@ Changed references to "node" in draw scene etc to "host" so now I have addHost a
 
 18/11/15:
 Added a new side tool bar to the draw tab with two editable fields; to and from. User will type the id of the host they wish to link and the id of the swithc they wish to link it to. Then they'll press the link button beneath.
+Added a text item in drawscene that displays the host id when a host is added in the form "h.x" where x is the node id. Now when the user adds a node he or she can see that node's id straight away.

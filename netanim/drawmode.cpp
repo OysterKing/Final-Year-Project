@@ -192,6 +192,7 @@ DrawMode::runButtonSlot()
 void
 DrawMode::addLinkButtonSlot()
 {
-
+    QString to = m_linkToEdit->text();
+    QString from = m_linkFromEdit->text();
 }
 }

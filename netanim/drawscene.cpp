@@ -128,11 +128,19 @@ DrawScene::setMousePositionLabel (QPointF pos)
 void
 DrawScene::addHost(QPointF pos)
 {
-    QString string = "Host";
+    QString description = "Host";
     dNode * drawnode = 0;
-    drawnode = dNodeMgr::getInstance()->add(0, 0, pos.x(), pos.y(), string);
+    drawnode = dNodeMgr::getInstance()->add(0, 0, pos.x(), pos.y(), description);
     drawnode->setSize(50, 50);
+
+    QString hostInfo = "h." + QString::number(drawnode->getNodeId());
+
+    QGraphicsTextItem * hostLabel = new QGraphicsTextItem;
+    hostLabel->setPos(pos);
+    hostLabel->setPlainText(hostInfo);
+
     DrawScene::getInstance()->addItem(drawnode);
+    DrawScene::getInstance()->addItem(hostLabel);
 }
 
 void
