@@ -24,8 +24,10 @@ public:
     void enableMousePositionLabel(bool show);
     void enableHostAddition(bool enable);
     void enableSwitchAddition(bool enable);
+    void enableLinkAddition(bool enable);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent (QGraphicsSceneMouseEvent *event);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
 private:
     typedef QVector <QGraphicsLineItem *>          LineItemVector_t;
@@ -41,6 +43,7 @@ private:
     bool m_enableMousePositionLabel;
     bool m_enableHostAddition;
     bool m_enableSwitchAddition;
+    bool m_enableLinkAddition;
     QPointF m_minPoint;
     QPointF m_maxPoint;
     QPointF m_sceneMinPoint;
@@ -53,7 +56,7 @@ private:
     void showMousePositionLabel(bool show);
     void addHost(QPointF pos);
     void addSwitch(QPointF pos);
-
+    void addLink(QPointF fromPos, QPointF toPos);
 };
 
 } // namespace netanim

@@ -59,16 +59,16 @@ Added code to draw scene and draw mode so that the test button now is checkable 
 Added some calls to a mouse click event in drawscene to see if I could add an item to the grid that could later be made into a node. I think I have to make a node class first then write a method called "addItem" in drawscene before I can actually add a permanent graphics item.
 
 15/11/15:
-<<<<<<< HEAD
 Added a new "item" class to define the widgets for nodes and switches. Added a dNode class which will be the drawing node that is added to the drawview. Also added a couple of new constants to animatorconstants.
 
 16/11/15:
 Managed to add a node when the mouse clicks the grid. Added calls to dNode and dNodeMgr to drawscene which allows the creation of nodes in the draw tab when the 'X' button is clicked.
-=======
 Added a new "item" class to define the widgets for nodes and switches. Added a dNode class which will be the drawing node that is added to the drawview. Also added a couple of new constants to animatorconstants.
->>>>>>> 04c17a200d8707ddbc0744ece207d1e7301ed43d
 
 17/11/15:
 Added a new button that, when clicked, adds a switch. For the moment switches are dNode objects, since nodes and switches, at least in this program, are very similar. I also added some extra functionality to the buttons; now when a button is checked the other buttons are disabled until the button is unchecked.
 Added a new class to define the link that will be used between the hosts and switches.
 Changed references to "node" in draw scene etc to "host" so now I have addHost and addSwitch instead of addNode and addSwitch.
+
+18/11/15:
+Added a new side tool bar to the draw tab with two editable fields; to and from. User will type the id of the host they wish to link and the id of the swithc they wish to link it to. Then they'll press the link button beneath.

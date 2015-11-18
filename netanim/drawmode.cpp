@@ -52,6 +52,7 @@ DrawMode::init()
 
     m_vLayout = new QVBoxLayout;
     m_vLayout->addWidget(m_topToolBar);
+    m_hLayout->addWidget(m_sideToolBar);
     m_vLayout->addSpacing(0);
     m_vLayout->addLayout(m_hLayout);
     m_centralWidget = new QWidget;
@@ -77,6 +78,7 @@ void
 DrawMode::initToolbars()
 {
     initTopToolbar();
+    initSideToolbar();
 }
 
 void
@@ -85,24 +87,51 @@ DrawMode::initTopToolbar()
     m_topToolBar = new QToolBar;
 
     m_addHostButton = new QToolButton;
-    m_addHostButton->setToolTip("Add node.");
+    m_addHostButton->setToolTip("Add node");
     m_addHostButton->setText("X");
     m_addHostButton->setCheckable(true);
     connect (m_addHostButton, SIGNAL(clicked()), this, SLOT (addHostButtonSlot()));
     m_topToolBar->addWidget(m_addHostButton);
 
     m_addSwitchButton = new QToolButton;
-    m_addSwitchButton->setToolTip("Add switch.");
+    m_addSwitchButton->setToolTip("Add switch");
     m_addSwitchButton->setText("Y");
     m_addSwitchButton->setCheckable(true);
     connect (m_addSwitchButton, SIGNAL(clicked()), this, SLOT (addSwitchButtonSlot()));
     m_topToolBar->addWidget(m_addSwitchButton);
 
     m_runButton = new QToolButton;
-    m_runButton->setToolTip("Run.");
+    m_runButton->setToolTip("Run");
     m_runButton->setText("A");
     connect (m_runButton, SIGNAL(clicked()), this, SLOT (runButtonSlot()));
     m_topToolBar->addWidget(m_runButton);
+}
+
+void
+DrawMode::initSideToolbar()
+{
+    m_sideToolBar = new QToolBar;
+    m_sideToolBar->setOrientation(Qt::Vertical);
+
+    m_linkFromLabel = new QLabel;
+    m_linkFromLabel->setText("FROM");
+    m_sideToolBar->addWidget(m_linkFromLabel);
+
+    m_linkFromEdit = new QLineEdit;
+    m_sideToolBar->addWidget(m_linkFromEdit);
+
+    m_linkToLabel = new QLabel;
+    m_linkToLabel->setText("TO");
+    m_sideToolBar->addWidget(m_linkToLabel);
+
+    m_linkToEdit = new QLineEdit;
+    m_sideToolBar->addWidget(m_linkToEdit);
+
+    m_addLinkButton = new QToolButton;
+    m_addLinkButton->setToolTip("Add link");
+    m_addLinkButton->setText("B");
+    connect(m_addLinkButton, SIGNAL(clicked()), this, SLOT (addLinkButtonSlot()));
+    m_sideToolBar->addWidget(m_addLinkButton);
 }
 
 void
@@ -156,6 +185,12 @@ DrawMode::addSwitchButtonSlot()
 
 void
 DrawMode::runButtonSlot()
+{
+
+}
+
+void
+DrawMode::addLinkButtonSlot()
 {
 
 }

@@ -4,6 +4,7 @@
 #include "drawscene.h"
 #include "drawmode.h"
 #include "drawview.h"
+#include "dlink.h"
 #include "dnode.h"
 #include "logqt.h"
 
@@ -100,8 +101,15 @@ DrawScene::enableHostAddition(bool enable)
 }
 
 void
-DrawScene::enableSwitchAddition(bool enable){
+DrawScene::enableSwitchAddition(bool enable)
+{
     m_enableSwitchAddition = enable;
+}
+
+void
+DrawScene::enableLinkAddition(bool enable)
+{
+    m_enableLinkAddition = enable;
 }
 
 void
@@ -136,6 +144,12 @@ DrawScene::addSwitch(QPointF pos)
     drawnode->setSize(100, 100);
     drawnode->setColor(0, 255, 0);
     DrawScene::getInstance()->addItem(drawnode);
+}
+
+void
+DrawScene::addLink(QPointF fromPos, QPointF toPos)
+{
+
 }
 
 void
@@ -183,6 +197,20 @@ DrawScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         }
     }
     return QGraphicsScene::mousePressEvent(event);
+}
+
+void
+DrawScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    if(m_enableLinkAddition){
+//        QList<QGraphicsItem*> items = DrawScene::items();
+//        QPointF scenePos = event->scenePos();
+//        for(int i = 0; i < items.size(); i++){
+//            QPointF itemPos = items.at(i)->pos();
+//            if(euclideanDistance(scenePos, itemPos) <)
+//        }
+
+    }
 }
 
 void

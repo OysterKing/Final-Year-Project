@@ -41,9 +41,15 @@ private:
     QHBoxLayout * m_hLayout;
     QVBoxLayout * m_vLayout;
     QToolBar * m_topToolBar;
+    QToolBar * m_sideToolBar;
     QToolButton * m_addHostButton;
     QToolButton * m_addSwitchButton;
     QToolButton * m_runButton;
+    QToolButton * m_addLinkButton;
+    QLabel * m_linkFromLabel;
+    QLabel * m_linkToLabel;
+    QLineEdit * m_linkFromEdit;
+    QLineEdit * m_linkToEdit;
     QScrollArea * m_toolbarScrollArea;
     QPointF m_minPoint;
     QPointF m_maxPoint;
@@ -55,11 +61,13 @@ private:
     void initControls();
     void initToolbars();
     void initTopToolbar();
+    void initSideToolbar();
 
 private slots:
     void addHostButtonSlot();
     void addSwitchButtonSlot();
     void runButtonSlot();
+    void addLinkButtonSlot();
 };
 } //namespace netanim
 

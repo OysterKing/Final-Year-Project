@@ -32,6 +32,7 @@ public:
     ~dNode();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 //    void moustMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
     void setNodeDescription(QString description);
     QPointF getCenter();
     QGraphicsTextItem * getDescription();

@@ -22,7 +22,7 @@ static const uint qt_meta_data_netanim__DrawMode[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       3,   14, // methods
+       4,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -33,6 +33,7 @@ static const uint qt_meta_data_netanim__DrawMode[] = {
       19,   18,   18,   18, 0x08,
       39,   18,   18,   18, 0x08,
       61,   18,   18,   18, 0x08,
+      77,   18,   18,   18, 0x08,
 
        0        // eod
 };
@@ -40,6 +41,7 @@ static const uint qt_meta_data_netanim__DrawMode[] = {
 static const char qt_meta_stringdata_netanim__DrawMode[] = {
     "netanim::DrawMode\0\0addHostButtonSlot()\0"
     "addSwitchButtonSlot()\0runButtonSlot()\0"
+    "addLinkButtonSlot()\0"
 };
 
 void netanim::DrawMode::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -51,6 +53,7 @@ void netanim::DrawMode::qt_static_metacall(QObject *_o, QMetaObject::Call _c, in
         case 0: _t->addHostButtonSlot(); break;
         case 1: _t->addSwitchButtonSlot(); break;
         case 2: _t->runButtonSlot(); break;
+        case 3: _t->addLinkButtonSlot(); break;
         default: ;
         }
     }
@@ -89,9 +92,9 @@ int netanim::DrawMode::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 3)
+        if (_id < 4)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 3;
+        _id -= 4;
     }
     return _id;
 }

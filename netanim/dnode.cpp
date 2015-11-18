@@ -151,6 +151,23 @@ dNode::updateCounter (uint32_t counterId, qreal counterValue, CounterType_t coun
     }
 }
 
+void
+dNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+//    Item::mouseDoubleClickEvent(event);
+//    if(!m_linked)
+//    {
+//        m_linked = true;
+//        update();
+//    }
+
+//    else
+//    {
+//        m_linked = false;
+//        update();
+//    }
+}
+
 //int
 //dNode::getResourceId ()
 //{
