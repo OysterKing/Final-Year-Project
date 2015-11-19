@@ -17,7 +17,10 @@ DrawScene::DrawScene():
     QGraphicsScene(0, 0, 250, 250),
     m_enableMousePositionLabel(false),
     m_enableSwitchAddition(false),
-    m_enableHostAddition(false)
+    m_enableHostAddition(false),
+    m_numHosts(0),
+    m_numSwitches(0),
+    m_numNodes(0)
 {
     m_mousePositionLabel = new QLabel("");
     m_mousePositionLabel->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -112,11 +115,27 @@ DrawScene::enableLinkAddition(bool enable)
     m_enableLinkAddition = enable;
 }
 
+int
+DrawScene::getNumHosts()
+{
+    return m_numHosts;
+}
+
+int
+DrawScene::getNumSwitches()
+{
+    return m_numSwitches;
+}
+
+int
+DrawScene::getNumNodes()
+{
+    return m_numNodes;
+}
+
 void
 DrawScene::setMousePositionLabel (QPointF pos)
 {
-
-  //QString string = "    (" + QString::number (qRound (pos.x ())) + "," + QString::number (qRound (pos.y ())) + ")";
   QString string = "    (" + QString::number ( (pos.x ())) + "," + QString::number ( (pos.y ())) + ")";
 
   m_mousePositionLabel->setText (string);
@@ -128,17 +147,21 @@ DrawScene::setMousePositionLabel (QPointF pos)
 void
 DrawScene::addHost(QPointF pos)
 {
+    int hostNumber = getNumHosts();
+    int nodeNumber = getNumNodes();
     QString description = "Host";
     dNode * drawnode = 0;
-    drawnode = dNodeMgr::getInstance()->add(0, 0, pos.x(), pos.y(), description);
+    drawnode = dNodeMgr::getInstance()->add(hostNumber, nodeNumber, pos.x(), pos.y(), description);
     drawnode->setSize(50, 50);
 
-    QString hostInfo = "h." + QString::number(drawnode->getNodeId());
+    QString hostInfo = "h." + QString::number(hostNumber);
 
     QGraphicsTextItem * hostLabel = new QGraphicsTextItem;
     hostLabel->setPos(pos);
     hostLabel->setPlainText(hostInfo);
 
+    m_numNodes += 1;
+    m_numHosts += 1;
     DrawScene::getInstance()->addItem(drawnode);
     DrawScene::getInstance()->addItem(hostLabel);
 }
@@ -146,12 +169,24 @@ DrawScene::addHost(QPointF pos)
 void
 DrawScene::addSwitch(QPointF pos)
 {
+    int switchNumber = getNumSwitches();
+    int nodeNumber = getNumNodes();
     QString string = "Switch";
     dNode * drawnode = 0;
-    drawnode = dNodeMgr::getInstance()->add(0, 0, pos.x(), pos.y(), string);
+    drawnode = dNodeMgr::getInstance()->add(switchNumber, nodeNumber, pos.x(), pos.y(), string);
     drawnode->setSize(100, 100);
     drawnode->setColor(0, 255, 0);
+
+    QString switchInfo = "s." + QString::number(switchNumber);
+
+    QGraphicsTextItem * switchLabel = new QGraphicsTextItem;
+    switchLabel->setPos(pos);
+    switchLabel->setPlainText(switchInfo);
+
+    m_numNodes += 1;
+    m_numSwitches += 1;
     DrawScene::getInstance()->addItem(drawnode);
+    DrawScene::getInstance()->addItem(switchLabel);
 }
 
 void

@@ -28,6 +28,9 @@ public:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent (QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    int getNumHosts();
+    int getNumSwitches();
+    int getNumNodes();
 
 private:
     typedef QVector <QGraphicsLineItem *>          LineItemVector_t;
@@ -35,6 +38,9 @@ private:
     qreal m_gridStep;
     bool m_showGrid;
     int m_nGridLines;
+    int m_numHosts;
+    int m_numSwitches;
+    int m_numNodes;
     LineItemVector_t             m_gridLines;
     GridCoordinatesVector_t m_gridCoordinates;
     QLabel * m_mousePositionLabel;
