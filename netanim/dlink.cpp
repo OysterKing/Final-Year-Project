@@ -104,16 +104,16 @@ dLink::paint (QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget
   Q_UNUSED (option);
   Q_UNUSED (widget);
   QFont font;
-  font.setPointSize (2);
+  font.setPointSize (5);
   QPen pen;
   pen.setCosmetic (true);
-  QColor bl(0, 0, 0, 50);
+  QColor bl(255, 0, 0, 100);
   pen.setColor (bl);
   painter->setFont (font);
   painter->setPen (pen);
 
   painter->drawLine (line ());
-  bl = QColor (0, 0, 0);
+  bl = QColor (0, 0, 255);
   pen.setColor (bl);
   pen.setCosmetic (true);
   painter->setPen (pen);

@@ -7,6 +7,7 @@
 #include "dlink.h"
 #include "dnode.h"
 #include "logqt.h"
+using namespace std;
 
 namespace netanim
 {
@@ -28,6 +29,9 @@ DrawScene::DrawScene():
     m_mousePositionProxyWidget->setFlag (QGraphicsItem::ItemIgnoresTransformations);
     m_nGridLines = 50;
     m_showGrid = true;
+//    m_linkedNodesMap = new std::map<QString, QString>;
+//    m_hostVector = new std::vector<QString>;
+//    m_switchVector = new std::vector<QString>;
 
     initGridCoordinates();
 }
@@ -133,6 +137,24 @@ DrawScene::getNumNodes()
     return m_numNodes;
 }
 
+std::map<QString, QString>
+DrawScene::getLinkedNodesMap()
+{
+    return m_linkedNodesMap;
+}
+
+std::vector<QString>
+DrawScene::getHostVector()
+{
+    return m_hostVector;
+}
+
+std::vector<QString>
+DrawScene::getSwitchVector()
+{
+    return m_switchVector;
+}
+
 void
 DrawScene::setMousePositionLabel (QPointF pos)
 {
@@ -160,6 +182,9 @@ DrawScene::addHost(QPointF pos)
     hostLabel->setPos(pos);
     hostLabel->setPlainText(hostInfo);
 
+    m_hostVector.push_back(hostInfo);
+    m_hostSysIdsMap.insert(std::pair<QString, int> (hostInfo, nodeNumber));
+
     m_numNodes += 1;
     m_numHosts += 1;
     DrawScene::getInstance()->addItem(drawnode);
@@ -183,6 +208,9 @@ DrawScene::addSwitch(QPointF pos)
     switchLabel->setPos(pos);
     switchLabel->setPlainText(switchInfo);
 
+    m_switchVector.push_back(switchInfo);
+    m_switchSysIdsMap.insert(std::pair<QString, int> (switchInfo, nodeNumber));
+
     m_numNodes += 1;
     m_numSwitches += 1;
     DrawScene::getInstance()->addItem(drawnode);
@@ -190,8 +218,35 @@ DrawScene::addSwitch(QPointF pos)
 }
 
 void
-DrawScene::addLink(QPointF fromPos, QPointF toPos)
+DrawScene::addLink(QString toString, QString fromString)
 {
+    uint32_t fromNodeSysId;
+    uint32_t toNodeSysId;
+    QString to = toString;
+    QString from = fromString;
+    QString linkDescription = from + " -> " + to;
+//    map<QString, int>::iterator it;
+
+    if(from.at(0) == 'h'){
+//        it = m_hostSysIdsMap.find(from);
+        fromNodeSysId = m_hostSysIdsMap.find(from)->second;
+    }
+
+    else if(to.at(0) == 'h'){
+        toNodeSysId = m_switchSysIdsMap.find(to)->second;
+    }
+
+    if(from.at(0) == 's'){
+        fromNodeSysId = m_switchSysIdsMap.find(from)->second;
+    }
+
+    if(to.at(0) == 's'){
+        toNodeSysId = m_switchSysIdsMap.find(to)->second;
+    }
+
+    dLink * drawlink = 0;
+    drawlink = dLinkManager::getInstance()->addLink(fromNodeSysId, toNodeSysId, from, to, linkDescription, true);
+    DrawScene::getInstance()->addItem(drawlink);
 
 }
 

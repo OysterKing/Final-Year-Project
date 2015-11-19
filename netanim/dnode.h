@@ -99,7 +99,7 @@ public:
     typedef std::map <uint32_t, QString> CounterIdName_t;
 
     static dNodeMgr * getInstance ();
-    dNode * getNode (uint32_t nodeId);
+    dNode * getNode (uint32_t nodeSysId);
     dNode * add (uint32_t nodeId, uint32_t nodeSysId, qreal x, qreal y, QString nodeDescription);
     uint32_t getCount ();
     QPointF getMinPoint ();

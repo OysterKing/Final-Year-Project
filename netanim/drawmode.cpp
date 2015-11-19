@@ -194,5 +194,42 @@ DrawMode::addLinkButtonSlot()
 {
     QString to = m_linkToEdit->text();
     QString from = m_linkFromEdit->text();
+    to = to.toLower();
+    from = from.toLower();
+    std::vector<QString> hosts;
+    std::vector<QString> switches;
+    hosts = DrawScene::getInstance()->getHostVector();
+    switches = DrawScene::getInstance()->getSwitchVector();
+
+//    if(to.at(0) != 'h' || to.at(0) != 's'){
+        //error incorrect input
+//    }
+
+//    if(to.at(0) == 'h' && from.at(0) == 'h'){
+        //error can't link host to host
+//    }
+
+    std::vector<QString>::iterator foundToHost = std::find(hosts.begin(), hosts.end(), to);
+    std::vector<QString>::iterator foundFromHost = std::find(hosts.begin(), hosts.end(), from);
+    std::vector<QString>::iterator foundToSwitch = std::find(switches.begin(), switches.end(), to);
+    std::vector<QString>::iterator foundFromSwitch = std::find(switches.begin(), switches.end(), from);
+
+    //add check to see if link already exists using link map
+    if(foundToSwitch != switches.end() && foundFromSwitch != switches.end()){
+        DrawScene::getInstance()->addLink(to, from);
+    }
+
+    else if(foundToHost != hosts.end() && foundFromSwitch != switches.end()){
+        DrawScene::getInstance()->addLink(to, from);
+    }
+
+    else if(foundToSwitch != switches.end() && foundFromHost != hosts.end()){
+        DrawScene::getInstance()->addLink(to, from);
+    }
+
+    else{
+        //error
+    }
+
 }
 }

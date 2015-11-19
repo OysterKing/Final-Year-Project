@@ -387,7 +387,7 @@ dNode * dNodeMgr::add (uint32_t nodeId, uint32_t nodeSysId, qreal x, qreal y, QS
   dNode * node = new dNode (nodeId, nodeSysId, x, y, nodeDescription);
   node->setPos (x, y);
   //node->setPixmap (pix);
-  m_nodes[nodeId] = node;
+  m_nodes[nodeSysId] = node;
   m_minX = qMin (m_minX, x);
   m_minY = qMin (m_minY, y);
   m_maxX = qMax (m_maxX, x);
@@ -408,9 +408,9 @@ dNodeMgr::setSize (qreal width, qreal height)
     }
 }
 
-dNode * dNodeMgr::getNode (uint32_t nodeId)
+dNode * dNodeMgr::getNode (uint32_t nodeSysId)
 {
-  return m_nodes[nodeId];
+  return m_nodes[nodeSysId];
 }
 
 uint32_t

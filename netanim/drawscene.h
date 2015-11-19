@@ -25,12 +25,16 @@ public:
     void enableHostAddition(bool enable);
     void enableSwitchAddition(bool enable);
     void enableLinkAddition(bool enable);
+    void addLink(QString from, QString to);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent (QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
     int getNumHosts();
     int getNumSwitches();
     int getNumNodes();
+    std::map<QString, QString> getLinkedNodesMap();
+    std::vector<QString> getHostVector();
+    std::vector<QString> getSwitchVector();
 
 private:
     typedef QVector <QGraphicsLineItem *>          LineItemVector_t;
@@ -54,6 +58,11 @@ private:
     QPointF m_maxPoint;
     QPointF m_sceneMinPoint;
     QPointF m_sceneMaxPoint;
+    std::map<QString, QString> m_linkedNodesMap;
+    std::map<QString, int> m_hostSysIdsMap;
+    std::map<QString, int> m_switchSysIdsMap;
+    std::vector<QString> m_hostVector;
+    std::vector<QString> m_switchVector;
 
     void markGridCoordinates();
     void initGridCoordinates();
@@ -62,7 +71,6 @@ private:
     void showMousePositionLabel(bool show);
     void addHost(QPointF pos);
     void addSwitch(QPointF pos);
-    void addLink(QPointF fromPos, QPointF toPos);
 };
 
 } // namespace netanim
