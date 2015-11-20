@@ -11,7 +11,8 @@ dLinkManager * pdLinkManager = 0;
 
 dLink::dLink(uint32_t fromId, uint32_t toId,
              QString pointADescription,
-             QString pointBDescription, QString linkDescription, bool p2p):
+             QString pointBDescription, QString linkDescription, QString bandwidth, QString loss,
+             QString delay, QString maxQueueSize, bool p2p):
     m_fromId (fromId),
     m_toId (toId),
     m_p2p (p2p)
@@ -19,6 +20,10 @@ dLink::dLink(uint32_t fromId, uint32_t toId,
     m_pointADescription = 0;
     m_pointBDescription = 0;
     m_currentLinkDescription = 0;
+    m_loss = loss;
+    m_delay = delay;
+    m_maxQueueSize = maxQueueSize;
+    m_bandwidth = bandwidth;
 
     if (!m_p2p)
       {
@@ -247,6 +252,29 @@ dLink::getInterfaceBDescription ()
     }
 }
 
+QString
+dLink::getBandwidth()
+{
+    return m_bandwidth;
+}
+
+QString
+dLink::getDelay()
+{
+    return m_delay;
+}
+
+QString
+dLink::getLoss()
+{
+    return m_loss;
+}
+
+QString
+dLink::getMaxQueueSize()
+{
+    return m_maxQueueSize;
+}
 
 dLinkManager::dLinkManager ()
 {
@@ -264,9 +292,14 @@ dLinkManager::getInstance ()
 }
 
 dLink *
-dLinkManager::addLink (uint32_t fromId, uint32_t toId, QString pointADescription, QString pointBDescription, QString linkDescription, bool p2p)
+dLinkManager::addLink (uint32_t fromId, uint32_t toId, QString pointADescription, QString pointBDescription, QString linkDescription,
+                       QString bandwidth,
+                       QString loss,
+                       QString delay,
+                       QString maxQueueSize,
+                       bool p2p)
 {
-  dLink * item = new dLink (fromId, toId, pointADescription, pointBDescription, linkDescription, p2p);
+  dLink * item = new dLink (fromId, toId, pointADescription, pointBDescription, linkDescription, bandwidth, loss, delay, maxQueueSize, p2p);
   if (m_pointToPointLinks.find (fromId) == m_pointToPointLinks.end ())
     {
       dLinkManager::dLinkVector_t v;

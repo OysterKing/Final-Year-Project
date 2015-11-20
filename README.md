@@ -78,3 +78,6 @@ Added a text item in drawscene that displays the host id when a host is added in
 Added some private integer variables to drawscene to keep track of the number of nodes, hosts and switches that have been added. Now, when a user adds a host or switch, the host's or switch's id is displayed correctly. I can use this when adding links.
 Added functionality to the add link button in drawmode and the addlink method in drawscene. Now the user can make host to switch and switch to switch connections by typing the names of the hosts and switches into the TO and FROM box then hitting the link button.
 I introduced the idea that a host and a switch has a system id and a normal id. The normal id is its host or switch id and is not unique whereas its system id is.
+
+20/11/15:
+Added some code to the add switch and add node methods in drawscene so that they now automatically assign the hosts ip addresses and mac addresses and the switches mac addresses. Extended dlink class to have strings representing bandwidth, loss, delay and max queue size. Also defined appropriate getters for these. They are instantiated by the dlink constructor.

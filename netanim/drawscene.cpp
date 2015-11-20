@@ -172,9 +172,15 @@ DrawScene::addHost(QPointF pos)
     int hostNumber = getNumHosts();
     int nodeNumber = getNumNodes();
     QString description = "Host";
+    QString ip = "10.0.0.";
+    QString mac = "00:00:00:00:00:";
     dNode * drawnode = 0;
     drawnode = dNodeMgr::getInstance()->add(hostNumber, nodeNumber, pos.x(), pos.y(), description);
     drawnode->setSize(50, 50);
+    ip = ip + QString::number(hostNumber);
+    mac = mac + QString::number(nodeNumber);
+    drawnode->addIpv4Address(ip);
+    drawnode->addMacAddress(mac);
 
     QString hostInfo = "h." + QString::number(hostNumber);
 
@@ -197,10 +203,13 @@ DrawScene::addSwitch(QPointF pos)
     int switchNumber = getNumSwitches();
     int nodeNumber = getNumNodes();
     QString string = "Switch";
+    QString mac = "00:00:00:00:00:";
     dNode * drawnode = 0;
     drawnode = dNodeMgr::getInstance()->add(switchNumber, nodeNumber, pos.x(), pos.y(), string);
     drawnode->setSize(100, 100);
     drawnode->setColor(0, 255, 0);
+    mac = mac + QString::number(nodeNumber);
+    drawnode->addMacAddress(mac);
 
     QString switchInfo = "s." + QString::number(switchNumber);
 
@@ -225,6 +234,10 @@ DrawScene::addLink(QString toString, QString fromString)
     QString to = toString;
     QString from = fromString;
     QString linkDescription = from + " -> " + to;
+    QString bandwidth = "100";
+    QString loss = "0";
+    QString delay = "0";
+    QString maxQueueSize = "1000";
 //    map<QString, int>::iterator it;
 
     if(from.at(0) == 'h'){
@@ -245,7 +258,8 @@ DrawScene::addLink(QString toString, QString fromString)
     }
 
     dLink * drawlink = 0;
-    drawlink = dLinkManager::getInstance()->addLink(fromNodeSysId, toNodeSysId, from, to, linkDescription, true);
+    drawlink = dLinkManager::getInstance()->addLink(fromNodeSysId, toNodeSysId, from, to, linkDescription, bandwidth,
+                                                    loss, delay, maxQueueSize, true);
     DrawScene::getInstance()->addItem(drawlink);
 
 }

@@ -13,7 +13,8 @@ class dLink: public QGraphicsLineItem
 public:
     dLink(uint32_t fromId, uint32_t toId,
           QString pointADescription = "", QString pointBDescription = "",
-          QString linkDescription = "", bool p2p = true);
+          QString linkDescription = "", QString bandwidth = "", QString loss = "", QString delay = "",
+          QString maxQueueSize = "", bool p2p = true);
 
     ~dLink();
     uint32_t m_fromId;
@@ -21,6 +22,10 @@ public:
     QString * m_pointADescription;
     QString * m_pointBDescription;
     QString * m_currentLinkDescription;
+    QString  m_bandwidth;
+    QString  m_delay;
+    QString  m_loss;
+    QString  m_maxQueueSize;
     bool    m_p2p;
     void updateCurrentLinkDescription (QString linkDescription);
     void resetCurrentLinkDescription ();
@@ -29,6 +34,10 @@ public:
     QPointF getInterfacePosB ();
     QString getInterfaceADescription ();
     QString getInterfaceBDescription ();
+    QString getBandwidth();
+    QString getDelay();
+    QString getLoss();
+    QString getMaxQueueSize();
     void repairLink ();
     bool isP2p ();
 
@@ -52,7 +61,12 @@ public:
   static dLinkManager * getInstance ();
   dLink * addLink (uint32_t fromId, uint32_t toId,
                      QString pointADescription,
-                     QString pointBDescription, QString linkDescription, bool p2p = true);
+                     QString pointBDescription, QString linkDescription,
+                     QString bandwidth,
+                     QString loss,
+                     QString delay,
+                     QString maxQueueSize,
+                     bool p2p = true);
 
 
   NodeIddLinkVectorMap_t * getLinks ();
