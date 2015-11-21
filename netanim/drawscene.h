@@ -35,6 +35,14 @@ public:
     std::map<QString, QString> getLinkedNodesMap();
     std::vector<QString> getHostVector();
     std::vector<QString> getSwitchVector();
+    std::map<QString, QString> getHostIpMap();
+    std::map<QString, QString> getHostMacMap();
+    std::map<QString, int> getHostSysIdMap();
+    std::map<QString, QPointF> getHostLocMap();
+    std::map<QString, QString> getSwitchMacMap();
+    std::map<QString, int> getSwitchSysIdMap();
+    std::map<QString, QPointF> getSwitchLocMap();
+    std::vector<QString> getLinksVector();
 
 private:
     typedef QVector <QGraphicsLineItem *>          LineItemVector_t;
@@ -61,6 +69,12 @@ private:
     std::map<QString, QString> m_linkedNodesMap;
     std::map<QString, int> m_hostSysIdsMap;
     std::map<QString, int> m_switchSysIdsMap;
+    std::map<QString, QString> m_hostIpMap;
+    std::map<QString, QString> m_hostMacMap;
+    std::map<QString, QString> m_switchMacMap;
+    std::map<QString, QPointF> m_hostLocMap;
+    std::map<QString, QPointF> m_switchLocMap;
+    std::vector<QString> m_linksVector;
     std::vector<QString> m_hostVector;
     std::vector<QString> m_switchVector;
 

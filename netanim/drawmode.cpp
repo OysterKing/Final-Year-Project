@@ -6,8 +6,16 @@
 #include "drawmode.h"
 #include "drawview.h"
 #include "drawscene.h"
+#include "iostream"
+#include "fstream"
+#include "QTextStream"
+#include "QFile"
 //#include "drawingconstants.h"
 
+#define SSTR( x ) dynamic_cast< std::ostringstream & >( \
+        ( std::ostringstream() << std::dec << x ) ).str()
+
+using namespace std;
 namespace netanim
 {
 
@@ -186,7 +194,90 @@ DrawMode::addSwitchButtonSlot()
 void
 DrawMode::runButtonSlot()
 {
+    std::vector<QString> hosts;
+    std::vector<QString> switches;
+    std::vector<QString> links;
+    std::map<QString, int> hostSysIdMap;
+    std::map<QString, int> switchSysIdMap;
+    std::map<QString, QString> hostIpMap;
+    std::map<QString, QString> hostMacMap;
+    std::map<QString, QString> switchMacMap;
+    std::map<QString, QPointF> hostLocMap;
+    std::map<QString, QPointF> switchLocMap;
 
+    hosts = DrawScene::getInstance()->getHostVector();
+    switches = DrawScene::getInstance()->getSwitchVector();
+    links = DrawScene::getInstance()->getLinksVector();
+    hostIpMap = DrawScene::getInstance()->getHostIpMap();
+    hostMacMap = DrawScene::getInstance()->getHostMacMap();
+    hostLocMap = DrawScene::getInstance()->getHostLocMap();
+    hostSysIdMap = DrawScene::getInstance()->getHostSysIdMap();
+    switchMacMap = DrawScene::getInstance()->getSwitchMacMap();
+    switchLocMap = DrawScene::getInstance()->getSwitchLocMap();
+    switchSysIdMap = DrawScene::getInstance()->getSwitchSysIdMap();
+
+    QString id, x, y, name, fromName, toName, fromIp, fromMac, toIp, toMac, fromId, toId;
+    QPointF position;
+
+    QFile xmlFile("netanim_topo.xml");
+    xmlFile.open(QIODevice::WriteOnly);
+    QTextStream outStream(&xmlFile);
+    outStream << "<anim ver=\"netanim-3.106\" filetype=\"animation\" >\n";
+
+    for(int i = 0; i < hosts.size(); i++){
+        name = hosts.at(i);
+        id = QString::number(hostSysIdMap.find(name)->second);
+        position = hostLocMap.find(name)->second;
+        x = QString::number(position.x());
+        y = QString::number(position.y());
+
+        outStream << "<node id=\"" + id + "\" sysId=\"0\" locX=\"" + x + "\" locY=\"" + y + "\" />\n";
+        outStream << "<nu p=\"c\" t=\"0\" id=\"" + id + "\" r=\"255\" g=\"0\" b=\"0\" />\n";
+    }
+
+    for(int i = 0; i < switches.size(); i++){
+        name = switches.at(i);
+        id = QString::number(switchSysIdMap.find(name)->second);
+        position = switchLocMap.find(name)->second;
+        x = QString::number(position.x());
+        y = QString::number(position.y());
+
+        outStream << "<node id=\"" + id + "\" sysId=\"0\" locX=\"" + x + "\" locY=\"" + y + "\" />\n";
+        outStream << "<nu p=\"c\" t=\"0\" id=\"" + id + "\" r=\"0\" g=\"255\" b=\"0\" />\n";
+    }
+
+    for(int i = 0; i < links.size(); i++){
+        name = links.at(i);
+        toName = name.left(3);
+        fromName = name.right(3);
+
+        if(toName.at(0) == 'h'){
+            toId = QString::number(hostSysIdMap.find(toName)->second);
+            toIp = hostIpMap.find(toName)->second;
+            toMac = hostMacMap.find(toName)->second;
+        }
+
+        else if(toName.at(0) == 's'){
+            toId = QString::number(switchSysIdMap.find(toName)->second);
+            toIp = "--.--.--";
+            toMac = switchMacMap.find(toName)->second;
+        }
+
+        if(fromName.at(0) == 'h'){
+            fromId = QString::number(hostSysIdMap.find(fromName)->second);
+            fromIp = hostIpMap.find(fromName)->second;
+            fromMac = hostMacMap.find(fromName)->second;
+        }
+
+        else if(fromName.at(0) == 's'){
+            fromId = QString::number(switchSysIdMap.find(fromName)->second);
+            fromIp = "--.--.--";
+            fromMac = switchMacMap.find(fromName)->second;
+        }
+        outStream << "<link fromId=\"" + fromId + "\" toId=\"" + toId + "\" fd=\"" + fromIp + "~" + fromMac + "\" td=\"" + toIp + "~" + toMac + "\" ld=\"\" />\n";
+    }
+
+    xmlFile.close();
 }
 
 void

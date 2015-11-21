@@ -155,6 +155,54 @@ DrawScene::getSwitchVector()
     return m_switchVector;
 }
 
+std::map<QString, QString>
+DrawScene::getHostIpMap()
+{
+    return m_hostIpMap;
+}
+
+std::map<QString, QString>
+DrawScene::getHostMacMap()
+{
+    return m_hostMacMap;
+}
+
+std::map<QString, QPointF>
+DrawScene::getHostLocMap()
+{
+    return m_hostLocMap;
+}
+
+std::map<QString, QString>
+DrawScene::getSwitchMacMap()
+{
+    return m_switchMacMap;
+}
+
+std::map<QString, QPointF>
+DrawScene::getSwitchLocMap()
+{
+    return m_switchLocMap;
+}
+
+std::map<QString, int>
+DrawScene::getSwitchSysIdMap()
+{
+    return m_switchSysIdsMap;
+}
+
+std::map<QString, int>
+DrawScene::getHostSysIdMap()
+{
+    return m_hostSysIdsMap;
+}
+
+std::vector<QString>
+DrawScene::getLinksVector()
+{
+    return m_linksVector;
+}
+
 void
 DrawScene::setMousePositionLabel (QPointF pos)
 {
@@ -190,6 +238,9 @@ DrawScene::addHost(QPointF pos)
 
     m_hostVector.push_back(hostInfo);
     m_hostSysIdsMap.insert(std::pair<QString, int> (hostInfo, nodeNumber));
+    m_hostIpMap.insert(std::pair<QString, QString> (hostInfo, ip));
+    m_hostMacMap.insert(std::pair<QString, QString> (hostInfo, mac));
+    m_hostLocMap.insert(std::pair<QString, QPointF> (hostInfo, pos));
 
     m_numNodes += 1;
     m_numHosts += 1;
@@ -219,6 +270,8 @@ DrawScene::addSwitch(QPointF pos)
 
     m_switchVector.push_back(switchInfo);
     m_switchSysIdsMap.insert(std::pair<QString, int> (switchInfo, nodeNumber));
+    m_switchMacMap.insert(std::pair<QString, QString> (switchInfo, mac));
+    m_switchLocMap.insert(std::pair<QString, QPointF> (switchInfo, pos));
 
     m_numNodes += 1;
     m_numSwitches += 1;
@@ -238,10 +291,10 @@ DrawScene::addLink(QString toString, QString fromString)
     QString loss = "0";
     QString delay = "0";
     QString maxQueueSize = "1000";
-//    map<QString, int>::iterator it;
+
+    m_linksVector.push_back(to + " " + from);
 
     if(from.at(0) == 'h'){
-//        it = m_hostSysIdsMap.find(from);
         fromNodeSysId = m_hostSysIdsMap.find(from)->second;
     }
 

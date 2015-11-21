@@ -81,3 +81,6 @@ I introduced the idea that a host and a switch has a system id and a normal id. 
 
 20/11/15:
 Added some code to the add switch and add node methods in drawscene so that they now automatically assign the hosts ip addresses and mac addresses and the switches mac addresses. Extended dlink class to have strings representing bandwidth, loss, delay and max queue size. Also defined appropriate getters for these. They are instantiated by the dlink constructor.
+
+21/11/15:
+Added functionality to the run button so that it saves the topology created in draw to an xml file in a format that netanim can read. The pcap translator will add the missing lines. I added various data maps to drawscene to allow me to access the required data in drawmode.
