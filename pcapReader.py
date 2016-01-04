@@ -32,6 +32,15 @@ class PacketReader:
 			eth = dpkt.ethernet.Ethernet(buf)
 			pktData = eth.data
 			tcp = pktData.data
+
+			ethSrc = binascii.hexlify(eth.src)
+			ethDst = binascii.hexlify(eth.dst)
+	
+			macSrc = self.decodeMacAddr(ethSrc)
+			macDst = self.decodeMacAddr(ethDst)
+
+			print "MAC PATH: ", macSrc, " -> ", macDst
+
 			
 			if type(tcp) is dpkt.tcp.TCP:
 #				tcpDPorts.append(tcp.dport)
@@ -57,7 +66,7 @@ class PacketReader:
 					if PacketReader.pktCounter == 0 or PacketReader.pktCounter%2 == 0:
 						dst_ip_addr_str = socket.inet_ntoa(ip.dst)
 						src_ip_addr_str = socket.inet_ntoa(ip.src)
-						print src_ip_addr_str + " " + dst_ip_addr_str
+#						print src_ip_addr_str + " " + dst_ip_addr_str
 						PacketReader.srcIP_list.append(src_ip_addr_str)
 						PacketReader.dstIP_list.append(dst_ip_addr_str)
 
@@ -92,6 +101,15 @@ class PacketReader:
 	def printTimes(self):
 		print PacketReader.pktTimes
 		return
+
+#This function accepts a 12 hex digit string and converts it to colon separated string.
+	def decodeMacAddr(self, mac_addr):
+		s = list()
+		for i in range(12/2):
+			s.append(str(int(mac_addr[i*2:i*2+2], 16)))
+		r = ":".join(s)
+		return r
+
 
 #	def printNumPkts(self):
 #		print "Number of packets = ", PacketReader.pktCounter/2
