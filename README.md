@@ -85,5 +85,8 @@ Added some code to the add switch and add node methods in drawscene so that they
 21/11/15:
 Added functionality to the run button so that it saves the topology created in draw to an xml file in a format that netanim can read. The pcap translator will add the missing lines. I added various data maps to drawscene to allow me to access the required data in drawmode.
 
-04/01/16:
+05/01/16:
 Added checks to the pcap reader to decode the mac addresses of the ethernet source and destinations in an effort to track packets accross the network.
+
+08/01/16:
+Added a line to convert the timestamps to a more legible datetime format.
