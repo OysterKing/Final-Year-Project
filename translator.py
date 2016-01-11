@@ -6,10 +6,21 @@ from pcapReader import PacketReader
 
 class Translator:
 	'Translates packets into xml lines.'
+	hostCount = 0
+
 	def __init__(self, srcIP_Addrs, dstIP_Addrs, pktTimes):
 		self.srcIP_Addrs = srcIP_Addrs
 		self.dstIP_Addrs = dstIP_Addrs
 		self.pktTimes = pktTimes
+
+	def countNumberHosts(self, filename):
+		with open(filename, 'r') as file:
+			data = file.readlines()
+
+		for i in range (len(data)):
+			print "HEY"
+			if data[i].startswith("<nu") and data[i].count('r="255"'):
+				Translator.hostCount += 1
 
 	def convertIP(self, ip): 
 		dotCount = 0		
@@ -21,13 +32,19 @@ class Translator:
 			elif ip[index] == '.':
 				dotCount+=1
 		
-		nodeID = int(addr) - 1
+		if ip.startswith("-"):
+			print Translator.hostCount
+			nodeID = int(addr) + Translator.hostCount
+
+		else:
+			nodeID = int(addr) - 1
+
 		nodeIDstring = str(nodeID)
 		return nodeIDstring
 
-	def writeToXML(self): #lets assume that information regarding topology and packet travel time is already in XML file.
+	def writeToXML(self, filename): #lets assume that information regarding topology and packet travel time is already in XML file.
 		j = 0
-		with open('test.xml', 'r') as file:
+		with open(filename, 'r') as file:
 			data = file.readlines()
 
 		entryIndex = len(data)-2
@@ -53,9 +70,11 @@ class Translator:
 
 #list1 = ["10.0.0.1", "10.0.0.2", "10.0.0.1"]
 #list2 = ["10.0.0.2", "10.0.0.1", "10.0.0.2"]
-packetReader = PacketReader("iperf.pcap")
-packetReader.openFile()
+packetReader = PacketReader(["h1.pcap", "h2.pcap", "s1-eth1.pcap"])
+packetReader.openFiles()
 packetReader.calculateTimes()
-translator = Translator(packetReader.srcIP_list, packetReader.dstIP_list, packetReader.pktTimes)
+packetReader.calculateFullSrcDst()
+translator = Translator(packetReader.fullSrcIP_list, packetReader.fullDstIP_list, packetReader.pktTimes)
+translator.countNumberHosts("netanim_topo.xml")
 #print translator.convertIp("10.0.0.1")
-translator.writeToXML()
+translator.writeToXML("netanim_topo.xml")

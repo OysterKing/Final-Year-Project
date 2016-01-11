@@ -93,3 +93,6 @@ Added a line to convert the timestamps to a more legible datetime format.
 
 11/01/16:
 Had a corrupt tree in my github repository so committing two days work now. Changed the calculate times function to work with the timestamps saved from each pcap file as opposed to a merged pcap file. Each packet now has a travel time between switches and hosts.
+
+11/01/16:
+Edited the translator file so that it adds correct animations. Unfortunately I have an issue with sorting out the ids in the animations."
