@@ -6,21 +6,29 @@ from pcapReader import PacketReader
 
 class Translator:
 	'Translates packets into xml lines.'
-	hostCount = 0
+	hostIDs = []
+	switchIDs = []
 
 	def __init__(self, srcIP_Addrs, dstIP_Addrs, pktTimes):
 		self.srcIP_Addrs = srcIP_Addrs
 		self.dstIP_Addrs = dstIP_Addrs
 		self.pktTimes = pktTimes
 
-	def countNumberHosts(self, filename):
+	def getHostSwitchIDs(self, filename):
 		with open(filename, 'r') as file:
 			data = file.readlines()
 
 		for i in range (len(data)):
 			print "HEY"
 			if data[i].startswith("<nu") and data[i].count('r="255"'):
-				Translator.hostCount += 1
+				print "h.", data[i - 1][10]
+				nodeID = int(data[i - 1][10])
+				Translator.hostIDs.append(nodeID)
+
+			elif data[i].startswith("<nu") and data[i].count('g="255"'):
+				print "s.", data[i -1][10]
+				nodeID = int(data[i - 1][10])
+				Translator.switchIDs.append(nodeID)
 
 	def convertIP(self, ip): 
 		dotCount = 0		
@@ -33,13 +41,14 @@ class Translator:
 				dotCount+=1
 		
 		if ip.startswith("-"):
-			print Translator.hostCount
-			nodeID = int(addr) + Translator.hostCount
+			nodeID = int(addr)
+			nodeIDstring = str(Translator.switchIDs[nodeID])
 
+		#Host ips always are of the form x.x.x.1 to x.x.x.n so we subtract one to get the correct index in the hostIDs list.
 		else:
 			nodeID = int(addr) - 1
+			nodeIDstring = str(Translator.hostIDs[nodeID])
 
-		nodeIDstring = str(nodeID)
 		return nodeIDstring
 
 	def writeToXML(self, filename): #lets assume that information regarding topology and packet travel time is already in XML file.
@@ -75,6 +84,6 @@ packetReader.openFiles()
 packetReader.calculateTimes()
 packetReader.calculateFullSrcDst()
 translator = Translator(packetReader.fullSrcIP_list, packetReader.fullDstIP_list, packetReader.pktTimes)
-translator.countNumberHosts("netanim_topo.xml")
+translator.getHostSwitchIDs("netanim_topo.xml")
 #print translator.convertIp("10.0.0.1")
 translator.writeToXML("netanim_topo.xml")

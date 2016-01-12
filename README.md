@@ -96,3 +96,6 @@ Had a corrupt tree in my github repository so committing two days work now. Chan
 
 11/01/16:
 Edited the translator file so that it adds correct animations. Unfortunately I have an issue with sorting out the ids in the animations."
+
+12/01/16:
+Edited the translator file so that is now reads the correct host and switch ids that the user has added to their custom topology. The function getHostSwitchIDs iterated through the xml file and extracts the host and switch IDs and saves them to separate lists. The convertIP function now uses the last number in the ip address to correctly access these lists and return the node id.
