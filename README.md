@@ -99,3 +99,6 @@ Edited the translator file so that it adds correct animations. Unfortunately I h
 
 12/01/16:
 Edited the translator file so that is now reads the correct host and switch ids that the user has added to their custom topology. The function getHostSwitchIDs iterated through the xml file and extracts the host and switch IDs and saves them to separate lists. The convertIP function now uses the last number in the ip address to correctly access these lists and return the node id.
+
+13/01/16:
+Created a new class called NetworkReader that will read the xml file containing the custom topology and create a corresponding mininet topology. Need to add another class that initialises and launches mininet.
