@@ -19,6 +19,8 @@ def customNet():
 
 	net = Mininet(topo, switch = BridgeSwitch, controller = OVSController, link = TCLink)
 	net.start()
+	CLI(net)
+	net.stop()
 
 def main():
 	customNet()

@@ -103,3 +103,6 @@ Edited the translator file so that is now reads the correct host and switch ids 
 13/01/16:
 Created a new class called NetReader that will read the xml file containing the custom topology and create a corresponding mininet topology. Need to add another class that initialises and launches mininet.
 Created a new class called NetInitialiser that starts up the custom topology on mininet read by the NetReader.
+
+14/01/16:
+Had to clone the project again do to a corrupt file, some changes to files may be undocumented. Added a small change to the NetReader class to correctly create the links between the hosts and switches.

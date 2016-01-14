@@ -45,21 +45,21 @@ try:
 					toID = int(data[i][23])
 					for j in range(len(hostIDs)):
 						if hostIDs[j] == fromID:
-							hostCount += 1
-							fromNode = str("h" + str(hostCount))
+							#hostCount += 1
+							fromNode = str("h" + str(j + 1))
 
 						elif hostIDs[j] == toID:
-							hostCount += 1
-							toNode = str("h" + str(hostCount))
+							#hostCount += 1
+							toNode = str("h" + str(j + 1))
 
 					for k in range(len(switchIDs)):
 						if switchIDs[k] == fromID:
 							#switchCount += 1
-							fromNode = str("s" + str(switchCount))
+							fromNode = str("s" + str(k + 1))
 
 						elif switchIDs[k] == toID:
 							#switchCount += 1
-							toNode = str("s" + str(switchCount))
+							toNode = str("s" + str(k + 1))
 
 					print fromNode
 					print toNode
