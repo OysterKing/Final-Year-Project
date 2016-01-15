@@ -29,9 +29,9 @@ def main():
 	arguments = sys.argv[1:]
 	pcapFiles = []
 
-	#sudo python NetInitialiser.py bw delay loss file.xml h1.pcap h2.pcap s1.pcap
+	#sudo python NetInitialiser.py bw delay loss file.xml h1.pcap h2.pcap s1-eth1.pcap
 	for i in range(5, len(sys.argv)):
-		pcapFiles.append(sys.argv[i])
+		pcapFiles = sys.argv[i].split()
 
 	print pcapFiles
 	packetReader = PacketReader(pcapFiles)

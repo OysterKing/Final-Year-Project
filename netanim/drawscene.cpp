@@ -225,7 +225,7 @@ DrawScene::addHost(QPointF pos)
     dNode * drawnode = 0;
     drawnode = dNodeMgr::getInstance()->add(hostNumber, nodeNumber, pos.x(), pos.y(), description);
     drawnode->setSize(50, 50);
-    ip = ip + QString::number(hostNumber);
+    ip = ip + QString::number(hostNumber + 1);
     mac = mac + QString::number(nodeNumber);
     drawnode->addIpv4Address(ip);
     drawnode->addMacAddress(mac);

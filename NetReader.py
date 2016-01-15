@@ -7,7 +7,7 @@ try:
 
 	class customTopo(Topo):
 
-		def __init__(self, blocking = False, link_opts = {}, xmlFilename = "netanim_topo.xml", **opts):
+		def __init__(self, blocking = False, link_opts = {}, xmlFilename = "/home/comhghall/netanim_topo.xml", **opts):
 
 			Topo.__init__(self, **opts)
 			hostIDs = []

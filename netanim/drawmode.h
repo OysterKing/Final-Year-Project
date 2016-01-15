@@ -44,8 +44,9 @@ private:
     QToolBar * m_sideToolBar;
     QToolButton * m_addHostButton;
     QToolButton * m_addSwitchButton;
-    QToolButton * m_runButton;
+    QToolButton * m_saveButton;
     QToolButton * m_addLinkButton;
+    QToolButton * m_runButton;
     QLabel * m_linkFromLabel;
     QLabel * m_linkToLabel;
     QLineEdit * m_linkFromEdit;
@@ -66,8 +67,9 @@ private:
 private slots:
     void addHostButtonSlot();
     void addSwitchButtonSlot();
-    void runButtonSlot();
+    void saveButtonSlot();
     void addLinkButtonSlot();
+    void runButtonSlot();
 };
 } //namespace netanim
 

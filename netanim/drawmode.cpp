@@ -10,6 +10,11 @@
 #include "fstream"
 #include "QTextStream"
 #include "QFile"
+#include <cstdlib>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
 //#include "drawingconstants.h"
 
 #define SSTR( x ) dynamic_cast< std::ostringstream & >( \
@@ -108,9 +113,15 @@ DrawMode::initTopToolbar()
     connect (m_addSwitchButton, SIGNAL(clicked()), this, SLOT (addSwitchButtonSlot()));
     m_topToolBar->addWidget(m_addSwitchButton);
 
+    m_saveButton = new QToolButton;
+    m_saveButton->setToolTip("Save");
+    m_saveButton->setText("A");
+    connect (m_saveButton, SIGNAL(clicked()), this, SLOT (saveButtonSlot()));
+    m_topToolBar->addWidget(m_saveButton);
+
     m_runButton = new QToolButton;
     m_runButton->setToolTip("Run");
-    m_runButton->setText("A");
+    m_runButton->setText("R");
     connect (m_runButton, SIGNAL(clicked()), this, SLOT (runButtonSlot()));
     m_topToolBar->addWidget(m_runButton);
 }
@@ -164,12 +175,12 @@ DrawMode::addHostButtonSlot()
 {
     if(m_addHostButton->isChecked()){
         m_addSwitchButton->setDisabled(true);
-        m_runButton->setDisabled(true);
+        m_saveButton->setDisabled(true);
     }
 
     else{
         m_addSwitchButton->setEnabled(true);
-        m_runButton->setEnabled(true);
+        m_saveButton->setEnabled(true);
     }
     DrawScene::getInstance()->enableMousePositionLabel(m_addHostButton->isChecked());
     DrawScene::getInstance()->enableHostAddition(m_addHostButton->isChecked());
@@ -180,19 +191,19 @@ DrawMode::addSwitchButtonSlot()
 {
     if(m_addSwitchButton->isChecked()){
         m_addHostButton->setDisabled(true);
-        m_runButton->setDisabled(true);
+        m_saveButton->setDisabled(true);
     }
 
     else{
         m_addHostButton->setEnabled(true);
-        m_runButton->setEnabled(true);
+        m_saveButton->setEnabled(true);
     }
     DrawScene::getInstance()->enableMousePositionLabel(m_addSwitchButton->isChecked());
     DrawScene::getInstance()->enableSwitchAddition(m_addSwitchButton->isChecked());
 }
 
 void
-DrawMode::runButtonSlot()
+DrawMode::saveButtonSlot()
 {
     std::vector<QString> hosts;
     std::vector<QString> switches;
@@ -219,7 +230,9 @@ DrawMode::runButtonSlot()
     QString id, x, y, name, fromName, toName, fromIp, fromMac, toIp, toMac, fromId, toId;
     QPointF position;
 
-    QFile xmlFile("netanim_topo.xml");
+    //ask the user to enter the name of his topology.
+
+    QFile xmlFile("/home/comhghall/netanim_topo.xml");
     xmlFile.open(QIODevice::WriteOnly);
     QTextStream outStream(&xmlFile);
     outStream << "<anim ver=\"netanim-3.106\" filetype=\"animation\" >\n";
@@ -277,6 +290,7 @@ DrawMode::runButtonSlot()
         outStream << "<link fromId=\"" + fromId + "\" toId=\"" + toId + "\" fd=\"" + fromIp + "~" + fromMac + "\" td=\"" + toIp + "~" + toMac + "\" ld=\"\" />\n";
     }
 
+    outStream << "</anim>";
     xmlFile.close();
 }
 
@@ -322,5 +336,68 @@ DrawMode::addLinkButtonSlot()
         //error
     }
 
+}
+
+void
+DrawMode::runButtonSlot()
+{
+    std::vector<QString> hosts;
+    std::vector<QString> switches;
+
+    hosts = DrawScene::getInstance()->getHostVector();
+    switches = DrawScene::getInstance()->getSwitchVector();
+    QString pcapFiles = "";
+
+    for(int i = 0; i < hosts.size(); i++){
+        pcapFiles += "/home/comhghall/h" + QString::number(i + 1) + ".pcap ";
+    }
+
+    for(int i = 0; i < switches.size(); i++){
+        pcapFiles += "/home/comhghall/s" + QString::number(i + 1) + "-eth1.pcap ";
+    }
+
+    char* fileString = new char[pcapFiles.length() + 1];
+    strcpy(fileString, pcapFiles.toLatin1().constData());
+
+    std::cout << fileString;
+
+    pid_t child_pid;
+    char* child_args[] = {"usr/bin/xterm", "-hold", "-e", "/usr/bin/sudo", "/usr/bin/python", "/home/comhghall/NetInitialiser.py", "bw", "delay", "loss", "/home/comhghall/netanim_topo.xml", fileString, NULL};
+    int child_status;
+    pid_t wait_result;
+    child_pid = fork();
+
+    switch(child_pid){
+        case -1:
+            break;
+
+        case 0:
+            execvp("/usr/bin/xterm", child_args);
+            abort();
+
+        default:
+            wait_result = waitpid(child_pid, &child_status, 0);
+            if(wait_result != child_pid){
+                //something went wrong
+//                m_mybutton->setToolTip("X");
+            }
+
+            else{
+                //child terminated successfully
+//                m_mybutton->setToolTip("Y");
+            }
+    }
+
+    wait_result = waitpid(child_pid, &child_status, WUNTRACED | WCONTINUED);
+    if(wait_result != child_pid){
+        //same as above
+  //      m_mybutton->setToolTip("Z");
+    }
+
+    if(WIFEXITED(child_status)){
+        //child's exit code = WEXITSTATUS(child_status);
+ //       m_mybutton->setToolTip("A");
+        m_runButton->setToolTip("A");
+    }
 }
 }
