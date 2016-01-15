@@ -106,3 +106,6 @@ Created a new class called NetInitialiser that starts up the custom topology on 
 
 14/01/16:
 Had to clone the project again do to a corrupt file, some changes to files may be undocumented. Added a small change to the NetReader class to correctly create the links between the hosts and switches.
+
+15/01/16:
+Linked the python scripts together so that now pcapReader and Translator are called from NetInitialiser after the mininet session has finished. Command line arguments are used to pass parameters to these classes.

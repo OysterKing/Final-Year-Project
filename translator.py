@@ -77,13 +77,11 @@ class Translator:
 			file.writelines(data)
 		return
 
-#list1 = ["10.0.0.1", "10.0.0.2", "10.0.0.1"]
-#list2 = ["10.0.0.2", "10.0.0.1", "10.0.0.2"]
-packetReader = PacketReader(["h1.pcap", "h2.pcap", "s1-eth1.pcap"])
-packetReader.openFiles()
-packetReader.calculateTimes()
-packetReader.calculateFullSrcDst()
-translator = Translator(packetReader.fullSrcIP_list, packetReader.fullDstIP_list, packetReader.pktTimes)
-translator.getHostSwitchIDs("netanim_topo.xml")
+#packetReader = PacketReader(["h1.pcap", "h2.pcap", "s1-eth1.pcap"])
+#packetReader.openFiles()
+#packetReader.calculateTimes()
+#packetReader.calculateFullSrcDst()
+#translator = Translator(packetReader.getFullSrcIPList, packetReader.getFullDstIPList, packetReader.getPktTimes)
+#translator.getHostSwitchIDs("netanim_topo.xml")
 #print translator.convertIp("10.0.0.1")
-translator.writeToXML("netanim_topo.xml")
+#translator.writeToXML("netanim_topo.xml")

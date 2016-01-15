@@ -8,6 +8,8 @@ from mininet.log import setLogLevel
 from mininet.node import Controller, OVSController
 from NetReader import customTopo
 from bridge_switch import BridgeSwitch
+from translator import Translator
+from pcapReader import PacketReader
 import sys
 #from utils import makeTerm, makeTerms
 from subprocess import Popen
@@ -24,6 +26,20 @@ def customNet():
 
 def main():
 	customNet()
+	arguments = sys.argv[1:]
+	pcapFiles = []
+
+	#sudo python NetInitialiser.py bw delay loss file.xml h1.pcap h2.pcap s1.pcap
+	for i in range(5, len(sys.argv)):
+		pcapFiles.append(sys.argv[i])
+
+	print pcapFiles
+	packetReader = PacketReader(pcapFiles)
+	packetReader.openFiles()
+	packetReader.calculateTimes()
+	packetReader.calculateFullSrcDst()
+	translator = Translator(packetReader.getFullSrcIPList, packetReader.getFullDstIPList, packetReader.getPktTimes)
+	translator.getHostSwitchIDs(sys.argv[4])
 
 if __name__ == '__main__':
 	main()

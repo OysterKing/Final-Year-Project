@@ -12,6 +12,8 @@ class PacketReader:
 	pktCounter = 0
 	srcIP_list = []
 	dstIP_list = []
+	fullSrcIP_list = []
+	fullDstIP_list = []
 	timePktDict = {}
 	readPktTimes = []
 	pktTimes = []
@@ -151,22 +153,61 @@ class PacketReader:
 
 		print "times = ", PacketReader.pktTimes
 
+	#Since switches don't have ip addresses, we have to manually insert a dummy ip address for each switch so
+	# we can produce the correct animations.
+	def calculateFullSrcDst(self):
+		numberHostIps = len(PacketReader.srcIP_list)/len(PacketReader.pcapFiles)
+		numberOfSwitches = numberHostIps - 2
+		ipCount = 0
+		
+		for i in range(2 * numberHostIps):
+			if i%2 != 0 and i != 0:
+				for j in range(numberOfSwitches - 1):
+					PacketReader.fullSrcIP_list.append("-.-.-." + str(j))
+
+			else:
+				PacketReader.fullSrcIP_list.append(PacketReader.srcIP_list[ipCount])
+				ipCount += 1
+
+		print "FULL SOURCES = ", PacketReader.fullSrcIP_list
+		ipCount = 0
+		
+		for i in range(2 * numberHostIps):
+			if i%2 == 0:
+				for j in range(numberOfSwitches - 1):
+					PacketReader.fullDstIP_list.append("-.-.-." + str(j))
+
+			else:
+				PacketReader.fullDstIP_list.append(PacketReader.dstIP_list[ipCount])
+				ipCount += 1
+
+		print "FULL DESTINATIONS = ", PacketReader.fullDstIP_list
 
 	def printTimes(self):
 		for i in range (len(PacketReader.pktTimes)):
 			print PacketReader.pktTimes[i], " (", PacketReader.srcIP_list[i], " -> ", PacketReader.dstIP_list[i], ")"
 		return
 
+	def getPktTimes(self):
+		return PacketReader.pktTimes
+
+	def getFullSrcIPList(self):
+		return PacketReader.fullSrcIP_list
+
+	def getFullDstIPList(self):
+		return PacketReader.fullDstIP_list
+
 #	def printNumPkts(self):
 #		print "Number of packets = ", PacketReader.pktCounter/2
 #		return
 
-reader = PacketReader(["h1.pcap", "h2.pcap", "s1-eth1.pcap"])
-reader.openFiles()
-reader.calculateTimes()
-reader.printSrcIPAddrs()
-print " "
-reader.printDstIPAddrs()
-print " "
+#reader = PacketReader(["h1.pcap", "h2.pcap", "s1-eth1.pcap"])
+#reader.openFiles()
+#reader.calculateTimes()
+#reader.calculateFullSrcDst()
+#reader.printSrcIPAddrs()
+#print " "
+#reader.printDstIPAddrs()
+#print " "
 #reader.printTimes()
 #reader.printNumPkts()
