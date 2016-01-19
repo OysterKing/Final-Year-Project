@@ -15,6 +15,7 @@ class PacketReader:
 	fullSrcIP_list = []
 	fullDstIP_list = []
 	timePktDict = {}
+	timeFileDict = {}
 	readPktTimes = []
 	pktTimes = []
 	pcapFiles = []
@@ -65,6 +66,7 @@ class PacketReader:
 				
 				if socket.inet_ntoa(ip.dst) != '255.255.255.255' or socket.inet_ntoa(ip.src) != '0.0.0.0':
 					icmpCount+=1
+					print "ID: ", ip.id
 					print 'Timestamp: ', str(datetime.datetime.utcfromtimestamp(ts)), " ", socket.inet_ntoa(ip.src), " -> ", socket.inet_ntoa(ip.dst)
 
 					#Get timestamp after decimal point.
@@ -75,21 +77,23 @@ class PacketReader:
 					# comes after the other duplicate timestamp. If it's a switch it comes before so we take one away.
 					if PacketReader.readPktTimes.count(str(timestamp)) > 0:
 						if filename[0] == "h":
-							ts += 0.000001
+							ts -= 0.000001
 
 						else:
-							ts -= 0.000001
+							ts += 0.000001
 
 					#Extract the relevant information from timestamp (values after decimal point)
 					print str(ts - int(ts)), " string"
 					PacketReader.readPktTimes.append(str(ts - int(ts)))
 					print filename, " ", icmpCount
-					PacketReader.timePktDict[str(ts - int(ts))] = "icmp", icmpCount
+					PacketReader.timePktDict[str(ts - int(ts))] = ip.id
+					PacketReader.timeFileDict[str(ts - int(ts))] = filename
 					
-					dst_ip_addr_str = socket.inet_ntoa(ip.dst)
-					src_ip_addr_str = socket.inet_ntoa(ip.src)
-					PacketReader.srcIP_list.append(src_ip_addr_str)
-					PacketReader.dstIP_list.append(dst_ip_addr_str)
+					if filename[0] == "h":
+						dst_ip_addr_str = socket.inet_ntoa(ip.dst)
+						src_ip_addr_str = socket.inet_ntoa(ip.src)
+						PacketReader.srcIP_list.append(src_ip_addr_str)
+						PacketReader.dstIP_list.append(dst_ip_addr_str)
 
 			PacketReader.pktCounter+=1
 
@@ -110,78 +114,85 @@ class PacketReader:
 		print PacketReader.dstIP_list
 		return
 
+#This function calculates the time it takes each packet to travel from host to switch, switch to switch and switch to host.
+#It also adds a full path in the form of a full source IP list and a full destination IP list. These lists contain the source host
+# and destination host IP addresses but also the dummy IP addresses of the switches inbetween.
 	def calculateTimes(self):
 		j = 0
 		packets = []
 		times = []
+		files = []
 		numberNodes = len(PacketReader.pcapFiles)
 		numberTimes = len(PacketReader.readPktTimes)
 		print " "
 		print PacketReader.readPktTimes
 		print " "
+		hostIPCount = 0
 
-		#For each of the saved times, find the packets that correspond to them. Every n-th packet,
-		# where n = number of pcap files, is a new packet so we calculate the times for the packet we've
-		# already saved and go again.
 		for i in range(numberTimes + 1):
-			if (i%numberNodes == 0 and i != 0):
-				print i
-				print times
+			if i != numberTimes:
+				minimum = min(PacketReader.readPktTimes)
+				packetNumber = PacketReader.timePktDict.get(minimum, None)
+				filename = PacketReader.timeFileDict.get(minimum, None)
+				print "p ", packets
+			
+			if (packets.count(packetNumber) == 0 and len(packets) != 0) or i == numberTimes:
 				print packets
-				for j in range (len(times) - 1):
+				print files
+				for j in range(len(times) - 1):
 					time = (float(times[j+1]) - float(times[j]))
 					print "TIME: ", time, " = ", times[j+1], " - ", times[j]
 					PacketReader.pktTimes.append(time)
-				packets = []
-				times = []
-
-				if i != numberTimes:
-					minimum = min(PacketReader.readPktTimes)
-					packetNumber = PacketReader.timePktDict.get(minimum, None)
-					del PacketReader.readPktTimes[PacketReader.readPktTimes.index(minimum)]
-					print "pktNumber = ", packetNumber
-					packets.append(PacketReader.timePktDict.get(minimum, None))
-					times.append(minimum)
-
-			else:
-				minimum = min(PacketReader.readPktTimes)
-				packetNumber = PacketReader.timePktDict.get(minimum, None)
-				del PacketReader.readPktTimes[PacketReader.readPktTimes.index(minimum)]
-				print "pktNumber = ", packetNumber
-				packets.append(PacketReader.timePktDict.get(minimum, None))
-				times.append(minimum)
-
-		print "times = ", PacketReader.pktTimes
 
 	#Since switches don't have ip addresses, we have to manually insert a dummy ip address for each switch so
 	# we can produce the correct animations.
-	def calculateFullSrcDst(self):
-		numberHostIps = len(PacketReader.srcIP_list)/len(PacketReader.pcapFiles)
-		numberOfSwitches = numberHostIps - 2
-		ipCount = 0
-		
-		for i in range(2 * numberHostIps):
-			if i%2 != 0 and i != 0:
-				for j in range(numberOfSwitches - 1):
-					PacketReader.fullSrcIP_list.append("-.-.-." + str(j))
+
+				for k in range(len(files)):
+					if k == 0:
+						sourceIP = PacketReader.srcIP_list[hostIPCount]
+						PacketReader.fullSrcIP_list.append(sourceIP)
+						index = files[k + 1].index('-')
+						switchNum = int(files[k + 1][index - 1]) - 1
+						dstIP = "-.-.-." + str(switchNum)
+						PacketReader.fullDstIP_list.append(dstIP)
+
+					elif files[k][0] == "h":
+						hostIPCount += 1
+
+
+					else:
+						index = files[k].index('-')
+						switchNum = int(files[k][index - 1]) - 1
+						sourceIP = "-.-.-." + str(switchNum)
+						PacketReader.fullSrcIP_list.append(sourceIP)
+
+						if files[k + 1][0] == "h":
+							dstIP = PacketReader.dstIP_list[hostIPCount]
+						else:
+							index = files[k + 1].index('-')
+							switchNum = int(files[k + 1][index - 1]) - 1
+							dstIP = "-.-.-." + str(switchNum)
+
+						PacketReader.fullDstIP_list.append(dstIP)
+
+				packets = []
+				times = []
+				files = []
+				packets.append(packetNumber)
+				files.append(filename)
+				times.append(minimum)
+				if i != numberTimes:
+					del PacketReader.readPktTimes[PacketReader.readPktTimes.index(minimum)]
 
 			else:
-				PacketReader.fullSrcIP_list.append(PacketReader.srcIP_list[ipCount])
-				ipCount += 1
+				print packets
+				packets.append(packetNumber)
+				files.append(filename)
+				times.append(minimum)
+				del PacketReader.readPktTimes[PacketReader.readPktTimes.index(minimum)]
 
-		print "FULL SOURCES = ", PacketReader.fullSrcIP_list
-		ipCount = 0
 		
-		for i in range(2 * numberHostIps):
-			if i%2 == 0:
-				for j in range(numberOfSwitches - 1):
-					PacketReader.fullDstIP_list.append("-.-.-." + str(j))
-
-			else:
-				PacketReader.fullDstIP_list.append(PacketReader.dstIP_list[ipCount])
-				ipCount += 1
-
-		print "FULL DESTINATIONS = ", PacketReader.fullDstIP_list
+		print "times = ", PacketReader.pktTimes
 
 	def printTimes(self):
 		for i in range (len(PacketReader.pktTimes)):
@@ -209,5 +220,7 @@ class PacketReader:
 #print " "
 #reader.printDstIPAddrs()
 #print " "
+#print reader.getFullSrcIPList()
+#print reader.getFullDstIPList()
 #reader.printTimes()
 #reader.printNumPkts()
