@@ -113,3 +113,6 @@ Added a new button to the draw tab that allows users to run mininet on the topol
 
 19/01/16:
 Updated the pcap reader so that it can now deal with a variable number of switches as opposed to just one. Needs to be more thoroughly tested. Now use packet sequence number to sort them out and time them correctly.
+
+20/01/16:
+Updated the pcap reader to more accurately separate duplicate timestamps by moving the last digit after the decimal point either up or down depending on where in the sequence it should come.

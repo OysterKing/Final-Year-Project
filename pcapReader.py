@@ -70,26 +70,47 @@ class PacketReader:
 					print 'Timestamp: ', str(datetime.datetime.utcfromtimestamp(ts)), " ", socket.inet_ntoa(ip.src), " -> ", socket.inet_ntoa(ip.dst)
 
 					#Get timestamp after decimal point.
-					timestamp = ts - int(ts)
+					timestamp = str(ts - int(ts))
+					timestampList = list(timestamp)
+					print timestampList
+					print "****BEFORE = ", timestamp
 
 					#Sometimes the timestamps occur so closely together that we can't tell them apart. If this happens and we're
 					# reading a host pcap file, we add one to the time since this is the final destination of the packet and
 					# comes after the other duplicate timestamp. If it's a switch it comes before so we take one away.
-					if PacketReader.readPktTimes.count(str(timestamp)) > 0:
-						if filename[0] == "h":
-							ts -= 0.000001
+					if PacketReader.readPktTimes.count(timestamp) > 0:
+						previousFile = PacketReader.timeFileDict[timestamp]
+#						PacketReader.timePktDict.has_key(str(ts - int(ts)))
+						if  previousFile[0] == "h" and filename[38] == "s":
+							indexOfp = previousFile.index('p')
+							hostNum = previousFile[indexOfp - 2]
+							dst = socket.inet_ntoa(ip.dst)
+							print dst[7:], " and ", hostNum
+							if dst[7:] == hostNum:
+								print "DESTINATION CULPRIT = ", filename
+								timestampList[len(timestamp) - 1] = str(int(timestamp[len(timestamp) - 1]) - 1)
+								timestamp = ''.join(timestampList)
+							else:
+								timestampList[len(timestamp) - 1] = str(int(timestamp[len(timestamp) - 1]) + 1)
+								timestamp = ''.join(timestampList)
+								print "SOURCE CULPRIT = ", filename
 
-						else:
-							ts += 0.000001
+#						elif PacketReader.timePktDict.has_key(str(ts - int(ts))) and filename[38] == "s" and previousFile[0] == "h":
+#							ts += 0.000001
+#							print "SWITCH CULPRIT = ", filename
+
+#						elif filename[38] == "h":
+#							ts -= 0.000001
+
+						
 
 					#Extract the relevant information from timestamp (values after decimal point)
-					print str(ts - int(ts)), " string"
-					PacketReader.readPktTimes.append(str(ts - int(ts)))
-					print filename, " ", icmpCount
-					PacketReader.timePktDict[str(ts - int(ts))] = ip.id
-					PacketReader.timeFileDict[str(ts - int(ts))] = filename
+					print timestamp, " *****AFTER"
+					PacketReader.readPktTimes.append(timestamp)
+					PacketReader.timePktDict[timestamp] = ip.id
+					PacketReader.timeFileDict[timestamp] = filename[38:]
 					
-					if filename[0] == "h":
+					if filename[38] == "h":
 						dst_ip_addr_str = socket.inet_ntoa(ip.dst)
 						src_ip_addr_str = socket.inet_ntoa(ip.src)
 						PacketReader.srcIP_list.append(src_ip_addr_str)
@@ -103,6 +124,15 @@ class PacketReader:
 #		print "UDP pkts = " + str(udpCount/2)
 #		print "TCP pkts = " + str(tcpCount/2)
 #		print "ICMP pkts = " + str(icmpCount/2)
+
+		for i in range(len(PacketReader.readPktTimes)):
+			if PacketReader.readPktTimes.count(PacketReader.readPktTimes[i]) > 1:
+				print "THERE ARE STILL DUPLICATES."
+
+		print len(PacketReader.readPktTimes)
+		print " "
+		print PacketReader.timePktDict
+		print " "
 		f.close()
 		return
 
