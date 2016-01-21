@@ -6,6 +6,7 @@ import sys
 import socket
 import binascii
 import datetime
+import decimal
 
 class PacketReader:
 	'Class to read pcap file.'
@@ -63,7 +64,7 @@ class PacketReader:
 
 			if type(pktData) is dpkt.ip.IP:
 				ip = pktData
-				
+
 				if socket.inet_ntoa(ip.dst) != '255.255.255.255' or socket.inet_ntoa(ip.src) != '0.0.0.0':
 					icmpCount+=1
 					print "ID: ", ip.id
@@ -88,26 +89,46 @@ class PacketReader:
 							print dst[7:], " and ", hostNum
 							if dst[7:] == hostNum:
 								print "DESTINATION CULPRIT = ", filename
-								timestampList[len(timestamp) - 1] = str(int(timestamp[len(timestamp) - 1]) - 1)
+								digitIndex = len(timestamp) - 1
+								if timestampList[digitIndex] == '0':
+									while timestampList[digitIndex] == '0':
+										timestampList[digitIndex] = '9'
+										if timestampList[digitIndex - 1] == '0':
+											digitIndex -= 1
+										else:
+											timestampList[digitIndex -1] = str(int(timestampList[digitIndex]) + 1)
+								
+								else:	
+									timestampList[len(timestamp) - 1] = str(int(timestampList[len(timestamp) - 1]) + 1)
+									timestampList[len(timestamp) - 1] = str(int(timestamp[len(timestamp) - 1]) - 1)
 								timestamp = ''.join(timestampList)
 							else:
-								timestampList[len(timestamp) - 1] = str(int(timestamp[len(timestamp) - 1]) + 1)
-								timestamp = ''.join(timestampList)
 								print "SOURCE CULPRIT = ", filename
+								digitIndex = len(timestamp) - 1
+								if timestampList[digitIndex] == '9':
+									while timestampList[digitIndex] == '9':
+										timestampList[digitIndex] = '0'
+										print timestampList
+										if timestampList[digitIndex - 1] == '9':
+											digitIndex -= 1
+										else:
+											timestampList[digitIndex -1] = str(int(timestampList[digitIndex]) + 1)
 
-#						elif PacketReader.timePktDict.has_key(str(ts - int(ts))) and filename[38] == "s" and previousFile[0] == "h":
-#							ts += 0.000001
-#							print "SWITCH CULPRIT = ", filename
+								else:	
+									timestampList[len(timestamp) - 1] = str(int(timestampList[len(timestamp) - 1]) + 1)
+									timestamp = ''.join(timestampList)
 
-#						elif filename[38] == "h":
-#							ts -= 0.000001
 
+					srcIPstring = socket.inet_ntoa(ip.src)
+					nodeNum = float(srcIPstring[7:])
+					pktID = ip.id/nodeNum
+					print ip.id, " -> ", pktID
 						
 
 					#Extract the relevant information from timestamp (values after decimal point)
 					print timestamp, " *****AFTER"
 					PacketReader.readPktTimes.append(timestamp)
-					PacketReader.timePktDict[timestamp] = ip.id
+					PacketReader.timePktDict[timestamp] = pktID
 					PacketReader.timeFileDict[timestamp] = filename[38:]
 					
 					if filename[38] == "h":

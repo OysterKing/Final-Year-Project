@@ -116,3 +116,6 @@ Updated the pcap reader so that it can now deal with a variable number of switch
 
 20/01/16:
 Updated the pcap reader to more accurately separate duplicate timestamps by moving the last digit after the decimal point either up or down depending on where in the sequence it should come.
+
+21/01/16:
+Attempted to change the duplicate time algorithm to account for when the last digit of a time is 9 or 0. Not perfect yet.
