@@ -11,7 +11,7 @@ from bridge_switch import BridgeSwitch
 from translator import Translator
 from pcapReader import PacketReader
 import sys
-#from utils import makeTerm, makeTerms
+from utils import makeTerm, makeTerms, makeTabbedTerm
 from subprocess import Popen
 
 def customNet():
@@ -21,6 +21,20 @@ def customNet():
 
 	net = Mininet(topo, switch = BridgeSwitch, controller = OVSController, link = TCLink)
 	net.start()
+
+	for offset, host in enumerate(net.hosts):
+#		host.cmd("tcpdump", "-u", "-w", host, ".pcap")
+		net.terms = makeTabbedTerm([net.hosts[offset]], term="xfce")
+		pcap = str(host), ".pcap"
+#		tcpdump = net.terms[offset]
+#		tcpdump = tcpdump.Popen("tcpdump", "-u", "-w", pcap)
+#		Popen(["tcpdump", "-u", "-w", pcap])
+#		print type(tcpdump)
+
+	for offset, switch in enumerate(net.switches):
+#		switch.cmd("tcpdump", "-i", switch, "-eth1", switch, ".pcap")
+		net.terms = makeTabbedTerm([net.switches[offset]], term="xfce")
+
 	CLI(net)
 	net.stop()
 
@@ -37,9 +51,13 @@ def main():
 	packetReader = PacketReader(pcapFiles)
 	packetReader.openFiles()
 	packetReader.calculateTimes()
-	packetReader.calculateFullSrcDst()
-	translator = Translator(packetReader.getFullSrcIPList, packetReader.getFullDstIPList, packetReader.getPktTimes)
+	print " "
+	print packetReader.getFullSrcIPList()
+	print " "
+	print packetReader.getFullDstIPList()
+	translator = Translator(packetReader.getFullSrcIPList(), packetReader.getFullDstIPList(), packetReader.getPktTimes())
 	translator.getHostSwitchIDs(sys.argv[4])
+	translator.writeToXML("/home/comhghall/netanim_topo.xml")
 
 if __name__ == '__main__':
 	main()

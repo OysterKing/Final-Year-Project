@@ -119,3 +119,6 @@ Updated the pcap reader to more accurately separate duplicate timestamps by movi
 
 21/01/16:
 Attempted to change the duplicate time algorithm to account for when the last digit of a time is 9 or 0. Not perfect yet.
+
+22/01/16:
+Fixed the time duplicate algorithm so that it changes them correctly though I may need to consider adding more to the timestamps so that the animation looks nicer. Deleted a line in NetInitialiser.

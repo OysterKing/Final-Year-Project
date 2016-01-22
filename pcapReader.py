@@ -91,29 +91,25 @@ class PacketReader:
 								print "DESTINATION CULPRIT = ", filename
 								digitIndex = len(timestamp) - 1
 								if timestampList[digitIndex] == '0':
-									while timestampList[digitIndex] == '0':
-										timestampList[digitIndex] = '9'
-										if timestampList[digitIndex - 1] == '0':
-											digitIndex -= 1
-										else:
-											timestampList[digitIndex -1] = str(int(timestampList[digitIndex]) + 1)
-								
+									intStamp = int(timestamp[2:]) - 1
+									timestampList = list(str(intStamp))
+									timestamp = ''.join(timestampList)
+									timestamp = "0." + timestamp
 								else:	
 									timestampList[len(timestamp) - 1] = str(int(timestampList[len(timestamp) - 1]) + 1)
 									timestampList[len(timestamp) - 1] = str(int(timestamp[len(timestamp) - 1]) - 1)
 								timestamp = ''.join(timestampList)
+
 							else:
 								print "SOURCE CULPRIT = ", filename
 								digitIndex = len(timestamp) - 1
 								if timestampList[digitIndex] == '9':
-									while timestampList[digitIndex] == '9':
-										timestampList[digitIndex] = '0'
-										print timestampList
-										if timestampList[digitIndex - 1] == '9':
-											digitIndex -= 1
-										else:
-											timestampList[digitIndex -1] = str(int(timestampList[digitIndex]) + 1)
-
+									intStamp = int(timestamp[2:]) + 1
+									timestampList = list(str(intStamp))
+									timestamp = ''.join(timestampList)
+									timestamp = "0." + timestamp
+									print "IT HAS BEEN CHANGED -------- ", timestamp
+									
 								else:	
 									timestampList[len(timestamp) - 1] = str(int(timestampList[len(timestamp) - 1]) + 1)
 									timestamp = ''.join(timestampList)
