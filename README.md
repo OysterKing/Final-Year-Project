@@ -122,3 +122,6 @@ Attempted to change the duplicate time algorithm to account for when the last di
 
 22/01/16:
 Fixed the time duplicate algorithm so that it changes them correctly though I may need to consider adding more to the timestamps so that the animation looks nicer. Deleted a line in NetInitialiser.
+
+23/01/16:
+Fixed the way I add the ip addresses to source and destination lists so now all the animations run correctly for any number of switches.

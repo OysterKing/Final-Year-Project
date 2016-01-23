@@ -17,6 +17,7 @@ class PacketReader:
 	fullDstIP_list = []
 	timePktDict = {}
 	timeFileDict = {}
+	fileIpDict = {}
 	readPktTimes = []
 	pktTimes = []
 	pcapFiles = []
@@ -66,6 +67,28 @@ class PacketReader:
 				ip = pktData
 
 				if socket.inet_ntoa(ip.dst) != '255.255.255.255' or socket.inet_ntoa(ip.src) != '0.0.0.0':
+
+					if filename[38] == "h":
+						fileStr = filename[38:]
+						indexOfDot = fileStr.index(".")
+						if indexOfDot == 2:
+							PacketReader.fileIpDict[filename[38:]] = "10.0.0." + fileStr[1]
+
+						else:
+							PacketReader.fileIpDict[filename[38:]] = "10.0.0." + fileStr[1:indexOfDot - 1]
+
+					else:
+						fileStr = filename[38:]
+						indexOfDash = fileStr.index("-")
+						if indexOfDash == 2:
+							switchNum = int(fileStr[1]) - 1
+							PacketReader.fileIpDict[filename[38:]] = "-.-.-." + str(switchNum)
+
+						else:
+							switchNum = int(fileStr[1:indexOfDash - 1]) - 1
+							PacketReader.fileIpDict[filename[38:]] = "-.-.-." + switchNum
+						
+
 					icmpCount+=1
 					print "ID: ", ip.id
 					print 'Timestamp: ', str(datetime.datetime.utcfromtimestamp(ts)), " ", socket.inet_ntoa(ip.src), " -> ", socket.inet_ntoa(ip.dst)
@@ -128,15 +151,19 @@ class PacketReader:
 					PacketReader.timeFileDict[timestamp] = filename[38:]
 					
 					if filename[38] == "h":
+						print "BEHOLD ----------------------- ", filename
 						dst_ip_addr_str = socket.inet_ntoa(ip.dst)
 						src_ip_addr_str = socket.inet_ntoa(ip.src)
+						print src_ip_addr_str
+						print " "
 						PacketReader.srcIP_list.append(src_ip_addr_str)
 						PacketReader.dstIP_list.append(dst_ip_addr_str)
 
+
 			PacketReader.pktCounter+=1
 
-#		print PacketReader.srcIP_list
-#		print PacketReader.dstIP_list
+		print PacketReader.srcIP_list
+		print PacketReader.dstIP_list
 #		print tcpSeqNos
 #		print "UDP pkts = " + str(udpCount/2)
 #		print "TCP pkts = " + str(tcpCount/2)
@@ -190,37 +217,12 @@ class PacketReader:
 					time = (float(times[j+1]) - float(times[j]))
 					print "TIME: ", time, " = ", times[j+1], " - ", times[j]
 					PacketReader.pktTimes.append(time)
+					srcIp = PacketReader.fileIpDict[files[j]]
+					PacketReader.fullSrcIP_list.append(srcIp)
 
-	#Since switches don't have ip addresses, we have to manually insert a dummy ip address for each switch so
-	# we can produce the correct animations.
-
-				for k in range(len(files)):
-					if k == 0:
-						sourceIP = PacketReader.srcIP_list[hostIPCount]
-						PacketReader.fullSrcIP_list.append(sourceIP)
-						index = files[k + 1].index('-')
-						switchNum = int(files[k + 1][index - 1]) - 1
-						dstIP = "-.-.-." + str(switchNum)
-						PacketReader.fullDstIP_list.append(dstIP)
-
-					elif files[k][0] == "h":
-						hostIPCount += 1
-
-
-					else:
-						index = files[k].index('-')
-						switchNum = int(files[k][index - 1]) - 1
-						sourceIP = "-.-.-." + str(switchNum)
-						PacketReader.fullSrcIP_list.append(sourceIP)
-
-						if files[k + 1][0] == "h":
-							dstIP = PacketReader.dstIP_list[hostIPCount]
-						else:
-							index = files[k + 1].index('-')
-							switchNum = int(files[k + 1][index - 1]) - 1
-							dstIP = "-.-.-." + str(switchNum)
-
-						PacketReader.fullDstIP_list.append(dstIP)
+				for k in range(1, len(files)):
+					dstIp = PacketReader.fileIpDict[files[k]]
+					PacketReader.fullDstIP_list.append(dstIp)
 
 				packets = []
 				times = []
