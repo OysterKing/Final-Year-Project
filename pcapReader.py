@@ -24,11 +24,9 @@ class PacketReader:
 
 	def __init__(self, fileNames):
 		PacketReader.pcapFiles = fileNames
-		print PacketReader.pcapFiles
 	
 	def openFiles(self):
 		for i in range(len(PacketReader.pcapFiles)):
-			print " "
 			self.parseFile(PacketReader.pcapFiles[i]);
 		return
 
@@ -66,8 +64,11 @@ class PacketReader:
 			if type(pktData) is dpkt.ip.IP:
 				ip = pktData
 
+				#Filter out any useless error packets such as those from 0.0.0.0 to 255.255.255.255 etc.
 				if socket.inet_ntoa(ip.dst) != '255.255.255.255' or socket.inet_ntoa(ip.src) != '0.0.0.0':
 
+					#Since each pcap file corresponds to a host, we can manually add their ip addresses to a dictionary so we can easily
+					# trace packets and construct the packet path.
 					if filename[38] == "h":
 						fileStr = filename[38:]
 						indexOfDot = fileStr.index(".")
@@ -77,6 +78,8 @@ class PacketReader:
 						else:
 							PacketReader.fileIpDict[filename[38:]] = "10.0.0." + fileStr[1:indexOfDot - 1]
 
+					#Switches don't have ip addresses but for the purposes of the animator, we need to give each a dummy ip address so that the
+					# translator can differentiate between them.
 					else:
 						fileStr = filename[38:]
 						indexOfDash = fileStr.index("-")
@@ -88,16 +91,11 @@ class PacketReader:
 							switchNum = int(fileStr[1:indexOfDash - 1]) - 1
 							PacketReader.fileIpDict[filename[38:]] = "-.-.-." + switchNum
 						
-
-					icmpCount+=1
-					print "ID: ", ip.id
-					print 'Timestamp: ', str(datetime.datetime.utcfromtimestamp(ts)), " ", socket.inet_ntoa(ip.src), " -> ", socket.inet_ntoa(ip.dst)
+#					print 'Timestamp: ', str(datetime.datetime.utcfromtimestamp(ts)), " ", socket.inet_ntoa(ip.src), " -> ", socket.inet_ntoa(ip.dst)
 
 					#Get timestamp after decimal point.
 					timestamp = str(ts - int(ts))
 					timestampList = list(timestamp)
-					print timestampList
-					print "****BEFORE = ", timestamp
 
 					#Sometimes the timestamps occur so closely together that we can't tell them apart. If this happens and we're
 					# reading a host pcap file, we add one to the time since this is the final destination of the packet and
@@ -109,9 +107,8 @@ class PacketReader:
 							indexOfp = previousFile.index('p')
 							hostNum = previousFile[indexOfp - 2]
 							dst = socket.inet_ntoa(ip.dst)
-							print dst[7:], " and ", hostNum
+
 							if dst[7:] == hostNum:
-								print "DESTINATION CULPRIT = ", filename
 								digitIndex = len(timestamp) - 1
 								if timestampList[digitIndex] == '0':
 									intStamp = int(timestamp[2:]) - 1
@@ -124,14 +121,12 @@ class PacketReader:
 								timestamp = ''.join(timestampList)
 
 							else:
-								print "SOURCE CULPRIT = ", filename
 								digitIndex = len(timestamp) - 1
 								if timestampList[digitIndex] == '9':
 									intStamp = int(timestamp[2:]) + 1
 									timestampList = list(str(intStamp))
 									timestamp = ''.join(timestampList)
 									timestamp = "0." + timestamp
-									print "IT HAS BEEN CHANGED -------- ", timestamp
 									
 								else:	
 									timestampList[len(timestamp) - 1] = str(int(timestampList[len(timestamp) - 1]) + 1)
@@ -141,42 +136,29 @@ class PacketReader:
 					srcIPstring = socket.inet_ntoa(ip.src)
 					nodeNum = float(srcIPstring[7:])
 					pktID = ip.id/nodeNum
-					print ip.id, " -> ", pktID
-						
 
 					#Extract the relevant information from timestamp (values after decimal point)
-					print timestamp, " *****AFTER"
 					PacketReader.readPktTimes.append(timestamp)
 					PacketReader.timePktDict[timestamp] = pktID
 					PacketReader.timeFileDict[timestamp] = filename[38:]
 					
 					if filename[38] == "h":
-						print "BEHOLD ----------------------- ", filename
 						dst_ip_addr_str = socket.inet_ntoa(ip.dst)
 						src_ip_addr_str = socket.inet_ntoa(ip.src)
-						print src_ip_addr_str
-						print " "
 						PacketReader.srcIP_list.append(src_ip_addr_str)
 						PacketReader.dstIP_list.append(dst_ip_addr_str)
 
 
 			PacketReader.pktCounter+=1
 
-		print PacketReader.srcIP_list
-		print PacketReader.dstIP_list
 #		print tcpSeqNos
 #		print "UDP pkts = " + str(udpCount/2)
 #		print "TCP pkts = " + str(tcpCount/2)
 #		print "ICMP pkts = " + str(icmpCount/2)
 
-		for i in range(len(PacketReader.readPktTimes)):
-			if PacketReader.readPktTimes.count(PacketReader.readPktTimes[i]) > 1:
-				print "THERE ARE STILL DUPLICATES."
-
-		print len(PacketReader.readPktTimes)
-		print " "
-		print PacketReader.timePktDict
-		print " "
+#		for i in range(len(PacketReader.readPktTimes)):
+#			if PacketReader.readPktTimes.count(PacketReader.readPktTimes[i]) > 1:
+#				print "THERE ARE STILL DUPLICATES."
 		f.close()
 		return
 
@@ -198,9 +180,6 @@ class PacketReader:
 		files = []
 		numberNodes = len(PacketReader.pcapFiles)
 		numberTimes = len(PacketReader.readPktTimes)
-		print " "
-		print PacketReader.readPktTimes
-		print " "
 		hostIPCount = 0
 
 		for i in range(numberTimes + 1):
@@ -208,14 +187,11 @@ class PacketReader:
 				minimum = min(PacketReader.readPktTimes)
 				packetNumber = PacketReader.timePktDict.get(minimum, None)
 				filename = PacketReader.timeFileDict.get(minimum, None)
-				print "p ", packets
 			
 			if (packets.count(packetNumber) == 0 and len(packets) != 0) or i == numberTimes:
-				print packets
-				print files
 				for j in range(len(times) - 1):
 					time = (float(times[j+1]) - float(times[j]))
-					print "TIME: ", time, " = ", times[j+1], " - ", times[j]
+#					print "TIME: ", time, " = ", times[j+1], " - ", times[j]
 					PacketReader.pktTimes.append(time)
 					srcIp = PacketReader.fileIpDict[files[j]]
 					PacketReader.fullSrcIP_list.append(srcIp)
@@ -240,8 +216,6 @@ class PacketReader:
 				times.append(minimum)
 				del PacketReader.readPktTimes[PacketReader.readPktTimes.index(minimum)]
 
-		
-		print "times = ", PacketReader.pktTimes
 
 	def printTimes(self):
 		for i in range (len(PacketReader.pktTimes)):
