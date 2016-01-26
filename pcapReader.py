@@ -7,6 +7,7 @@ import socket
 import binascii
 import datetime
 import decimal
+import getpass
 
 class PacketReader:
 	'Class to read pcap file.'
@@ -21,9 +22,11 @@ class PacketReader:
 	readPktTimes = []
 	pktTimes = []
 	pcapFiles = []
+	username = ''
 
-	def __init__(self, fileNames):
+	def __init__(self, fileNames, username):
 		PacketReader.pcapFiles = fileNames
+		PacketReader.username = username
 	
 	def openFiles(self):
 		for i in range(len(PacketReader.pcapFiles)):
@@ -37,6 +40,11 @@ class PacketReader:
 		tcpCount = 0
 		icmpCount = 0
 		arpCount = 0
+		username = getpass.getuser()
+		print "username = ", PacketReader.username
+		pcapFileIndex = filename.rfind(PacketReader.username)
+		pcapFileIndex = pcapFileIndex + 23 + len(PacketReader.username)
+		print "INDEX  =", pcapFileIndex
 #		tcpDPorts = []
 #		tcpSPorts = []
 #		tcpData = []
@@ -69,27 +77,27 @@ class PacketReader:
 
 					#Since each pcap file corresponds to a host, we can manually add their ip addresses to a dictionary so we can easily
 					# trace packets and construct the packet path.
-					if filename[38] == "h":
-						fileStr = filename[38:]
+					if filename[pcapFileIndex] == "h":
+						fileStr = filename[pcapFileIndex:]
 						indexOfDot = fileStr.index(".")
 						if indexOfDot == 2:
-							PacketReader.fileIpDict[filename[38:]] = "10.0.0." + fileStr[1]
+							PacketReader.fileIpDict[filename[pcapFileIndex:]] = "10.0.0." + fileStr[1]
 
 						else:
-							PacketReader.fileIpDict[filename[38:]] = "10.0.0." + fileStr[1:indexOfDot - 1]
+							PacketReader.fileIpDict[filename[pcapFileIndex:]] = "10.0.0." + fileStr[1:indexOfDot - 1]
 
 					#Switches don't have ip addresses but for the purposes of the animator, we need to give each a dummy ip address so that the
 					# translator can differentiate between them.
 					else:
-						fileStr = filename[38:]
+						fileStr = filename[pcapFileIndex:]
 						indexOfDash = fileStr.index("-")
 						if indexOfDash == 2:
 							switchNum = int(fileStr[1]) - 1
-							PacketReader.fileIpDict[filename[38:]] = "-.-.-." + str(switchNum)
+							PacketReader.fileIpDict[filename[pcapFileIndex:]] = "-.-.-." + str(switchNum)
 
 						else:
 							switchNum = int(fileStr[1:indexOfDash - 1]) - 1
-							PacketReader.fileIpDict[filename[38:]] = "-.-.-." + switchNum
+							PacketReader.fileIpDict[filename[pcapFileIndex:]] = "-.-.-." + switchNum
 						
 #					print 'Timestamp: ', str(datetime.datetime.utcfromtimestamp(ts)), " ", socket.inet_ntoa(ip.src), " -> ", socket.inet_ntoa(ip.dst)
 
@@ -103,7 +111,7 @@ class PacketReader:
 					if PacketReader.readPktTimes.count(timestamp) > 0:
 						previousFile = PacketReader.timeFileDict[timestamp]
 #						PacketReader.timePktDict.has_key(str(ts - int(ts)))
-						if  previousFile[0] == "h" and filename[38] == "s":
+						if  previousFile[0] == "h" and filename[pcapFileIndex] == "s":
 							indexOfp = previousFile.index('p')
 							hostNum = previousFile[indexOfp - 2]
 							dst = socket.inet_ntoa(ip.dst)
@@ -142,7 +150,7 @@ class PacketReader:
 					PacketReader.timePktDict[timestamp] = pktID
 					PacketReader.timeFileDict[timestamp] = filename[38:]
 					
-					if filename[38] == "h":
+					if filename[pcapFileIndex] == "h":
 						dst_ip_addr_str = socket.inet_ntoa(ip.dst)
 						src_ip_addr_str = socket.inet_ntoa(ip.src)
 						PacketReader.srcIP_list.append(src_ip_addr_str)

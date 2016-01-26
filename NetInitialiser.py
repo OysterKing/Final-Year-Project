@@ -13,6 +13,7 @@ from pcapReader import PacketReader
 import sys
 from utils import makeTerm, makeTerms, makeTabbedTerm
 from subprocess import Popen
+import getpass
 
 def customNet():
 	link_opts = {"bw":1000, "delay":0, "loss": 0, "use_htb": False}
@@ -42,13 +43,14 @@ def main():
 	customNet()
 	arguments = sys.argv[1:]
 	pcapFiles = []
+	username = sys.argv[5]
 
 	#sudo python NetInitialiser.py bw delay loss file.xml h1.pcap h2.pcap s1-eth1.pcap
-	for i in range(5, len(sys.argv)):
+	for i in range(6, len(sys.argv)):
 		pcapFiles = sys.argv[i].split()
 
 	print pcapFiles
-	packetReader = PacketReader(pcapFiles)
+	packetReader = PacketReader(pcapFiles, username)
 	packetReader.openFiles()
 	packetReader.calculateTimes()
 	print " "
@@ -56,8 +58,10 @@ def main():
 	print " "
 	print packetReader.getFullDstIPList()
 	translator = Translator(packetReader.getFullSrcIPList(), packetReader.getFullDstIPList(), packetReader.getPktTimes())
+	print sys.argv[4]
 	translator.getHostSwitchIDs(sys.argv[4])
-	translator.writeToXML("/home/comhghall/netanim_topo.xml")
+	#username = getpass.getuser()
+	translator.writeToXML("/home/" + username + "/netanim_topo.xml")
 
 if __name__ == '__main__':
 	main()

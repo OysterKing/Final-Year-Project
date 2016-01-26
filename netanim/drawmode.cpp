@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <pwd.h>
 
 //#include "drawingconstants.h"
 
@@ -347,22 +348,31 @@ DrawMode::runButtonSlot()
     hosts = DrawScene::getInstance()->getHostVector();
     switches = DrawScene::getInstance()->getSwitchVector();
     QString pcapFiles = "";
+    //Get the user's linux username.
+    struct passwd *pwd;
+    pwd = getpwuid(getuid());
+    const char* linuxUsername = pwd->pw_name;
 
     for(int i = 0; i < hosts.size(); i++){
-        pcapFiles += "/home/comhghall/h" + QString::number(i + 1) + ".pcap ";
+        pcapFiles += "/home/" + QString::fromUtf8(linuxUsername) + "/ns-3-allinone/netanim/h" + QString::number(i + 1) + ".pcap ";
     }
 
     for(int i = 0; i < switches.size(); i++){
-        pcapFiles += "/home/comhghall/s" + QString::number(i + 1) + "-eth1.pcap ";
+        pcapFiles += "/home/" + QString::fromUtf8(linuxUsername) + "/ns-3-allinone/netanim/s" + QString::number(i + 1) + "-eth0.pcap ";
     }
 
     char* fileString = new char[pcapFiles.length() + 1];
     strcpy(fileString, pcapFiles.toLatin1().constData());
+    string tempNetInitPath = std::string("/home/") + linuxUsername + std::string("/NetInitialiser.py");
+    string tempXmlPath = std::string("/home/") + linuxUsername + std::string("/netanim_topo.xml");
+    char* netInitPath = strdup(tempNetInitPath.c_str());
+    char* xmlPath = strdup(tempXmlPath.c_str());
+    char* user = strdup(linuxUsername);
 
     std::cout << fileString;
 
     pid_t child_pid;
-    char* child_args[] = {"usr/bin/xterm", "-hold", "-e", "/usr/bin/sudo", "/usr/bin/python", "/home/comhghall/NetInitialiser.py", "bw", "delay", "loss", "/home/comhghall/netanim_topo.xml", fileString, NULL};
+    char* child_args[] = {"usr/bin/xterm", "-hold", "-e", "/usr/bin/sudo", "/usr/bin/python", netInitPath, "bw", "delay", "loss", xmlPath, user, fileString, NULL};
     int child_status;
     pid_t wait_result;
     child_pid = fork();
