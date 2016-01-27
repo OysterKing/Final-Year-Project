@@ -354,11 +354,11 @@ DrawMode::runButtonSlot()
     const char* linuxUsername = pwd->pw_name;
 
     for(int i = 0; i < hosts.size(); i++){
-        pcapFiles += "/home/" + QString::fromUtf8(linuxUsername) + "/ns-3-allinone/netanim/h" + QString::number(i + 1) + ".pcap ";
+        pcapFiles += "/home/" + QString::fromUtf8(linuxUsername) + "/h" + QString::number(i + 1) + ".pcap ";
     }
 
     for(int i = 0; i < switches.size(); i++){
-        pcapFiles += "/home/" + QString::fromUtf8(linuxUsername) + "/ns-3-allinone/netanim/s" + QString::number(i + 1) + "-eth0.pcap ";
+        pcapFiles += "/home/" + QString::fromUtf8(linuxUsername) + "/s" + QString::number(i + 1) + "-eth0.pcap ";
     }
 
     char* fileString = new char[pcapFiles.length() + 1];

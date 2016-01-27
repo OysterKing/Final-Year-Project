@@ -43,7 +43,7 @@ class PacketReader:
 		username = getpass.getuser()
 		print "username = ", PacketReader.username
 		pcapFileIndex = filename.rfind(PacketReader.username)
-		pcapFileIndex = pcapFileIndex + 23 + len(PacketReader.username)
+		pcapFileIndex = pcapFileIndex + 1 + len(PacketReader.username)
 		print "INDEX  =", pcapFileIndex
 #		tcpDPorts = []
 #		tcpSPorts = []
@@ -111,7 +111,7 @@ class PacketReader:
 					if PacketReader.readPktTimes.count(timestamp) > 0:
 						previousFile = PacketReader.timeFileDict[timestamp]
 #						PacketReader.timePktDict.has_key(str(ts - int(ts)))
-						if  previousFile[0] == "h" and filename[pcapFileIndex] == "s":
+						if  previousFile[pcapFileIndex] == "h" and filename[pcapFileIndex] == "s":
 							indexOfp = previousFile.index('p')
 							hostNum = previousFile[indexOfp - 2]
 							dst = socket.inet_ntoa(ip.dst)
@@ -148,7 +148,7 @@ class PacketReader:
 					#Extract the relevant information from timestamp (values after decimal point)
 					PacketReader.readPktTimes.append(timestamp)
 					PacketReader.timePktDict[timestamp] = pktID
-					PacketReader.timeFileDict[timestamp] = filename[38:]
+					PacketReader.timeFileDict[timestamp] = filename[pcapFileIndex:]
 					
 					if filename[pcapFileIndex] == "h":
 						dst_ip_addr_str = socket.inet_ntoa(ip.dst)
@@ -201,10 +201,12 @@ class PacketReader:
 					time = (float(times[j+1]) - float(times[j]))
 #					print "TIME: ", time, " = ", times[j+1], " - ", times[j]
 					PacketReader.pktTimes.append(time)
+					print files
 					srcIp = PacketReader.fileIpDict[files[j]]
 					PacketReader.fullSrcIP_list.append(srcIp)
 
 				for k in range(1, len(files)):
+					print files
 					dstIp = PacketReader.fileIpDict[files[k]]
 					PacketReader.fullDstIP_list.append(dstIp)
 

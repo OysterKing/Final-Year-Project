@@ -129,3 +129,6 @@ Added comments and deleted a lot of print statements used for debugging.
 
 26/01/16:
 The file paths are no longer hardcoded in pcapReader, drawmode or NetInitialiser.
+
+27/01/16:
+NetInitialiser now opens all terminals in a tabbed format which is more readible and neat. It also runs tcpdump on each of the hosts and switches in the background. Changed the filepath so that pcap files arent saved in the netanim folder.

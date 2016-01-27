@@ -15,7 +15,8 @@ from utils import makeTerm, makeTerms, makeTabbedTerm
 from subprocess import Popen
 import getpass
 
-def customNet():
+def customNet(username):
+	user = username
 	link_opts = {"bw":1000, "delay":0, "loss": 0, "use_htb": False}
 	filename = "netanim_topo.xml"
 	topo = customTopo(link_opts = link_opts, filename = filename)
@@ -24,23 +25,32 @@ def customNet():
 	net.start()
 
 	for offset, host in enumerate(net.hosts):
-#		host.cmd("tcpdump", "-u", "-w", host, ".pcap")
-		net.terms = makeTabbedTerm([net.hosts[offset]], term="xfce")
-		pcap = str(host), ".pcap"
+		print "Capturing on hosts...", offset
+#		net.terms = makeTabbedTerm([net.hosts[offset]], term="xfce")
+		path = "/home/" + user + "/" + str(host) + ".pcap"
+		print path
+		host.cmd("tcpdump -u -w", path, "&")
 #		tcpdump = net.terms[offset]
 #		tcpdump = tcpdump.Popen("tcpdump", "-u", "-w", pcap)
 #		Popen(["tcpdump", "-u", "-w", pcap])
 #		print type(tcpdump)
 
 	for offset, switch in enumerate(net.switches):
-#		switch.cmd("tcpdump", "-i", switch, "-eth1", switch, ".pcap")
-		net.terms = makeTabbedTerm([net.switches[offset]], term="xfce")
+		print "Capturing on switches...", offset
+		print switch
+		path = "/home/" + username + "/" + str(switch) + "-eth0.pcap"
+		switch.cmd("tcpdump -i", switch, "-u -w", path, "&")
+#		net.terms = makeTabbedTerm([net.switches[offset]], term="xfce")
+
+	net.terms = makeTabbedTerm(net.hosts, term = "xfce")
+	net.terms = makeTabbedTerm(net.switches, term = "xfce")
 
 	CLI(net)
 	net.stop()
 
 def main():
-	customNet()
+	#pass the username to the custom net function
+	customNet(username = sys.argv[5])
 	arguments = sys.argv[1:]
 	pcapFiles = []
 	username = sys.argv[5]
