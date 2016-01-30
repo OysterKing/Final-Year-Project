@@ -8,6 +8,7 @@ import binascii
 import datetime
 import decimal
 import getpass
+import os
 
 class PacketReader:
 	'Class to read pcap file.'
@@ -28,7 +29,8 @@ class PacketReader:
 	
 	def openFiles(self):
 		for i in range(len(PacketReader.pcapFiles)):
-			self.parseFile(PacketReader.pcapFiles[i]);
+			self.parseFile(PacketReader.pcapFiles[i])
+			os.remove(PacketReader.pcapFiles[i])
 		return
 
 	def parseFile(self, filename):
