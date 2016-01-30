@@ -12,8 +12,6 @@ import getpass
 class PacketReader:
 	'Class to read pcap file.'
 	pktCounter = 0
-	srcIP_list = []
-	dstIP_list = []
 	fullSrcIP_list = []
 	fullDstIP_list = []
 	timePktDict = {}
@@ -63,6 +61,11 @@ class PacketReader:
 				tcpCount+=1
 
 			elif type(tcp) is dpkt.udp.UDP:
+#				print "UDP PACKET"
+#				udp = tcp
+#				print udp.__hdr__
+#				print udp.sport
+#				print udp.dport
 				udpCount+=1
 
 #			if type(pktData) is dpkt.arp.ARP:
@@ -111,7 +114,7 @@ class PacketReader:
 					if PacketReader.readPktTimes.count(timestamp) > 0:
 						previousFile = PacketReader.timeFileDict[timestamp]
 #						PacketReader.timePktDict.has_key(str(ts - int(ts)))
-						if  previousFile[pcapFileIndex] == "h" and filename[pcapFileIndex] == "s":
+						if  previousFile[0] == "h" and filename[0] == "s":
 							indexOfp = previousFile.index('p')
 							hostNum = previousFile[indexOfp - 2]
 							dst = socket.inet_ntoa(ip.dst)
@@ -149,33 +152,18 @@ class PacketReader:
 					PacketReader.readPktTimes.append(timestamp)
 					PacketReader.timePktDict[timestamp] = pktID
 					PacketReader.timeFileDict[timestamp] = filename[pcapFileIndex:]
-					
-					if filename[pcapFileIndex] == "h":
-						dst_ip_addr_str = socket.inet_ntoa(ip.dst)
-						src_ip_addr_str = socket.inet_ntoa(ip.src)
-						PacketReader.srcIP_list.append(src_ip_addr_str)
-						PacketReader.dstIP_list.append(dst_ip_addr_str)
-
 
 			PacketReader.pktCounter+=1
 
 #		print tcpSeqNos
 #		print "UDP pkts = " + str(udpCount/2)
-#		print "TCP pkts = " + str(tcpCount/2)
+		print "TCP pkts = " + str(tcpCount)
 #		print "ICMP pkts = " + str(icmpCount/2)
 
 #		for i in range(len(PacketReader.readPktTimes)):
 #			if PacketReader.readPktTimes.count(PacketReader.readPktTimes[i]) > 1:
 #				print "THERE ARE STILL DUPLICATES."
 		f.close()
-		return
-
-	def printSrcIPAddrs(self):
-		print PacketReader.srcIP_list
-		return
-
-	def printDstIPAddrs(self):
-		print PacketReader.dstIP_list
 		return
 
 #This function calculates the time it takes each packet to travel from host to switch, switch to switch and switch to host.
@@ -225,12 +213,6 @@ class PacketReader:
 				files.append(filename)
 				times.append(minimum)
 				del PacketReader.readPktTimes[PacketReader.readPktTimes.index(minimum)]
-
-
-	def printTimes(self):
-		for i in range (len(PacketReader.pktTimes)):
-			print PacketReader.pktTimes[i], " (", PacketReader.srcIP_list[i], " -> ", PacketReader.dstIP_list[i], ")"
-		return
 
 	def getPktTimes(self):
 		return PacketReader.pktTimes

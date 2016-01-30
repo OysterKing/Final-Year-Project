@@ -132,3 +132,6 @@ The file paths are no longer hardcoded in pcapReader, drawmode or NetInitialiser
 
 27/01/16:
 NetInitialiser now opens all terminals in a tabbed format which is more readible and neat. It also runs tcpdump on each of the hosts and switches in the background. Changed the filepath so that pcap files arent saved in the netanim folder.
+
+30/01/16:
+Had another corrupt git repository so had to clone again. I deleted some of the functions and lists that are no longer needed in pcap reader.
