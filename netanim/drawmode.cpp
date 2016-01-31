@@ -67,7 +67,7 @@ DrawMode::init()
     m_vLayout = new QVBoxLayout;
     m_vLayout->addWidget(m_topToolBar);
     m_hLayout->addWidget(m_sideToolBar);
-    m_vLayout->addSpacing(0);
+    m_vLayout->addSpacing(10);
     m_vLayout->addLayout(m_hLayout);
     m_centralWidget = new QWidget;
     m_centralWidget->setLayout(m_vLayout);
@@ -102,27 +102,27 @@ DrawMode::initTopToolbar()
 
     m_addHostButton = new QToolButton;
     m_addHostButton->setToolTip("Add node");
-    m_addHostButton->setText("X");
+    m_addHostButton->setText("ADD NODE");
     m_addHostButton->setCheckable(true);
     connect (m_addHostButton, SIGNAL(clicked()), this, SLOT (addHostButtonSlot()));
     m_topToolBar->addWidget(m_addHostButton);
 
     m_addSwitchButton = new QToolButton;
     m_addSwitchButton->setToolTip("Add switch");
-    m_addSwitchButton->setText("Y");
+    m_addSwitchButton->setText("ADD SWITCH");
     m_addSwitchButton->setCheckable(true);
     connect (m_addSwitchButton, SIGNAL(clicked()), this, SLOT (addSwitchButtonSlot()));
     m_topToolBar->addWidget(m_addSwitchButton);
 
     m_saveButton = new QToolButton;
     m_saveButton->setToolTip("Save");
-    m_saveButton->setText("A");
+    m_saveButton->setText("SAVE");
     connect (m_saveButton, SIGNAL(clicked()), this, SLOT (saveButtonSlot()));
     m_topToolBar->addWidget(m_saveButton);
 
     m_runButton = new QToolButton;
     m_runButton->setToolTip("Run");
-    m_runButton->setText("R");
+    m_runButton->setText("RUN");
     connect (m_runButton, SIGNAL(clicked()), this, SLOT (runButtonSlot()));
     m_topToolBar->addWidget(m_runButton);
 }
@@ -132,6 +132,7 @@ DrawMode::initSideToolbar()
 {
     m_sideToolBar = new QToolBar;
     m_sideToolBar->setOrientation(Qt::Vertical);
+//    m_sideToolBar->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding);
 
     m_linkFromLabel = new QLabel;
     m_linkFromLabel->setText("FROM");
@@ -147,11 +148,39 @@ DrawMode::initSideToolbar()
     m_linkToEdit = new QLineEdit;
     m_sideToolBar->addWidget(m_linkToEdit);
 
+    m_bwLabel = new QLabel;
+    m_bwLabel->setText("BW");
+    m_sideToolBar->addWidget(m_bwLabel);
+
+//    QWidget *separator = new QWidget(this);
+//    separator->setSizePolicy(QSizePolicy::Expanding,
+//    QSizePolicy::Expanding);
+//    m_sideToolBar->addWidget(separator);
+
+    m_bwEdit = new QLineEdit;
+    m_sideToolBar->addWidget(m_bwEdit);
+
+    m_delayLabel = new QLabel;
+    m_delayLabel->setText("DELAY");
+    m_sideToolBar->addWidget(m_delayLabel);
+
+    m_delayEdit = new QLineEdit;
+    m_sideToolBar->addWidget(m_delayEdit);
+
+    m_lossLabel = new QLabel;
+    m_lossLabel->setText("LOSS");
+    m_sideToolBar->addWidget(m_delayLabel);
+
+    m_lossEdit = new QLineEdit;
+    m_sideToolBar->addWidget(m_lossEdit);
+
     m_addLinkButton = new QToolButton;
     m_addLinkButton->setToolTip("Add link");
-    m_addLinkButton->setText("B");
+    m_addLinkButton->setText("CREATE LINK");
     connect(m_addLinkButton, SIGNAL(clicked()), this, SLOT (addLinkButtonSlot()));
     m_sideToolBar->addWidget(m_addLinkButton);
+
+    m_sideToolBar->adjustSize();
 }
 
 void

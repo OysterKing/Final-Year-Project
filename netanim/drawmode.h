@@ -49,8 +49,14 @@ private:
     QToolButton * m_runButton;
     QLabel * m_linkFromLabel;
     QLabel * m_linkToLabel;
+    QLabel * m_bwLabel;
+    QLabel * m_delayLabel;
+    QLabel * m_lossLabel;
     QLineEdit * m_linkFromEdit;
     QLineEdit * m_linkToEdit;
+    QLineEdit * m_bwEdit;
+    QLineEdit * m_delayEdit;
+    QLineEdit * m_lossEdit;
     QScrollArea * m_toolbarScrollArea;
     QPointF m_minPoint;
     QPointF m_maxPoint;

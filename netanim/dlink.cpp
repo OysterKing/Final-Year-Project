@@ -3,6 +3,7 @@
 
 #include "dlink.h"
 #include "dnode.h"
+#include <cstdlib>
 
 namespace netanim
 {
