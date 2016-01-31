@@ -17,7 +17,7 @@ import getpass
 
 def customNet(username):
 	user = username
-	link_opts = {"bw":1000, "delay":0, "loss": 0, "use_htb": False}
+	link_opts = {"bw":1000, "delay":1000, "loss": 0, "use_htb": False}
 	filename = "netanim_topo.xml"
 	topo = customTopo(link_opts = link_opts, filename = filename)
 
