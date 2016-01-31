@@ -136,3 +136,6 @@ NetInitialiser now opens all terminals in a tabbed format which is more readible
 30/01/16:
 Had another corrupt git repository so had to clone again. I deleted some of the functions and lists that are no longer needed in pcap reader.
 Added a line to pcap reader to delete the pcap files when they are no longer needed; this prevents later errors since the pcap files are always labelled the same.
+
+31/01/16:
+Fixed an error where I was looking at the incorrect index when checking for duplicate timestamps in pcapReader.

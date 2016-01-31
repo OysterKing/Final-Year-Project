@@ -13,6 +13,8 @@ import os
 class PacketReader:
 	'Class to read pcap file.'
 	pktCounter = 0
+	srcIP_list = []
+	dstIP_list = []
 	fullSrcIP_list = []
 	fullDstIP_list = []
 	timePktDict = {}
@@ -29,7 +31,7 @@ class PacketReader:
 	
 	def openFiles(self):
 		for i in range(len(PacketReader.pcapFiles)):
-			self.parseFile(PacketReader.pcapFiles[i])
+			self.parseFile(PacketReader.pcapFiles[i]);
 			os.remove(PacketReader.pcapFiles[i])
 		return
 
@@ -115,8 +117,11 @@ class PacketReader:
 					# comes after the other duplicate timestamp. If it's a switch it comes before so we take one away.
 					if PacketReader.readPktTimes.count(timestamp) > 0:
 						previousFile = PacketReader.timeFileDict[timestamp]
+						print "THERE IS A DUPLICATE IN ", filename[pcapFileIndex:], " FOLLOWING ", previousFile
+						print "BEFORE : ", timestamp
 #						PacketReader.timePktDict.has_key(str(ts - int(ts)))
-						if  previousFile[0] == "h" and filename[0] == "s":
+						if  previousFile[0] == "h" and filename[pcapFileIndex] == "s":
+							print "CHANGING THE TIMESTAMP IN ", filename, " FROM ", previousFile
 							indexOfp = previousFile.index('p')
 							hostNum = previousFile[indexOfp - 2]
 							dst = socket.inet_ntoa(ip.dst)
@@ -145,6 +150,7 @@ class PacketReader:
 									timestampList[len(timestamp) - 1] = str(int(timestampList[len(timestamp) - 1]) + 1)
 									timestamp = ''.join(timestampList)
 
+						print "AFTER : ", timestamp
 
 					srcIPstring = socket.inet_ntoa(ip.src)
 					nodeNum = float(srcIPstring[7:])
@@ -154,6 +160,14 @@ class PacketReader:
 					PacketReader.readPktTimes.append(timestamp)
 					PacketReader.timePktDict[timestamp] = pktID
 					PacketReader.timeFileDict[timestamp] = filename[pcapFileIndex:]
+					
+					if filename[pcapFileIndex] == "h":
+						dst_ip_addr_str = socket.inet_ntoa(ip.dst)
+						src_ip_addr_str = socket.inet_ntoa(ip.src)
+						PacketReader.srcIP_list.append(src_ip_addr_str)
+						PacketReader.dstIP_list.append(dst_ip_addr_str)
+#						print ip.__hdr__
+
 
 			PacketReader.pktCounter+=1
 
@@ -162,10 +176,20 @@ class PacketReader:
 		print "TCP pkts = " + str(tcpCount)
 #		print "ICMP pkts = " + str(icmpCount/2)
 
-#		for i in range(len(PacketReader.readPktTimes)):
-#			if PacketReader.readPktTimes.count(PacketReader.readPktTimes[i]) > 1:
-#				print "THERE ARE STILL DUPLICATES."
+		for i in range(len(PacketReader.readPktTimes)):
+			if PacketReader.readPktTimes.count(PacketReader.readPktTimes[i]) > 1:
+				print "THERE ARE STILL DUPLICATES."
+
+		print PacketReader.timeFileDict
 		f.close()
+		return
+
+	def printSrcIPAddrs(self):
+		print PacketReader.srcIP_list
+		return
+
+	def printDstIPAddrs(self):
+		print PacketReader.dstIP_list
 		return
 
 #This function calculates the time it takes each packet to travel from host to switch, switch to switch and switch to host.
@@ -215,6 +239,12 @@ class PacketReader:
 				files.append(filename)
 				times.append(minimum)
 				del PacketReader.readPktTimes[PacketReader.readPktTimes.index(minimum)]
+
+
+	def printTimes(self):
+		for i in range (len(PacketReader.pktTimes)):
+			print PacketReader.pktTimes[i], " (", PacketReader.srcIP_list[i], " -> ", PacketReader.dstIP_list[i], ")"
+		return
 
 	def getPktTimes(self):
 		return PacketReader.pktTimes
