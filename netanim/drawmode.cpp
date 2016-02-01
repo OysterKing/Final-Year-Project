@@ -149,7 +149,7 @@ DrawMode::initSideToolbar()
     m_sideToolBar->addWidget(m_linkToEdit);
 
     m_bwLabel = new QLabel;
-    m_bwLabel->setText("BW");
+    m_bwLabel->setText("BANDWIDTH");
     m_sideToolBar->addWidget(m_bwLabel);
 
 //    QWidget *separator = new QWidget(this);
@@ -160,6 +160,8 @@ DrawMode::initSideToolbar()
     m_bwEdit = new QLineEdit;
     m_sideToolBar->addWidget(m_bwEdit);
 
+//    m_sideToolBar->addSeparator();
+
     m_delayLabel = new QLabel;
     m_delayLabel->setText("DELAY");
     m_sideToolBar->addWidget(m_delayLabel);
@@ -167,9 +169,11 @@ DrawMode::initSideToolbar()
     m_delayEdit = new QLineEdit;
     m_sideToolBar->addWidget(m_delayEdit);
 
+//    m_sideToolBar->addSeparator();
+
     m_lossLabel = new QLabel;
     m_lossLabel->setText("LOSS");
-    m_sideToolBar->addWidget(m_delayLabel);
+    m_sideToolBar->addWidget(m_lossLabel);
 
     m_lossEdit = new QLineEdit;
     m_sideToolBar->addWidget(m_lossEdit);

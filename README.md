@@ -141,3 +141,6 @@ Added a line to pcap reader to delete the pcap files when they are no longer nee
 Fixed an error where I was looking at the incorrect index when checking for duplicate timestamps in pcapReader.
 Hardcoded in some default delay to try prevent duplicate timestamps from occurring.
 Added new fields to draw mode and made the buttons more clear.
+
+01/02/16:
+Fixed an error where labels weren't appearing correctly in the side toolbar of drawmode.
