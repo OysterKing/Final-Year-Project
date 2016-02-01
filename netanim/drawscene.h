@@ -25,7 +25,7 @@ public:
     void enableHostAddition(bool enable);
     void enableSwitchAddition(bool enable);
     void enableLinkAddition(bool enable);
-    void addLink(QString from, QString to);
+    void addLink(QString from, QString to, QString bw, QString d, QString l);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent (QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);

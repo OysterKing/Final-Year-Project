@@ -139,7 +139,11 @@ dLink::paint (QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget
         {
           painter->rotate (-line ().angle ());
         }
-      painter->drawText (center, *m_currentLinkDescription);
+
+//      painter->drawText (center, *m_currentLinkDescription);
+      painter->drawText(center, "BW: " + m_bandwidth + " D: " + m_delay + " L: " + m_loss);
+//      painter->drawText(center, m_delay);
+//      painter->drawText(center, m_loss);
       painter->restore ();
     }
 

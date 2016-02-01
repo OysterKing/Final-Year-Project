@@ -280,16 +280,16 @@ DrawScene::addSwitch(QPointF pos)
 }
 
 void
-DrawScene::addLink(QString toString, QString fromString)
+DrawScene::addLink(QString toString, QString fromString, QString bw, QString d, QString l)
 {
     uint32_t fromNodeSysId;
     uint32_t toNodeSysId;
     QString to = toString;
     QString from = fromString;
     QString linkDescription = from + " -> " + to;
-    QString bandwidth = "100";
-    QString loss = "0";
-    QString delay = "0";
+    QString bandwidth = bw;
+    QString loss = l;
+    QString delay = d;
     QString maxQueueSize = "1000";
 
     m_linksVector.push_back(to + " " + from);

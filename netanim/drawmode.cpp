@@ -333,8 +333,14 @@ DrawMode::addLinkButtonSlot()
 {
     QString to = m_linkToEdit->text();
     QString from = m_linkFromEdit->text();
+    QString bandwidth = m_bwEdit->text();
+    QString delay = m_delayEdit->text();
+    QString loss = m_lossEdit->text();
     to = to.toLower();
     from = from.toLower();
+    bandwidth = bandwidth.toLower();
+    delay = delay.toLower();
+    loss = loss.toLower();
     std::vector<QString> hosts;
     std::vector<QString> switches;
     hosts = DrawScene::getInstance()->getHostVector();
@@ -355,15 +361,15 @@ DrawMode::addLinkButtonSlot()
 
     //add check to see if link already exists using link map
     if(foundToSwitch != switches.end() && foundFromSwitch != switches.end()){
-        DrawScene::getInstance()->addLink(to, from);
+        DrawScene::getInstance()->addLink(to, from, bandwidth, delay, loss);
     }
 
     else if(foundToHost != hosts.end() && foundFromSwitch != switches.end()){
-        DrawScene::getInstance()->addLink(to, from);
+        DrawScene::getInstance()->addLink(to, from, bandwidth, delay, loss);
     }
 
     else if(foundToSwitch != switches.end() && foundFromHost != hosts.end()){
-        DrawScene::getInstance()->addLink(to, from);
+        DrawScene::getInstance()->addLink(to, from, bandwidth, delay, loss);
     }
 
     else{

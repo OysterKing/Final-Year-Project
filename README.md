@@ -144,3 +144,4 @@ Added new fields to draw mode and made the buttons more clear.
 
 01/02/16:
 Fixed an error where labels weren't appearing correctly in the side toolbar of drawmode.
+Users can now customise delay, bandwidth and loss for each link. This information is then displayed on the link instead of "h.0->s.0".
