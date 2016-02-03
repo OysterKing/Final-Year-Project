@@ -155,6 +155,9 @@ class PacketReader:
 					srcIPstring = socket.inet_ntoa(ip.src)
 					nodeNum = float(srcIPstring[7:])
 					pktID = ip.id/nodeNum
+					print ""
+					print ip.id, " -> ", pktID
+					print ""
 
 					#Extract the relevant information from timestamp (values after decimal point)
 					PacketReader.readPktTimes.append(timestamp)
@@ -181,6 +184,7 @@ class PacketReader:
 				print "THERE ARE STILL DUPLICATES."
 
 		print PacketReader.timeFileDict
+		print PacketReader.timePktDict
 		f.close()
 		return
 
@@ -204,41 +208,60 @@ class PacketReader:
 		numberTimes = len(PacketReader.readPktTimes)
 		hostIPCount = 0
 
-		for i in range(numberTimes + 1):
-			if i != numberTimes:
-				minimum = min(PacketReader.readPktTimes)
-				packetNumber = PacketReader.timePktDict.get(minimum, None)
-				filename = PacketReader.timeFileDict.get(minimum, None)
-			
-			if (packets.count(packetNumber) == 0 and len(packets) != 0) or i == numberTimes:
-				for j in range(len(times) - 1):
-					time = (float(times[j+1]) - float(times[j]))
-#					print "TIME: ", time, " = ", times[j+1], " - ", times[j]
-					PacketReader.pktTimes.append(time)
-					print files
-					srcIp = PacketReader.fileIpDict[files[j]]
-					PacketReader.fullSrcIP_list.append(srcIp)
+		while len(PacketReader.readPktTimes) > 0:
+			minimum = min(PacketReader.readPktTimes)
+			minPktId = PacketReader.timePktDict[minimum]
+			del PacketReader.timePktDict[minimum]
 
-				for k in range(1, len(files)):
-					print files
-					dstIp = PacketReader.fileIpDict[files[k]]
-					PacketReader.fullDstIP_list.append(dstIp)
+			packets.append(minPktId)
+			times.append(minimum)
+			filename = PacketReader.timeFileDict[minimum]
+			del PacketReader.timeFileDict[minimum]
+			files.append(filename)
 
-				packets = []
-				times = []
-				files = []
-				packets.append(packetNumber)
+			del PacketReader.readPktTimes[PacketReader.readPktTimes.index(minimum)]
+
+			#get all other instances of that packet.
+			valueKeyTupleList = PacketReader.timePktDict.items()
+			for item in valueKeyTupleList:
+				if item[1] == minPktId:
+					print item
+					time = item[0]
+					times.append(time)
+					#filename = PacketReader.timeFileDict[time]
+					#files.append(filename)
+					del PacketReader.timePktDict[time]
+					#del PacketReader.timeFileDict[time]
+					del PacketReader.readPktTimes[PacketReader.readPktTimes.index(time)]
+
+			print "BEFORE SORT -------- ", times
+			#sort list of times in ascending order
+			times = sorted(times, key = float)
+			print "AFTER SORT -------- ", times
+
+			for i in range(1, len(times)):
+				filename = PacketReader.timeFileDict[times[i]]
 				files.append(filename)
-				times.append(minimum)
-				if i != numberTimes:
-					del PacketReader.readPktTimes[PacketReader.readPktTimes.index(minimum)]
+				del PacketReader.timeFileDict[times[i]]
 
-			else:
-				print packets
-				packets.append(packetNumber)
-				files.append(filename)
-				times.append(minimum)
-				del PacketReader.readPktTimes[PacketReader.readPktTimes.index(minimum)]
+			for j in range(len(times) - 1):
+				time = (float(times[j+1]) - float(times[j]))
+#				print "TIME: ", time, " = ", times[j+1], " - ", times[j]
+				PacketReader.pktTimes.append(time)
+				print files
+				print times
+				srcIp = PacketReader.fileIpDict[files[j]]
+				PacketReader.fullSrcIP_list.append(srcIp)
+
+			for k in range(1, len(files)):
+				print files
+				dstIp = PacketReader.fileIpDict[files[k]]
+				PacketReader.fullDstIP_list.append(dstIp)
+
+			packets = []
+			times = []
+			files = []
+
 
 
 	def printTimes(self):

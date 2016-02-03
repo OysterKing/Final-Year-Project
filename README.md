@@ -148,3 +148,6 @@ Users can now customise delay, bandwidth and loss for each link. This informatio
 
 02/02/16:
 Added bridge_switch file that contains settings for the mininet switches. Should have been included earlier.
+
+03/02/16:
+I encountered an error regarding multiple packets in transit. I fixed this by changing the calulateTimes method in pcapReader. It is now more efficient, neat and works correctly, taking into account the possibility of multiple packets on the network.
