@@ -73,7 +73,7 @@ class Translator:
 			data[entryIndex] += packetLine
 		print data[entryIndex]
 
-		with open('test.xml', 'w') as file:
+		with open('/home/comhghall/Final-Year-Project/resources/test.xml', 'w') as file:
 			file.writelines(data)
 		return
 

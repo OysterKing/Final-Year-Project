@@ -7,7 +7,7 @@ try:
 
 	class customTopo(Topo):
 
-		def __init__(self, blocking = False, link_opts = {}, xmlFilename = "/home/comhghall/netanim_topo.xml", **opts):
+		def __init__(self, blocking = False, link_opts = {}, xmlFilename = "/home/comhghall/Final-Year-Project/resources/netanim_topo.xml", **opts):
 
 			Topo.__init__(self, **opts)
 			hostIDs = []
@@ -61,8 +61,6 @@ try:
 							#switchCount += 1
 							toNode = str("s" + str(k + 1))
 
-					print fromNode
-					print toNode
 					self.addLink(fromNode, toNode, **link_opts)
 
 except ImportError:

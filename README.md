@@ -151,3 +151,6 @@ Added bridge_switch file that contains settings for the mininet switches. Should
 
 03/02/16:
 I encountered an error regarding multiple packets in transit. I fixed this by changing the calulateTimes method in pcapReader. It is now more efficient, neat and works correctly, taking into account the possibility of multiple packets on the network.
+
+04/02/16:
+Changed filepaths so that now the program works out of the Final-Year-Project folder and the pcap and xml files are saved in a sub folder called resources.

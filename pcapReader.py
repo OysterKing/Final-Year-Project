@@ -45,7 +45,7 @@ class PacketReader:
 		username = getpass.getuser()
 		print "username = ", PacketReader.username
 		pcapFileIndex = filename.rfind(PacketReader.username)
-		pcapFileIndex = pcapFileIndex + 1 + len(PacketReader.username)
+		pcapFileIndex = pcapFileIndex + 30 + len(PacketReader.username)
 		print "INDEX  =", pcapFileIndex
 #		tcpDPorts = []
 #		tcpSPorts = []

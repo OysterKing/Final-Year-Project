@@ -17,7 +17,7 @@ import getpass
 
 def customNet(username):
 	user = username
-	link_opts = {"bw":1000, "delay":1000, "loss": 0, "use_htb": False}
+	link_opts = {"bw":1000, "delay":10, "loss": 0, "use_htb": False}
 	filename = "netanim_topo.xml"
 	topo = customTopo(link_opts = link_opts, filename = filename)
 
@@ -27,8 +27,8 @@ def customNet(username):
 	for offset, host in enumerate(net.hosts):
 		print "Capturing on hosts...", offset
 #		net.terms = makeTabbedTerm([net.hosts[offset]], term="xfce")
-		path = "/home/" + user + "/" + str(host) + ".pcap"
-		print path
+		path = "/home/comhghall/Final-Year-Project/resources/" + str(host) + ".pcap"
+		print "path = ", path
 		host.cmd("tcpdump -u -w", path, "&")
 #		tcpdump = net.terms[offset]
 #		tcpdump = tcpdump.Popen("tcpdump", "-u", "-w", pcap)
@@ -38,7 +38,8 @@ def customNet(username):
 	for offset, switch in enumerate(net.switches):
 		print "Capturing on switches...", offset
 		print switch
-		path = "/home/" + username + "/" + str(switch) + "-eth0.pcap"
+		path = "/home/comhghall/Final-Year-Project/resources/" + str(switch) + "-eth0.pcap"
+		print "path = ", path
 		switch.cmd("tcpdump -i", switch, "-u -w", path, "&")
 #		net.terms = makeTabbedTerm([net.switches[offset]], term="xfce")
 
@@ -59,7 +60,7 @@ def main():
 	for i in range(6, len(sys.argv)):
 		pcapFiles = sys.argv[i].split()
 
-	print pcapFiles
+	print "pcap files = ", pcapFiles
 	packetReader = PacketReader(pcapFiles, username)
 	packetReader.openFiles()
 	packetReader.calculateTimes()
@@ -71,7 +72,7 @@ def main():
 	print sys.argv[4]
 	translator.getHostSwitchIDs(sys.argv[4])
 	#username = getpass.getuser()
-	translator.writeToXML("/home/" + username + "/netanim_topo.xml")
+	translator.writeToXML("/home/" + username + "/Final-Year-Project/resources/netanim_topo.xml")
 
 if __name__ == '__main__':
 	main()
