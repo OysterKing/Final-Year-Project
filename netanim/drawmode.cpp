@@ -104,6 +104,7 @@ DrawMode::initTopToolbar()
     m_addHostButton->setToolTip("Add node");
     m_addHostButton->setText("ADD NODE");
     m_addHostButton->setCheckable(true);
+    m_addHostButton->setStyleSheet("border:1px outset #7990c1");
     connect (m_addHostButton, SIGNAL(clicked()), this, SLOT (addHostButtonSlot()));
     m_topToolBar->addWidget(m_addHostButton);
 
@@ -111,18 +112,21 @@ DrawMode::initTopToolbar()
     m_addSwitchButton->setToolTip("Add switch");
     m_addSwitchButton->setText("ADD SWITCH");
     m_addSwitchButton->setCheckable(true);
+    m_addSwitchButton->setStyleSheet("border:1px outset #7990c1");
     connect (m_addSwitchButton, SIGNAL(clicked()), this, SLOT (addSwitchButtonSlot()));
     m_topToolBar->addWidget(m_addSwitchButton);
 
     m_saveButton = new QToolButton;
     m_saveButton->setToolTip("Save");
     m_saveButton->setText("SAVE");
+    m_saveButton->setStyleSheet("border:1px outset #7990c1");
     connect (m_saveButton, SIGNAL(clicked()), this, SLOT (saveButtonSlot()));
     m_topToolBar->addWidget(m_saveButton);
 
     m_runButton = new QToolButton;
     m_runButton->setToolTip("Run");
     m_runButton->setText("RUN");
+    m_runButton->setStyleSheet("border:1px outset #7990c1");
     connect (m_runButton, SIGNAL(clicked()), this, SLOT (runButtonSlot()));
     m_topToolBar->addWidget(m_runButton);
 }
@@ -181,6 +185,7 @@ DrawMode::initSideToolbar()
     m_addLinkButton = new QToolButton;
     m_addLinkButton->setToolTip("Add link");
     m_addLinkButton->setText("CREATE LINK");
+    m_addLinkButton->setStyleSheet("border:1px outset #7990c1");
     connect(m_addLinkButton, SIGNAL(clicked()), this, SLOT (addLinkButtonSlot()));
     m_sideToolBar->addWidget(m_addLinkButton);
 

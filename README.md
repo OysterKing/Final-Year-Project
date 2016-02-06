@@ -157,3 +157,4 @@ Changed filepaths so that now the program works out of the Final-Year-Project fo
 
 06/02/16:
 Added code to netanim to write the link options chosen by the user to the temporary xml file. The NetReader then parse this information for each link and initiates them in mininet. Translator deletes this extra information when it is writing the final executable xml file.
+Changed the aesthetic of the buttons in the draw window so that they now have a border.
