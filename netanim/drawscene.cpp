@@ -203,6 +203,12 @@ DrawScene::getLinksVector()
     return m_linksVector;
 }
 
+std::vector<QString>
+DrawScene::getLinkOptsVector()
+{
+    return m_linkOptsVector;
+}
+
 void
 DrawScene::setMousePositionLabel (QPointF pos)
 {
@@ -293,6 +299,7 @@ DrawScene::addLink(QString toString, QString fromString, QString bw, QString d, 
     QString maxQueueSize = "1000";
 
     m_linksVector.push_back(to + " " + from);
+    m_linkOptsVector.push_back(bw + " " + delay + " " + loss);
 
     if(from.at(0) == 'h'){
         fromNodeSysId = m_hostSysIdsMap.find(from)->second;

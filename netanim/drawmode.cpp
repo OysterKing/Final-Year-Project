@@ -242,6 +242,7 @@ DrawMode::saveButtonSlot()
     std::vector<QString> hosts;
     std::vector<QString> switches;
     std::vector<QString> links;
+    std::vector<QString> linkOptions;
     std::map<QString, int> hostSysIdMap;
     std::map<QString, int> switchSysIdMap;
     std::map<QString, QString> hostIpMap;
@@ -253,6 +254,7 @@ DrawMode::saveButtonSlot()
     hosts = DrawScene::getInstance()->getHostVector();
     switches = DrawScene::getInstance()->getSwitchVector();
     links = DrawScene::getInstance()->getLinksVector();
+    linkOptions = DrawScene::getInstance()->getLinkOptsVector();
     hostIpMap = DrawScene::getInstance()->getHostIpMap();
     hostMacMap = DrawScene::getInstance()->getHostMacMap();
     hostLocMap = DrawScene::getInstance()->getHostLocMap();
@@ -261,12 +263,12 @@ DrawMode::saveButtonSlot()
     switchLocMap = DrawScene::getInstance()->getSwitchLocMap();
     switchSysIdMap = DrawScene::getInstance()->getSwitchSysIdMap();
 
-    QString id, x, y, name, fromName, toName, fromIp, fromMac, toIp, toMac, fromId, toId;
+    QString id, x, y, name, fromName, toName, fromIp, fromMac, toIp, toMac, fromId, toId, bw, delay, loss, option;
     QPointF position;
 
     //ask the user to enter the name of his topology.
 
-    QFile xmlFile("/home/comhghall/netanim_topo.xml");
+    QFile xmlFile("/home/comhghall/Final-Year-Project/resources/netanim_topo.xml");
     xmlFile.open(QIODevice::WriteOnly);
     QTextStream outStream(&xmlFile);
     outStream << "<anim ver=\"netanim-3.106\" filetype=\"animation\" >\n";
@@ -297,6 +299,11 @@ DrawMode::saveButtonSlot()
         name = links.at(i);
         toName = name.left(3);
         fromName = name.right(3);
+        option = linkOptions.at(i);
+        QStringList optionList = option.split(" ", QString::SkipEmptyParts);
+        bw = optionList[0];
+        delay = optionList[1];
+        loss = optionList[2];
 
         if(toName.at(0) == 'h'){
             toId = QString::number(hostSysIdMap.find(toName)->second);
@@ -321,7 +328,7 @@ DrawMode::saveButtonSlot()
             fromIp = "--.--.--";
             fromMac = switchMacMap.find(fromName)->second;
         }
-        outStream << "<link fromId=\"" + fromId + "\" toId=\"" + toId + "\" fd=\"" + fromIp + "~" + fromMac + "\" td=\"" + toIp + "~" + toMac + "\" ld=\"\" />\n";
+        outStream << "<link fromId=\"" + fromId + "\" toId=\"" + toId + "\" fd=\"" + fromIp + "~" + fromMac + "\" td=\"" + toIp + "~" + toMac + "\" ld=\"\" />" + bw + " " + delay + " " + loss + "\n";
     }
 
     outStream << "</anim>";
@@ -393,17 +400,17 @@ DrawMode::runButtonSlot()
     const char* linuxUsername = pwd->pw_name;
 
     for(int i = 0; i < hosts.size(); i++){
-        pcapFiles += "/home/" + QString::fromUtf8(linuxUsername) + "/h" + QString::number(i + 1) + ".pcap ";
+        pcapFiles += "/home/" + QString::fromUtf8(linuxUsername) + "/Final-Year-Project/resources/h" + QString::number(i + 1) + ".pcap ";
     }
 
     for(int i = 0; i < switches.size(); i++){
-        pcapFiles += "/home/" + QString::fromUtf8(linuxUsername) + "/s" + QString::number(i + 1) + "-eth0.pcap ";
+        pcapFiles += "/home/" + QString::fromUtf8(linuxUsername) + "/Final-Year-Project/resources/s" + QString::number(i + 1) + "-eth0.pcap ";
     }
 
     char* fileString = new char[pcapFiles.length() + 1];
     strcpy(fileString, pcapFiles.toLatin1().constData());
-    string tempNetInitPath = std::string("/home/") + linuxUsername + std::string("/NetInitialiser.py");
-    string tempXmlPath = std::string("/home/") + linuxUsername + std::string("/netanim_topo.xml");
+    string tempNetInitPath = std::string("/home/") + linuxUsername + std::string("/Final-Year-Project/NetInitialiser.py");
+    string tempXmlPath = std::string("/home/") + linuxUsername + std::string("/Final-Year-Project/resources/netanim_topo.xml");
     char* netInitPath = strdup(tempNetInitPath.c_str());
     char* xmlPath = strdup(tempXmlPath.c_str());
     char* user = strdup(linuxUsername);

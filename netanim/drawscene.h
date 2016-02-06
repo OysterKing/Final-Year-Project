@@ -43,6 +43,7 @@ public:
     std::map<QString, int> getSwitchSysIdMap();
     std::map<QString, QPointF> getSwitchLocMap();
     std::vector<QString> getLinksVector();
+    std::vector<QString> getLinkOptsVector();
 
 private:
     typedef QVector <QGraphicsLineItem *>          LineItemVector_t;
@@ -77,6 +78,7 @@ private:
     std::vector<QString> m_linksVector;
     std::vector<QString> m_hostVector;
     std::vector<QString> m_switchVector;
+    std::vector<QString> m_linkOptsVector;
 
     void markGridCoordinates();
     void initGridCoordinates();

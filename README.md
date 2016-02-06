@@ -154,3 +154,6 @@ I encountered an error regarding multiple packets in transit. I fixed this by ch
 
 04/02/16:
 Changed filepaths so that now the program works out of the Final-Year-Project folder and the pcap and xml files are saved in a sub folder called resources.
+
+06/02/16:
+Added code to netanim to write the link options chosen by the user to the temporary xml file. The NetReader then parse this information for each link and initiates them in mininet. Translator deletes this extra information when it is writing the final executable xml file.

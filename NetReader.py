@@ -41,6 +41,12 @@ try:
 			for i in range(len(data)):
 				if data[i].startswith("<link"):
 					#link
+					indexOfEnd = data[i].index(">")
+					optionString = data[i][indexOfEnd + 1:]
+					optionList = optionString.split()
+					bw = optionList[0]
+					delay = optionList[1]
+					loss = optionList[2]
 					fromID = int(data[i][14])
 					toID = int(data[i][23])
 					for j in range(len(hostIDs)):
@@ -61,6 +67,10 @@ try:
 							#switchCount += 1
 							toNode = str("s" + str(k + 1))
 
+					print "Adding link ", fromNode, " -> ", toNode, " bw: ", bw, " delay: ", delay, " loss: ", loss
+					link_opts['bw'] = float(bw)
+					link_opts['delay'] = float(delay)
+					link_opts['loss'] = float(loss)
 					self.addLink(fromNode, toNode, **link_opts)
 
 except ImportError:

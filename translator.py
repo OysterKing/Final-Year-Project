@@ -56,6 +56,11 @@ class Translator:
 		with open(filename, 'r') as file:
 			data = file.readlines()
 
+		for i in range(len(data)):
+			if data[i].count("link") > 0:
+				indexOfEnd = data[i].index(">")
+				data[i] = data[i][0:indexOfEnd + 1] + "\n"
+
 		entryIndex = len(data)-2
 		fbtx = 2
 		for i in range (len(self.srcIP_Addrs)):
