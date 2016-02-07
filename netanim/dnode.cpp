@@ -151,6 +151,13 @@ dNode::updateCounter (uint32_t counterId, qreal counterValue, CounterType_t coun
     }
 }
 
+//void
+//dNode::mousePressEvent(QGraphicsSceneMouseEvent *event)
+//{
+//    std::cout << "You pressed a node.";
+//    QGraphicsItem::mousePressEvent(event);
+//}
+
 void
 dNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {

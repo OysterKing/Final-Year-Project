@@ -69,6 +69,9 @@ public:
 //    void updateBatteryCapacityImage (bool show);
     void updateNodeSysId (uint32_t nodeSysId, bool show);
 
+//protected:
+//    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
 private:
     QGraphicsTextItem * m_nodeDescription;
     uint32_t m_nodeId;

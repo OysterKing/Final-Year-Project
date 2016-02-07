@@ -119,6 +119,12 @@ DrawScene::enableLinkAddition(bool enable)
     m_enableLinkAddition = enable;
 }
 
+void
+DrawScene::enableDelete(bool enable)
+{
+    m_enableDelete = enable;
+}
+
 int
 DrawScene::getNumHosts()
 {
@@ -325,6 +331,18 @@ DrawScene::addLink(QString toString, QString fromString, QString bw, QString d, 
 }
 
 void
+DrawScene::deleteNode(QPointF pos){
+    QList<QGraphicsItem*> items = DrawScene::items();
+    for(int i = 0; i < items.size(); i++){
+        if (items.at(i)->isUnderMouse()){
+            std::cout << "IT'S UNDER THE MOUSE.\n";
+            DrawScene::removeItem(items.at(i));
+        }
+        std::cout << pos;
+    }
+}
+
+void
 DrawScene::showMousePositionLabel (bool show)
 {
   m_mousePositionProxyWidget->setVisible (show);
@@ -366,6 +384,13 @@ DrawScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         QPointF scenePos = event->scenePos();
         if((scenePos.x () > 0) && (scenePos.y () > 0)){
             addSwitch(scenePos);
+        }
+    }
+
+    else if(m_enableDelete){
+        QPointF scenePos = event->scenePos();
+        if((scenePos.x () > 0) && (scenePos.y () > 0)){
+            deleteNode(scenePos);
         }
     }
     return QGraphicsScene::mousePressEvent(event);

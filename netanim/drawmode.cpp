@@ -116,6 +116,14 @@ DrawMode::initTopToolbar()
     connect (m_addSwitchButton, SIGNAL(clicked()), this, SLOT (addSwitchButtonSlot()));
     m_topToolBar->addWidget(m_addSwitchButton);
 
+    m_deleteButton = new QToolButton;
+    m_deleteButton->setToolTip("Delete a switch or host.");
+    m_deleteButton->setText("DELETE");
+    m_deleteButton->setCheckable(true);
+    m_deleteButton->setStyleSheet("border:1px outset #7990c1");
+    connect (m_deleteButton, SIGNAL(clicked()), this, SLOT (deleteButtonSlot()));
+    m_topToolBar->addWidget(m_deleteButton);
+
     m_saveButton = new QToolButton;
     m_saveButton->setToolTip("Save");
     m_saveButton->setText("SAVE");
@@ -388,6 +396,12 @@ DrawMode::addLinkButtonSlot()
         //error
     }
 
+}
+
+void
+DrawMode::deleteButtonSlot()
+{
+    DrawScene::getInstance()->enableDelete(true);
 }
 
 void

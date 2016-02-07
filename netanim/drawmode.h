@@ -47,6 +47,7 @@ private:
     QToolButton * m_saveButton;
     QToolButton * m_addLinkButton;
     QToolButton * m_runButton;
+    QToolButton * m_deleteButton;
     QLabel * m_linkFromLabel;
     QLabel * m_linkToLabel;
     QLabel * m_bwLabel;
@@ -76,6 +77,7 @@ private slots:
     void saveButtonSlot();
     void addLinkButtonSlot();
     void runButtonSlot();
+    void deleteButtonSlot();
 };
 } //namespace netanim
 
