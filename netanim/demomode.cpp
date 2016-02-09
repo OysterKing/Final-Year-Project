@@ -33,6 +33,12 @@ DemoMode::setFocus(bool focus)
     }
 }
 
+void
+DemoMode::setTabName(QString name)
+{
+    m_tabName = name;
+}
+
 QWidget *
 DemoMode::getCentralWidget()
 {
@@ -42,7 +48,7 @@ DemoMode::getCentralWidget()
 QString
 DemoMode::getTabName()
 {
-    return "Demo";
+    return m_tabName;
 }
 
 void

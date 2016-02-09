@@ -56,7 +56,7 @@ NetAnim::NetAnim ():
   DIR *dir;
   struct dirent *ent;
   int i = 4;
-  std::string file;
+  QString file;
 
   if ((dir = opendir ("/home/comhghall/Final-Year-Project/demos/")) != NULL) {
     /* print all the files and directories within directory */
@@ -64,6 +64,7 @@ NetAnim::NetAnim ():
         file = ent->d_name;
         if(file[0] == 'D'){
             DemoMode * demoTab = DemoMode::getInstance();
+            demoTab->setTabName(file);
             m_tabWidget->addTab(demoTab->getCentralWidget(), demoTab->getTabName());
             m_TabMode[i] = demoTab;
             std::cout << ent->d_name;

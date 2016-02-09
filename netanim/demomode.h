@@ -27,6 +27,7 @@ public:
 
     //setters
     void setFocus(bool focus);
+    void setTabName(QString name);
     void systemReset();
 
 private:
@@ -41,6 +42,7 @@ private:
     QWidget * m_centralWidget;
     QHBoxLayout * m_hLayout;
     QVBoxLayout * m_vLayout;
+    QString m_tabName;
 
 
     DemoModeState_t m_state;
