@@ -161,3 +161,6 @@ Changed the aesthetic of the buttons in the draw window so that they now have a 
 
 07/02/16:
 Added a delete button that deletes nodes and labels.
+
+09/02/16:
+Added a new window to netanim. An instance of this window is opened for every file in a folder called "demos". At the moment the window is blank.

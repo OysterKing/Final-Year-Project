@@ -33,6 +33,8 @@ public:
     int getNumHosts();
     int getNumSwitches();
     int getNumNodes();
+    void decrementNumHosts();
+    void decrementNumSwitches();
     std::map<QString, QString> getLinkedNodesMap();
     std::vector<QString> getHostVector();
     std::vector<QString> getSwitchVector();
@@ -77,6 +79,7 @@ private:
     std::map<QString, QString> m_switchMacMap;
     std::map<QString, QPointF> m_hostLocMap;
     std::map<QString, QPointF> m_switchLocMap;
+    std::map<QPointF, QString> m_posNodeMap;
     std::vector<QString> m_linksVector;
     std::vector<QString> m_hostVector;
     std::vector<QString> m_switchVector;

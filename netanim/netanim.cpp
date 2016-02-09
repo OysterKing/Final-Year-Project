@@ -20,6 +20,10 @@
 #include "statsmode.h"
 #include "packetsmode.h"
 #include "drawmode.h"
+#include "demomode.h"
+#include "dirent.h"
+#include "string.h"
+#include <string>
 #ifdef WITH_NS3
 #include "designer/designermode.h"
 #endif
@@ -48,6 +52,31 @@ NetAnim::NetAnim ():
   DrawMode * drawTab = DrawMode::getInstance();
   m_tabWidget->addTab(drawTab->getCentralWidget(), drawTab->getTabName());
   m_TabMode[3] = drawTab;
+
+  DIR *dir;
+  struct dirent *ent;
+  int i = 4;
+  std::string file;
+
+  if ((dir = opendir ("/home/comhghall/Final-Year-Project/demos/")) != NULL) {
+    /* print all the files and directories within directory */
+    while ((ent = readdir (dir)) != NULL) {
+        file = ent->d_name;
+        if(file[0] == 'D'){
+            DemoMode * demoTab = DemoMode::getInstance();
+            m_tabWidget->addTab(demoTab->getCentralWidget(), demoTab->getTabName());
+            m_TabMode[i] = demoTab;
+            std::cout << ent->d_name;
+            std::cout << "\n";
+            i++;
+        }
+    }
+    closedir (dir);
+  }
+
+//  DemoMode * demoTab_2 = DemoMode::getInstance();
+//  m_tabWidget->addTab(demoTab_2->getCentralWidget(), demoTab_2->getTabName());
+//  m_TabMode[i] = demoTab_2;
 
 #ifdef WITH_NS3
   DesignerMode * designerMode = new DesignerMode;

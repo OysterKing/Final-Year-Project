@@ -216,6 +216,20 @@ DrawScene::getLinkOptsVector()
 }
 
 void
+DrawScene::decrementNumHosts()
+{
+    m_numHosts -= 1;
+    m_numNodes -= 1;
+}
+
+void
+DrawScene::decrementNumSwitches()
+{
+    m_numSwitches -= 1;
+    m_numNodes -= 1;
+}
+
+void
 DrawScene::setMousePositionLabel (QPointF pos)
 {
   QString string = "    (" + QString::number ( (pos.x ())) + "," + QString::number ( (pos.y ())) + ")";
@@ -254,6 +268,8 @@ DrawScene::addHost(QPointF pos)
     m_hostMacMap.insert(std::pair<QString, QString> (hostInfo, mac));
     m_hostLocMap.insert(std::pair<QString, QPointF> (hostInfo, pos));
 
+//    m_posNodeMap.insert(std::pair<QPointF, QString> (pos, "host"));
+
     m_numNodes += 1;
     m_numHosts += 1;
     DrawScene::getInstance()->addItem(drawnode);
@@ -284,6 +300,8 @@ DrawScene::addSwitch(QPointF pos)
     m_switchSysIdsMap.insert(std::pair<QString, int> (switchInfo, nodeNumber));
     m_switchMacMap.insert(std::pair<QString, QString> (switchInfo, mac));
     m_switchLocMap.insert(std::pair<QString, QPointF> (switchInfo, pos));
+
+//    m_posNodeMap.insert(std::pair<QPointF, QString> (pos, "switch"));
 
     m_numNodes += 1;
     m_numSwitches += 1;
@@ -333,12 +351,23 @@ DrawScene::addLink(QString toString, QString fromString, QString bw, QString d, 
 void
 DrawScene::deleteNode(QPointF pos){
     QList<QGraphicsItem*> items = DrawScene::items();
+    QString nodeType;
     for(int i = 0; i < items.size(); i++){
         if (items.at(i)->isUnderMouse()){
             std::cout << "IT'S UNDER THE MOUSE.\n";
-            DrawScene::removeItem(items.at(i));
+//            std::cout << items.at(i)->type() << "\n";
+//            nodeType = m_posNodeMap[pos];
+            if(nodeType == "switch"){
+                DrawScene::decrementNumSwitches();
+                DrawScene::removeItem(items.at(i));
+            }
+
+            else{
+                DrawScene::decrementNumHosts();
+                DrawScene::removeItem(items.at(i));
+            }
         }
-        std::cout << pos;
+//        std::cout << pos;
     }
 }
 
