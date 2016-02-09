@@ -43,6 +43,8 @@ private:
     QHBoxLayout * m_hLayout;
     QVBoxLayout * m_vLayout;
     QString m_tabName;
+    QPointF m_minPoint;
+    QPointF m_maxPoint;
 
 
     DemoModeState_t m_state;

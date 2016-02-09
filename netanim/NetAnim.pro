@@ -52,7 +52,9 @@ SOURCES += \
     dnode.cpp \
     item.cpp \
     dlink.cpp \
-    demomode.cpp
+    demomode.cpp \
+    demoview.cpp \
+    demoscene.cpp
 HEADERS += \
     log.h \
     fatal-error.h \
@@ -158,7 +160,9 @@ HEADERS += \
     dnode.h \
     item.h \
     dlink.h \
-    demomode.h
+    demomode.h \
+    demoview.h \
+    demoscene.h
 
 
 INCLUDEPATH += qtpropertybrowser/src
