@@ -4,6 +4,8 @@ Final Year Project*/
 #include "demomode.h"
 #include "demoscene.h"
 #include "demoview.h"
+#include "QFile"
+#include "QTextStream"
 
 #define SSTR( x ) dynamic_cast< std::ostringstream & >( \
         ( std::ostringstream() << std::dec << x ) ).str()
@@ -39,6 +41,7 @@ void
 DemoMode::setTabName(QString name)
 {
     m_tabName = name;
+    parse();
 }
 
 QWidget *
@@ -70,6 +73,24 @@ DemoMode::init()
     m_maxPoint.setY(1000.0);
     DemoScene::getInstance()->setCanvasBoundaries(m_minPoint, m_maxPoint);
     setWindowTitle("NetAnim");
+}
+
+void
+DemoMode::parse()
+{
+    QString demoTextFile = m_tabName + "_text.xml";
+    QString filename = "/home/comhghall/Final-Year-Project/demos/" + m_tabName + "/" + demoTextFile;
+    QFile xmlFile("/home/comhghall/Final-Year-Project/demos/" + m_tabName + "/" + demoTextFile);
+    xmlFile.open(QIODevice::ReadOnly);
+    QTextStream inStream(&xmlFile);
+    qDebug(demoTextFile.toLatin1());
+    qDebug(filename.toLatin1());
+
+    while(!inStream.atEnd()){
+        QString line = inStream.readLine();
+        qDebug(line.toLatin1());
+    }
+    xmlFile.close();
 }
 
 } //namespace netanim

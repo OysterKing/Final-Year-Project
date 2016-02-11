@@ -51,6 +51,7 @@ private:
 
     DemoMode();
     void init();
+    void parse();
 
 };
 } //namespace netanim

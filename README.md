@@ -166,3 +166,6 @@ Added a delete button that deletes nodes and labels.
 Added a new window to netanim. An instance of this window is opened for every file in a folder called "demos". At the moment the window is blank.
 Added code so that now each tab added as a demo is named after each file in the demo directory.
 Added the demo view and demo scene classes.
+
+11/02/16:
+Added a parse function to demomode to parse the demo xml text files. At the moment it just prints the file to the console.
