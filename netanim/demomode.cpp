@@ -4,6 +4,7 @@ Final Year Project*/
 #include "demomode.h"
 #include "demoscene.h"
 #include "demoview.h"
+#include "xmlmanager.h"
 #include "QFile"
 #include "QTextStream"
 
@@ -78,19 +79,21 @@ DemoMode::init()
 void
 DemoMode::parse()
 {
+    XmlManager xmlManager;
     QString demoTextFile = m_tabName + "_text.xml";
     QString filename = "/home/comhghall/Final-Year-Project/demos/" + m_tabName + "/" + demoTextFile;
     QFile xmlFile("/home/comhghall/Final-Year-Project/demos/" + m_tabName + "/" + demoTextFile);
-    xmlFile.open(QIODevice::ReadOnly);
-    QTextStream inStream(&xmlFile);
-    qDebug(demoTextFile.toLatin1());
-    qDebug(filename.toLatin1());
+    xmlManager.writeXmlFile("/home/comhghall/Final-Year-Project/demos/textXmlFile.xml");
+//    xmlFile.open(QIODevice::ReadOnly);
+//    QTextStream inStream(&xmlFile);
+//    qDebug(demoTextFile.toLatin1());
+//    qDebug(filename.toLatin1());
 
-    while(!inStream.atEnd()){
-        QString line = inStream.readLine();
-        qDebug(line.toLatin1());
-    }
-    xmlFile.close();
+//    while(!inStream.atEnd()){
+//        QString line = inStream.readLine();
+//        qDebug(line.toLatin1());
+//    }
+//    xmlFile.close();
 }
 
 } //namespace netanim

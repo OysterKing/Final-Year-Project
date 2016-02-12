@@ -54,7 +54,8 @@ SOURCES += \
     dlink.cpp \
     demomode.cpp \
     demoview.cpp \
-    demoscene.cpp
+    demoscene.cpp \
+    xmlmanager.cpp
 HEADERS += \
     log.h \
     fatal-error.h \
@@ -162,7 +163,8 @@ HEADERS += \
     dlink.h \
     demomode.h \
     demoview.h \
-    demoscene.h
+    demoscene.h \
+    xmlmanager.h
 
 
 INCLUDEPATH += qtpropertybrowser/src

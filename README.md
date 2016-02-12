@@ -169,3 +169,6 @@ Added the demo view and demo scene classes.
 
 11/02/16:
 Added a parse function to demomode to parse the demo xml text files. At the moment it just prints the file to the console.
+
+12/02/16:
+Added an xml manager class that can read and write xml files. This will be used to write and read demo text.
