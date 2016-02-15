@@ -172,3 +172,6 @@ Added a parse function to demomode to parse the demo xml text files. At the mome
 
 12/02/16:
 Added an xml manager class that can read and write xml files. This will be used to write and read demo text.
+
+15/02/16:
+Added a read xml function to the xml manager to parse the demo text xml files. Each detail is saved in a vector of strings and can be accessed later when adding the text items to the graphics scene.

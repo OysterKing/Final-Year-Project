@@ -14,6 +14,16 @@ public:
     XmlManager();
     void readXmlFile(QString filename);
     void writeXmlFile(QString filename);
+    std::vector<QString> getStringVector();
+    std::vector<QString> getColourVector();
+    std::vector<QString> getFontVector();
+    std::vector<QString> getSizeVector();
+
+private:
+    std::vector<QString> stringVector;
+    std::vector<QString> fontVector;
+    std::vector<QString> colourVector;
+    std::vector<QString> sizeVector;
 };
 } //namespace netanim
 
