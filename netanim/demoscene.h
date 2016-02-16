@@ -18,6 +18,7 @@ public:
     DemoScene();
     QRectF getBoundaryRect();
     void setCanvasBoundaries(QPointF minPoint, QPointF maxPoint);
+    void addTextItem(QString body, QString font, QString colour, QString size, QPointF pos);
 
 private:
     QPointF m_minPoint;

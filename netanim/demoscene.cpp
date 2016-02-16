@@ -19,7 +19,10 @@ DemoScene::DemoScene():
 DemoScene *
 DemoScene::getInstance()
 {
-    pDemoScene = new DemoScene;
+    if(!pDemoScene){
+        std::cout << "\n" << "DECLARED" << "\n";
+        pDemoScene = new DemoScene;
+    }
     return pDemoScene;
 }
 
@@ -51,6 +54,37 @@ QRectF
 DemoScene::getBoundaryRect ()
 {
   return QRectF (m_sceneMinPoint, m_sceneMaxPoint);
+}
+
+void
+DemoScene::addTextItem(QString body, QString font, QString colour, QString size, QPointF pos)
+{
+    QGraphicsTextItem * textItem = new QGraphicsTextItem;
+
+    textItem->setPos(pos);
+    bool ok = 0;
+    QColor textColour;
+
+    QString r = colour.mid(1, 2);
+    QString g = colour.mid(3, 4);
+    QString b = colour.mid(5, 6);
+
+    int red = r.toUInt(&ok, 16);
+    int green = g.toUInt(&ok, 16);
+    int blue = b.toUInt(&ok, 16);
+
+    int fontSize = size.toUInt(&ok, 10);
+    QFont serifFont(font, fontSize, QFont::Bold);
+
+    textColour.setRed(red);
+    textColour.setGreen(green);
+    textColour.setBlue(blue);
+    textItem->setPlainText(body);
+    textItem->setDefaultTextColor(textColour);
+    textItem->setFont(serifFont);
+    textItem->setVisible(true);
+
+    addItem(textItem);
 }
 
 } //namespace netanim

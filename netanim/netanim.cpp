@@ -69,6 +69,7 @@ NetAnim::NetAnim ():
             m_TabMode[i] = demoTab;
             std::cout << ent->d_name;
             std::cout << "\n";
+            qDebug(demoTab->getTabName().toLatin1());
             i++;
         }
     }

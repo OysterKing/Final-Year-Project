@@ -18,7 +18,9 @@ DemoView::DemoView(QGraphicsScene * scene):
 DemoView *
 DemoView::getInstance()
 {
-    pDemoView = new DemoView(DemoScene::getInstance());
+//    if(!pDemoView){
+        pDemoView = new DemoView(DemoScene::getInstance());
+//    }
     return pDemoView;
 }
 
