@@ -45,13 +45,17 @@ private:
     QString m_tabName;
     QPointF m_minPoint;
     QPointF m_maxPoint;
-
+    std::vector<QString> m_parsedStrings;
+    std::vector<QString> m_parsedFonts;
+    std::vector<QString> m_parsedColours;
+    std::vector<QString> m_parsedSizes;
 
     DemoModeState_t m_state;
 
     DemoMode();
     void init();
     void parse();
+    void addTextItem(QGraphicsScene * scene, QString string, QString font, QString colour, QString size, QPointF pos);
 
 };
 } //namespace netanim

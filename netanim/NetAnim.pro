@@ -53,8 +53,6 @@ SOURCES += \
     item.cpp \
     dlink.cpp \
     demomode.cpp \
-    demoview.cpp \
-    demoscene.cpp \
     xmlmanager.cpp
 HEADERS += \
     log.h \
@@ -156,8 +154,6 @@ HEADERS += \
     countertablesscene.h \
     qcustomplot.h \
     drawmode.h \
-    drawview.h \
-    drawscene.h \
     dnode.h \
     item.h \
     dlink.h \

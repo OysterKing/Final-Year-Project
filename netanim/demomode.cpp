@@ -61,7 +61,9 @@ DemoMode::init()
 {
     m_state = INIT;
     m_hLayout = new QHBoxLayout;
-    m_hLayout->addWidget(DemoView::getInstance());
+    QGraphicsView * view = new QGraphicsView;
+    QGraphicsScene * scene = new QGraphicsScene(0, 0, 250, 250);
+    m_hLayout->addWidget(view);
     m_vLayout = new QVBoxLayout;
     m_vLayout->addLayout(m_hLayout);
     m_centralWidget = new QWidget;
@@ -71,17 +73,23 @@ DemoMode::init()
     m_minPoint.setY(0.0);
     m_maxPoint.setX(1000.0);
     m_maxPoint.setY(1000.0);
-
-    //scene->addText("DEMO");
-    setWindowTitle("NetAnim");
     parse();
+
+    QPointF pos;
+    pos.setX(std::rand() % 101);
+    pos.setY(std::rand() % 101);
+
+    for(int i = 0; i < m_parsedStrings.size(); i++){
+        addTextItem(scene, m_parsedStrings.at(i), m_parsedFonts.at(i), m_parsedColours.at(i), m_parsedSizes.at(i), pos);
+    }
+    //scene->addText("DEMO");
+    view->setScene(scene);
+    setWindowTitle("NetAnim");
 }
 
 void
 DemoMode::parse()
 {
-    DemoScene * scene = DemoScene::getInstance();
-    scene->setCanvasBoundaries(m_minPoint, m_maxPoint);
     XmlManager xmlManager;
     QString demoTextFile = m_tabName + "_text.xml";
     QString filename = "/home/comhghall/Final-Year-Project/demos/" + m_tabName + "/" + demoTextFile;
@@ -89,19 +97,41 @@ DemoMode::parse()
 //    xmlManager.writeXmlFile("/home/comhghall/Final-Year-Project/demos/textXmlFile.xml");
 
     xmlManager.readXmlFile("/home/comhghall/Final-Year-Project/demos/textXmlFile.xml");
-    std::vector<QString> strings = xmlManager.getStringVector();
-    std::vector<QString> colours = xmlManager.getColourVector();
-    std::vector<QString> fonts = xmlManager.getFontVector();
-    std::vector<QString> sizes = xmlManager.getSizeVector();
-    QPointF pos;
-    pos.setX(0 + std::rand() % (101));
-    pos.setY(0 + std::rand() % (101));
+    m_parsedStrings = xmlManager.getStringVector();
+    m_parsedColours = xmlManager.getColourVector();
+    m_parsedFonts = xmlManager.getFontVector();
+    m_parsedSizes = xmlManager.getSizeVector();
+}
 
-    for(int i = 0; i != strings.size(); i++){
-        std::cout << "WE'RE TRYING.";
-        scene->addTextItem(strings.at(i), fonts.at(i), colours.at(i), sizes.at(i), pos);
-        scene->addText("test");
-    }
+void
+DemoMode::addTextItem(QGraphicsScene * scene, QString string, QString font, QString colour, QString size, QPointF pos)
+{
+    QGraphicsTextItem * textItem = new QGraphicsTextItem;
+
+    textItem->setPos(pos);
+    bool ok = 0;
+    QColor textColour;
+
+    QString r = colour.mid(1, 2);
+    QString g = colour.mid(3, 4);
+    QString b = colour.mid(5, 6);
+
+    int red = r.toUInt(&ok, 16);
+    int green = g.toUInt(&ok, 16);
+    int blue = b.toUInt(&ok, 16);
+
+    int fontSize = size.toUInt(&ok, 10);
+    QFont serifFont(font, fontSize, QFont::Bold);
+
+    textColour.setRed(red);
+    textColour.setGreen(green);
+    textColour.setBlue(blue);
+    textItem->setPlainText(string);
+    textItem->setDefaultTextColor(textColour);
+    textItem->setFont(serifFont);
+    textItem->setVisible(true);
+
+    scene->addItem(textItem);
 }
 
 } //namespace netanim

@@ -178,3 +178,6 @@ Added a read xml function to the xml manager to parse the demo text xml files. E
 
 16/02/16:
 Connected the xml parser to the demo scene so that now what is in the xml demo file is displayed as a text item in the demo windows.
+
+17/02/16:
+Deleted redundant demoscene and demoview classes and moved the addTextItem function to demomode which now instantiates a simple QGraphicsScene and QGraphicsView object.
