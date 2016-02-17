@@ -154,12 +154,12 @@ HEADERS += \
     countertablesscene.h \
     qcustomplot.h \
     drawmode.h \
+    drawview.h \
+    drawscene.h \
     dnode.h \
     item.h \
     dlink.h \
     demomode.h \
-    demoview.h \
-    demoscene.h \
     xmlmanager.h
 
 

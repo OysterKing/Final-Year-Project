@@ -1,5 +1,9 @@
-<text ver="netanim-3.106" filetype="text">
-<title t="Demo 1" s="10" c="fd0000" f="Helvetica" />
-<item t="This is the first demo to see" s="5" c="fd0000" f="Helvetica"/>
-<item t=" if it works." s="5" c="fd0000" f="Helvetica"/>
-</text>
+<?xml version="1.0" encoding="UTF-8"?>
+<DEMO>
+    <TEXT1>
+        <Body>dummy2</Body>
+        <Font>fontvalue</Font>
+        <Colour>colourvalue</Colour>
+        <Size>5</Size>
+    </TEXT1>
+</DEMO>

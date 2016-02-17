@@ -29,6 +29,7 @@ public:
     void setFocus(bool focus);
     void setTabName(QString name);
     void systemReset();
+    void displayText();
 
 private:
     //state

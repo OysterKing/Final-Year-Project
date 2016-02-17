@@ -65,6 +65,7 @@ NetAnim::NetAnim ():
         if(file[0] == 'D'){
             DemoMode * demoTab = DemoMode::getInstance();
             demoTab->setTabName(file);
+            demoTab->displayText();
             m_tabWidget->addTab(demoTab->getCentralWidget(), demoTab->getTabName());
             m_TabMode[i] = demoTab;
             std::cout << ent->d_name;

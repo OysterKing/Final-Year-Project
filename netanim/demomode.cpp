@@ -2,8 +2,6 @@
 Final Year Project*/
 
 #include "demomode.h"
-#include "demoscene.h"
-#include "demoview.h"
 #include "xmlmanager.h"
 #include "QFile"
 #include "QTextStream"
@@ -59,7 +57,12 @@ DemoMode::getTabName()
 void
 DemoMode::init()
 {
-    m_state = INIT;
+    m_state = INIT;  
+}
+
+void
+DemoMode::displayText()
+{
     m_hLayout = new QHBoxLayout;
     QGraphicsView * view = new QGraphicsView;
     QGraphicsScene * scene = new QGraphicsScene(0, 0, 250, 250);
@@ -96,7 +99,7 @@ DemoMode::parse()
 //    QFile xmlFile("/home/comhghall/Final-Year-Project/demos/" + m_tabName + "/" + demoTextFile);
 //    xmlManager.writeXmlFile("/home/comhghall/Final-Year-Project/demos/textXmlFile.xml");
 
-    xmlManager.readXmlFile("/home/comhghall/Final-Year-Project/demos/textXmlFile.xml");
+    xmlManager.readXmlFile(filename);
     m_parsedStrings = xmlManager.getStringVector();
     m_parsedColours = xmlManager.getColourVector();
     m_parsedFonts = xmlManager.getFontVector();
