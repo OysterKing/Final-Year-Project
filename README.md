@@ -182,3 +182,6 @@ Connected the xml parser to the demo scene so that now what is in the xml demo f
 17/02/16:
 Deleted redundant demoscene and demoview classes and moved the addTextItem function to demomode which now instantiates a simple QGraphicsScene and QGraphicsView object.
 Added a new function to demomode that adds all the text items after the tab has been given its name. This means I can display two different demo files in two different windows.
+
+18/02/16:
+Added some default x and y positions for the text items in demomode that are incremented with each piece of text. This leads to a nicer layout.

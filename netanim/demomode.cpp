@@ -78,11 +78,13 @@ DemoMode::displayText()
     m_maxPoint.setY(1000.0);
     parse();
 
-    QPointF pos;
-    pos.setX(std::rand() % 101);
-    pos.setY(std::rand() % 101);
-
+    int x = -500;
+    int y = -200;
     for(int i = 0; i < m_parsedStrings.size(); i++){
+        QPointF pos;
+        pos.setX(x);
+        y = y + 20;
+        pos.setY(y);
         addTextItem(scene, m_parsedStrings.at(i), m_parsedFonts.at(i), m_parsedColours.at(i), m_parsedSizes.at(i), pos);
     }
     //scene->addText("DEMO");
@@ -115,9 +117,13 @@ DemoMode::addTextItem(QGraphicsScene * scene, QString string, QString font, QStr
     bool ok = 0;
     QColor textColour;
 
-    QString r = colour.mid(1, 2);
-    QString g = colour.mid(3, 4);
-    QString b = colour.mid(5, 6);
+    QString r = colour.mid(0, 2);
+    QString g = colour.mid(2, 2);
+    QString b = colour.mid(4, 2);
+
+    qDebug(r.toLatin1());
+    qDebug(g.toLatin1());
+    qDebug(b.toLatin1());
 
     int red = r.toUInt(&ok, 16);
     int green = g.toUInt(&ok, 16);

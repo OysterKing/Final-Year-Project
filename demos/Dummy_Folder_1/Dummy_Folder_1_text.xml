@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <DEMO>
     <TEXT1>
-        <Body>bodyvalue</Body>
-        <Font>fontvalue</Font>
-        <Colour>colourvalue</Colour>
-        <Size>5</Size>
+        <Body>This is some test text.</Body>
+        <Font>Runic</Font>
+        <Colour>000000</Colour>
+        <Size>10</Size>
     </TEXT1>
+    <TEXT2>
+	<Body>This is some more test text, to see what it looks like.</Body>
+	<Font>Runic</Font>
+	<Colour>000000</Colour>
+	<Size>10</Size>
+    </TEXT2>
+    <TEXT3>
+	<Body>Step 1: Read about networks.</Body>
+	<Font>Helvetica</Font>
+	<Colour>000000</Colour>
+	<Size>10</Size>
+    </TEXT3>
 </DEMO>
