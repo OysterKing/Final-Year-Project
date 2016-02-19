@@ -21,6 +21,7 @@
 #include "packetsmode.h"
 #include "drawmode.h"
 #include "demomode.h"
+#include "demowritemode.h"
 #include "dirent.h"
 #include "string.h"
 #include <string>
@@ -77,6 +78,9 @@ NetAnim::NetAnim ():
     closedir (dir);
   }
 
+  DemoWriteMode * demoWriteTab = DemoWriteMode::getInstance();
+  m_tabWidget->addTab(demoWriteTab->getCentralWidget(), demoWriteTab->getTabName());
+  m_TabMode[i] = demoWriteTab;
 //  DemoMode * demoTab_2 = DemoMode::getInstance();
 //  m_tabWidget->addTab(demoTab_2->getCentralWidget(), demoTab_2->getTabName());
 //  m_TabMode[i] = demoTab_2;

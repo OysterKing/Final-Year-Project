@@ -185,3 +185,6 @@ Added a new function to demomode that adds all the text items after the tab has 
 
 18/02/16:
 Added some default x and y positions for the text items in demomode that are incremented with each piece of text. This leads to a nicer layout.
+
+19/02/16:
+Added  new class, demowritemode to allow users to write their own demos.
