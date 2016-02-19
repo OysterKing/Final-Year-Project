@@ -6,6 +6,7 @@
 
 #include "common.h"
 #include "mode.h"
+#include <QTextEdit>
 
 namespace netanim
 {
@@ -46,11 +47,18 @@ private:
     QString m_tabname;
     QPointF m_minPoint;
     QPointF m_maxPoint;
+    QTextEdit * m_textEditor;
+    QToolButton * m_saveButton;
+    QToolButton * m_addImageButton;
 
     DemoWriteModeState_t m_state;
 
     DemoWriteMode();
     void init();
+
+private slots:
+    void saveButtonSlot();
+    void addImageButtonSlot();
 };
 
 } //namespace netanim

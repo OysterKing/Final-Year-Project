@@ -188,3 +188,4 @@ Added some default x and y positions for the text items in demomode that are inc
 
 19/02/16:
 Added  new class, demowritemode to allow users to write their own demos.
+Added a text box to the demowrite tab and a save button that doesn't do anything just yet.

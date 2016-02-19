@@ -3,6 +3,7 @@
 
 #include "demowritemode.h"
 #include "xmlmanager.h"
+#include <QTextEdit>
 
 #define SSTR( x ) dynamic_cast< std::ostringstream & >( \
         ( std::ostringstream() << std::dec << x ) ).str()
@@ -56,9 +57,13 @@ DemoWriteMode::init()
 {
     m_state = INIT;
     m_gLayout = new QGridLayout;
-    QGraphicsView * view = new QGraphicsView;
-    QGraphicsScene * scene = new QGraphicsScene(0, 0, 250, 250);
-    m_gLayout->addWidget(view);
+    m_textEditor = new QTextEdit;
+    m_saveButton = new QToolButton;
+    m_saveButton->setText("SAVE");
+
+    m_gLayout->addWidget(m_textEditor, 1, 0);
+    m_gLayout->addWidget(m_saveButton, 2, 1);
+
     m_centralWidget = new QWidget;
     m_centralWidget->setLayout(m_gLayout);
 
@@ -66,8 +71,19 @@ DemoWriteMode::init()
     m_minPoint.setY(0.0);
     m_maxPoint.setX(1000.0);
     m_maxPoint.setY(1000.0);
+    setWindowTitle("NetAnim");
+}
 
-    view->setScene(scene);
+void
+DemoWriteMode::saveButtonSlot()
+{
+
+}
+
+void
+DemoWriteMode::addImageButtonSlot()
+{
+
 }
 
 } //namespace netanim
