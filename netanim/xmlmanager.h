@@ -13,7 +13,7 @@ class XmlManager
 public:
     XmlManager();
     void readXmlFile(QString filename);
-    void writeXmlFile(QString filename);
+    void writeXmlFile(QString filename, QString text);
     std::vector<QString> getStringVector();
     std::vector<QString> getColourVector();
     std::vector<QString> getFontVector();

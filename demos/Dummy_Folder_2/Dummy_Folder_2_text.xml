@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <DEMO>
     <TEXT1>
-        <Body>dummy2</Body>
+        <Body>Demo 1:
+
+In this demo, we will learn about how ARP, or Address Resolution Protocol, works.
+Follow the steps below to complete the demo.
+
+Step 1:
+	Click on the Animator tab in netanim then click the load button (the folder).
+
+Step 2:
+	Navigate to the demos folder and open the ARP_Demo folder. Inside is a file called ARP_animation.xml, load this file.
+
+Step 3:
+	Set the simulation speed to slow and disable the grid by clicking the grid option button in the top toolbar.
+
+Step 4:
+	Click play and watch the ARP packets travelling between the hosts.</Body>
         <Font>fontvalue</Font>
         <Colour>colourvalue</Colour>
-        <Size>5</Size>
+        <Size>10</Size>
     </TEXT1>
 </DEMO>

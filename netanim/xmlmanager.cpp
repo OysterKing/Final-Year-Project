@@ -12,7 +12,7 @@ XmlManager::XmlManager()
 }
 
 void
-XmlManager::writeXmlFile(QString filename)
+XmlManager::writeXmlFile(QString filename, QString text)
 {
     QFile file(filename);
     file.open(QIODevice::WriteOnly);
@@ -24,10 +24,10 @@ XmlManager::writeXmlFile(QString filename)
     xmlWriter.writeStartElement("DEMO");
 
     xmlWriter.writeStartElement("TEXT1");
-    xmlWriter.writeTextElement("Body", "bodyvalue" );
+    xmlWriter.writeTextElement("Body", text );
     xmlWriter.writeTextElement("Font", "fontvalue");
     xmlWriter.writeTextElement("Colour", "colourvalue");
-    xmlWriter.writeTextElement("Size", "5");
+    xmlWriter.writeTextElement("Size", "10");
 
     xmlWriter.writeEndElement();
     xmlWriter.writeEndElement();

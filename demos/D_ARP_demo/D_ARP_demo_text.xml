@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEMO>
+    <TEXT1>
+        <Body>ARP Demo
+
+Welcome to the ARP demo. In this demo, we'll have a look at Adress Resolution Protocol, also known as ARP.
+
+Step 1:
+	This is step 1.
+
+Step 2:
+	This is step 2.
+
+Step 3:
+	This is step 3.</Body>
+        <Font>fontvalue</Font>
+        <Colour>colourvalue</Colour>
+        <Size>5</Size>
+    </TEXT1>
+</DEMO>

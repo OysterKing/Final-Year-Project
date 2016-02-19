@@ -50,6 +50,7 @@ private:
     QTextEdit * m_textEditor;
     QToolButton * m_saveButton;
     QToolButton * m_addImageButton;
+    QLineEdit * m_filenameEdit;
 
     DemoWriteModeState_t m_state;
 
