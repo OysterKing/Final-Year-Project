@@ -193,3 +193,4 @@ Connected the save button to a slot function that creates a folder with the demo
 
 24/02/16:
 Added a new set of arguments to the net intiliaser that signal what mode to run mininet in and whether or not to run a dhcp server. I added three new buttons to facilitate these modes.
+Also added some functions to the demowriter in attempt to add a rich text editor.
