@@ -57,6 +57,9 @@ DrawMode::getTabName()
 void
 DrawMode::init()
 {
+    m_enableBasic = false;
+    m_enableDhcp = false;
+    m_enableBlank = false;
     m_state = INIT;
 //    DrawView::getInstance()->setScene(InterfaceStatsScene::getInstance());
     initToolbars();
@@ -137,6 +140,19 @@ DrawMode::initTopToolbar()
     m_runButton->setStyleSheet("border:1px outset #7990c1");
     connect (m_runButton, SIGNAL(clicked()), this, SLOT (runButtonSlot()));
     m_topToolBar->addWidget(m_runButton);
+
+    m_runBlankModeButton = new QToolButton;
+    m_runBlankModeButton->setToolTip("Run network with no ip addresses etc. User manually sets these.");
+    m_runBlankModeButton->setText("RUN BLANK");
+    m_runButton->setStyleSheet("border:1px outset #7990c1");
+    connect (m_runBlankModeButton, SIGNAL(clicked()), this, SLOT (runBlankModeButtonSlot()));
+    m_topToolBar->addWidget(m_runBlankModeButton);
+
+    m_runDhcpModeButton = new QToolButton;
+    m_runDhcpModeButton->setToolTip("Run network with DHCP server.");
+    m_runDhcpModeButton->setText("RUN DHCP");
+    connect (m_runDhcpModeButton, SIGNAL(clicked()), this, SLOT (runDhcpModeButtonSlot()));
+    m_topToolBar->addWidget(m_runDhcpModeButton);
 }
 
 void
@@ -407,6 +423,27 @@ DrawMode::deleteButtonSlot()
 void
 DrawMode::runButtonSlot()
 {
+    m_enableBasic = true;
+    launchMN();
+}
+
+void
+DrawMode::runBlankModeButtonSlot()
+{
+    m_enableBlank = true;
+    launchMN();
+}
+
+void
+DrawMode::runDhcpModeButtonSlot()
+{
+    m_enableDhcp = true;
+    launchMN();
+}
+
+void
+DrawMode::launchMN()
+{
     std::vector<QString> hosts;
     std::vector<QString> switches;
 
@@ -434,10 +471,37 @@ DrawMode::runButtonSlot()
     char* xmlPath = strdup(tempXmlPath.c_str());
     char* user = strdup(linuxUsername);
 
-    std::cout << fileString;
+    string s_enableBasic, s_enableBlank, s_enableDhcp;
+    char* enableBasic;
+    char* enableBlank;
+    char* enableDhcp;
+//    std::cout << fileString;
 
     pid_t child_pid;
-    char* child_args[] = {"usr/bin/xterm", "-hold", "-e", "/usr/bin/sudo", "/usr/bin/python", netInitPath, "bw", "delay", "loss", xmlPath, user, fileString, NULL};
+
+    if(m_enableBasic){
+        s_enableBasic = "true";
+        s_enableDhcp = "false";
+        s_enableBlank = "false";
+    }
+
+    else if(m_enableBlank){
+        s_enableBasic = "false";
+        s_enableDhcp = "false";
+        s_enableBlank = "true";
+    }
+
+    else if(m_enableDhcp){
+        s_enableBasic = "false";
+        s_enableDhcp = "true";
+        s_enableBlank = "false";
+    }
+
+    enableBasic = strdup(s_enableBasic.c_str());
+    enableBlank = strdup(s_enableBlank.c_str());
+    enableDhcp = strdup(s_enableDhcp.c_str());
+    char* child_args[] = {"usr/bin/xterm", "-hold", "-e", "/usr/bin/sudo", "/usr/bin/python", netInitPath, enableBlank, enableBasic, enableDhcp, xmlPath, user, fileString, NULL};
+
     int child_status;
     pid_t wait_result;
     child_pid = fork();
@@ -474,5 +538,10 @@ DrawMode::runButtonSlot()
  //       m_mybutton->setToolTip("A");
         m_runButton->setToolTip("A");
     }
+
+    m_enableBasic = false;
+    m_enableDhcp = false;
+    m_enableBlank = false;
 }
+
 }

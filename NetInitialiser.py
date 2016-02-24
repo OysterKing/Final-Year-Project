@@ -15,7 +15,7 @@ from utils import makeTerm, makeTerms, makeTabbedTerm
 from subprocess import Popen
 import getpass
 
-def customNet(username):
+def customNet(username, enableBlank, enableBasic, enableDhcp):
 	user = username
 	link_opts = {"bw":1000, "delay":10, "loss": 0, "use_htb": False}
 	filename = "netanim_topo.xml"
@@ -51,7 +51,7 @@ def customNet(username):
 
 def main():
 	#pass the username to the custom net function
-	customNet(username = sys.argv[5])
+	customNet(username = sys.argv[5], enableBlank = sys.argv[1], enableBasic = sys.argv[2], enableDhcp = sys.argv[3])
 	arguments = sys.argv[1:]
 	pcapFiles = []
 	username = sys.argv[5]

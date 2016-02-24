@@ -190,3 +190,6 @@ Added some default x and y positions for the text items in demomode that are inc
 Added  new class, demowritemode to allow users to write their own demos.
 Added a text box to the demowrite tab and a save button that doesn't do anything just yet.
 Connected the save button to a slot function that creates a folder with the demo name and puts the xmlt text file inside it.
+
+24/02/16:
+Added a new set of arguments to the net intiliaser that signal what mode to run mininet in and whether or not to run a dhcp server. I added three new buttons to facilitate these modes.

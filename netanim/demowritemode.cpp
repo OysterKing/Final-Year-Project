@@ -59,6 +59,16 @@ DemoWriteMode::init()
     m_state = INIT;
     m_gLayout = new QGridLayout;
     m_textEditor = new QTextEdit;
+    setupTextActions();
+
+    connect(m_textEditor, SIGNAL(currentCharFormatChanged(QTextCharFormat)),
+                this, SLOT(currentCharFormatChanged(QTextCharFormat)));
+
+    QFont textFont("Helvetica");
+    textFont.setStyleHint(QFont::SansSerif);
+    m_textEditor->setFont(textFont);
+//    fontChanged(m_textEditor->font());
+//    colorChanged(m_textEditor->textColor());
 
     m_saveButton = new QToolButton;
     m_saveButton->setText("SAVE");
@@ -106,5 +116,93 @@ DemoWriteMode::addImageButtonSlot()
 {
 
 }
+
+void
+DemoWriteMode::setupTextActions()
+{
+    QToolBar *tb = new QToolBar();
+    m_gLayout->addWidget(tb, 0, 0);
+
+    QLabel * boldLabel = new QLabel();
+    boldLabel->setText("B");
+    actionTextBold = new QAction(boldLabel);
+
+    actionTextBold->setShortcut(Qt::CTRL + Qt::Key_B);
+    actionTextBold->setPriority(QAction::LowPriority);
+    QFont bold;
+    bold.setBold(true);
+    actionTextBold->setFont(bold);
+    connect(actionTextBold, SIGNAL(triggered()), this, SLOT(textBold()));
+    tb->addAction(actionTextBold);
+    actionTextBold->setCheckable(true);
+}
+
+void
+DemoWriteMode::textBold()
+{
+    QTextCharFormat fmt;
+    fmt.setFontWeight(actionTextBold->isChecked() ? QFont::Bold : QFont::Normal);
+    mergeFormatOnWordOrSelection(fmt);
+}
+
+void
+DemoWriteMode::textColour()
+{
+
+}
+
+void
+DemoWriteMode::textItalic()
+{
+
+}
+
+void
+DemoWriteMode::textSize()
+{
+
+}
+
+void
+DemoWriteMode::textUnderline()
+{
+
+}
+
+void
+DemoWriteMode::currentCharFormatChanged(const QTextCharFormat &format)
+{
+    fontChanged(format.font());
+    colorChanged(format.foreground().color());
+}
+
+void
+DemoWriteMode::mergeFormatOnWordOrSelection(const QTextCharFormat &format)
+{
+    QTextCursor cursor = m_textEditor->textCursor();
+    if (!cursor.hasSelection())
+        cursor.select(QTextCursor::WordUnderCursor);
+    cursor.mergeCharFormat(format);
+    m_textEditor->mergeCurrentCharFormat(format);
+}
+
+void
+DemoWriteMode::fontChanged(const QFont &f)
+{
+    comboFont->setCurrentIndex(comboFont->findText(QFontInfo(f).family()));
+    comboSize->setCurrentIndex(comboSize->findText(QString::number(f.pointSize())));
+    actionTextBold->setChecked(f.bold());
+    actionTextItalic->setChecked(f.italic());
+    actionTextUnderline->setChecked(f.underline());
+}
+
+void
+DemoWriteMode::colorChanged(const QColor &c)
+{
+    QPixmap pix(16, 16);
+    pix.fill(c);
+    actionTextColor->setIcon(pix);
+}
+
 
 } //namespace netanim

@@ -48,6 +48,8 @@ private:
     QToolButton * m_addLinkButton;
     QToolButton * m_runButton;
     QToolButton * m_deleteButton;
+    QToolButton * m_runBlankModeButton;
+    QToolButton * m_runDhcpModeButton;
     QLabel * m_linkFromLabel;
     QLabel * m_linkToLabel;
     QLabel * m_bwLabel;
@@ -61,6 +63,9 @@ private:
     QScrollArea * m_toolbarScrollArea;
     QPointF m_minPoint;
     QPointF m_maxPoint;
+    bool m_enableDhcp;
+    bool m_enableBlank;
+    bool m_enableBasic;
 
     DrawModeState_t m_state;
 
@@ -70,6 +75,7 @@ private:
     void initToolbars();
     void initTopToolbar();
     void initSideToolbar();
+    void launchMN();
 
 private slots:
     void addHostButtonSlot();
@@ -78,6 +84,8 @@ private slots:
     void addLinkButtonSlot();
     void runButtonSlot();
     void deleteButtonSlot();
+    void runBlankModeButtonSlot();
+    void runDhcpModeButtonSlot();
 };
 } //namespace netanim
 

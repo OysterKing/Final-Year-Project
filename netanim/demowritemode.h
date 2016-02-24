@@ -7,6 +7,10 @@
 #include "common.h"
 #include "mode.h"
 #include <QTextEdit>
+#include <QTextCharFormat>
+#include <QFontComboBox>
+#include <QComboBox>
+#include <QAction>
 
 namespace netanim
 {
@@ -57,9 +61,33 @@ private:
     DemoWriteMode();
     void init();
 
+    void mergeFormatOnWordOrSelection(const QTextCharFormat &format);
+    void fontChanged(const QFont &f);
+    void colorChanged(const QColor &c);
+    void setupTextActions();
+
+    QAction *actionTextBold;
+    QAction *actionTextUnderline;
+    QAction *actionTextItalic;
+    QAction *actionTextColor;
+
+    QComboBox *comboStyle;
+    QFontComboBox *comboFont;
+    QComboBox *comboSize;
+
+    QToolBar *tb;
+
 private slots:
     void saveButtonSlot();
     void addImageButtonSlot();
+    void textBold();
+    void textUnderline();
+    void textItalic();
+    void textSize();
+    void textColour();
+
+    void currentCharFormatChanged(const QTextCharFormat &format);
+
 };
 
 } //namespace netanim
