@@ -6,10 +6,11 @@ from mininet.link import TCLink
 from mininet.util import dumpNodeConnections
 from mininet.log import setLogLevel
 from mininet.node import Controller, OVSController
-from NetReader import customTopo
+from NetReader import basicTopo, dhcpTopo
 from bridge_switch import BridgeSwitch
 from translator import Translator
 from pcapReader import PacketReader
+from random_network import random_macs, random_subnet
 import sys
 from utils import makeTerm, makeTerms, makeTabbedTerm
 from subprocess import Popen
@@ -19,29 +20,79 @@ def customNet(username, enableBlank, enableBasic, enableDhcp):
 	user = username
 	link_opts = {"bw":1000, "delay":10, "loss": 0, "use_htb": False}
 	filename = "netanim_topo.xml"
-	topo = customTopo(link_opts = link_opts, filename = filename)
 
-	net = Mininet(topo, switch = BridgeSwitch, controller = OVSController, link = TCLink)
+	if(enableBasic or enableBlank):
+		topo = basicTopo(link_opts = link_opts, filename = filename)
+		net = Mininet(topo, switch = BridgeSwitch, controller = OVSController, link = TCLink)
+
+	elif(enableDhcp):
+		topo = dhcpTopo(link_opts = link_opts, filename = filename)
+		net = Mininet(topo, switch = Router, controller = OVSController, link = TCLink)
+	
 	net.start()
 
+	macs = random_macs(len(net.hosts))
+
 	for offset, host in enumerate(net.hosts):
-		print "Capturing on hosts...", offset
-#		net.terms = makeTabbedTerm([net.hosts[offset]], term="xfce")
-		path = "/home/comhghall/Final-Year-Project/resources/" + str(host) + ".pcap"
-		print "path = ", path
-		host.cmd("tcpdump -u -w", path, "&")
-#		tcpdump = net.terms[offset]
-#		tcpdump = tcpdump.Popen("tcpdump", "-u", "-w", pcap)
-#		Popen(["tcpdump", "-u", "-w", pcap])
-#		print type(tcpdump)
+		#Set up default network with hardcoded ip addresses.
+		if(enableBasic):
+			print "Capturing on hosts...", offset
+			path = "/home/comhghall/Final-Year-Project/resources/" + str(host) + ".pcap"
+			print "path = ", path
+			host.cmd("tcpdump -u -w", path, "&")
+
+		#Set up a blank network.
+		elif(enableBlank or enableDhcp):
+			print "Capturing on hosts...", offset
+			path = "/home/comhghall/Final-Year-Project/resources/" + str(host) + ".pcap"
+			print "path = ", path
+			host.cmd("tcpdump -u -w", path, "&")
+			interface = host.intf()
+			host.cmd("ifconfig", interface, "down")
+			host.cmd("ifconfig", interface, "0.0.0.0")
+			host.cmd("ifconfig", interface, hex(macs[offset]))
+			host.cmd("ifconfig", interface, "down")
 
 	for offset, switch in enumerate(net.switches):
-		print "Capturing on switches...", offset
-		print switch
-		path = "/home/comhghall/Final-Year-Project/resources/" + str(switch) + "-eth0.pcap"
-		print "path = ", path
-		switch.cmd("tcpdump -i", switch, "-u -w", path, "&")
-#		net.terms = makeTabbedTerm([net.switches[offset]], term="xfce")
+		if(enableBasic or enableBlank):
+			print "Capturing on switches...", offset
+			print switch
+			path = "/home/comhghall/Final-Year-Project/resources/" + str(switch) + "-eth0.pcap"
+			print "path = ", path
+			switch.cmd("tcpdump -i", switch, "-u -w", path, "&")
+
+		if(enableDhcp):
+			print "Capturing on switches...", offset
+			print switch
+			path = "/home/comhghall/Final-Year-Project/resources/" + str(switch) + "-eth0.pcap"
+			switch.cmd("tcpdump -i", switch, "-u -w", path, "&")
+			print "path = ", path
+			switch.cmd("sysctl -w net.ipv4.ip_forward=1")
+			if str(switch)[0] != "r":
+				switch.cmd("brctl", switch, "down")
+				switch.cmd("brclt delbr", switch)
+				switch.cmd("brctl addbr", switch)
+				for interface in switch.intfNames():
+					if interface != "lo":
+						switch.cmd("ifconfig", interface, "down")
+				for interface in switch.intfNames():
+					if interface != "lo":
+						switch.cmd("brctl addif", switch, interface)
+				switch.cmd("brctl", switch, "up")
+				for interface in switch.intfNames():
+					if interface != "lo":
+						switch.cmd("ifconfig", interface, "up")
+			else:
+				switch.cmd("echo","",">/etc/dnsmasq.conf")
+				for interface in switch.intfNames():
+					if interface != "lo":
+						switch.cmd("ifconfig", interface, "down")
+						prefix,subnet_mask = random_subnet(24)
+						dhcp_entry = "dhcp-range=" + socket.inet_ntoa(struct.pack('!L', prefix+10)) +"," + socket.inet_ntoa(struct.pack('!L', prefix+20))+",30s"
+						switch.cmd("echo",dhcp_entry,">>/etc/dnsmasq.conf")
+						switch.cmd("ifconfig", interface, "{0}/{1}".format(prefix+1, subnet_mask))
+						switch.cmd("ifconfig", interface, "up")
+				switch.cmd("dnsmasq")
 
 	net.terms = makeTabbedTerm(net.hosts, term = "xfce")
 	net.terms = makeTabbedTerm(net.switches, term = "xfce")
