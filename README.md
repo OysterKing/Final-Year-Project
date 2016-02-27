@@ -197,3 +197,6 @@ Also added some functions to the demowriter in attempt to add a rich text editor
 
 25/02/16:
 Added code to the netInitialiser and the netReader to facilitate the different modes of running (blank, basic, or dhcp).
+
+27/02/16:
+Fixed an issue in net initialiser that was causing the if statements not to trip. Turns out I was treating the enableDhcp etc. variables as Booleans when they were, in fact, strings.

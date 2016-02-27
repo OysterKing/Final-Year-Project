@@ -8,6 +8,7 @@ from mininet.log import setLogLevel
 from mininet.node import Controller, OVSController
 from NetReader import basicTopo, dhcpTopo
 from bridge_switch import BridgeSwitch
+from router import Router
 from translator import Translator
 from pcapReader import PacketReader
 from random_network import random_macs, random_subnet
@@ -20,12 +21,19 @@ def customNet(username, enableBlank, enableBasic, enableDhcp):
 	user = username
 	link_opts = {"bw":1000, "delay":10, "loss": 0, "use_htb": False}
 	filename = "netanim_topo.xml"
+	basic = enableBasic
+	blank = enableBlank
+	dhcp = enableDhcp
 
-	if(enableBasic or enableBlank):
+	print "enableBlank = ", enableBlank
+	print "enableDhcp = ", enableDhcp
+	print "enableBasic = ", enableBasic
+
+	if(basic or blank):
 		topo = basicTopo(link_opts = link_opts, filename = filename)
 		net = Mininet(topo, switch = BridgeSwitch, controller = OVSController, link = TCLink)
 
-	elif(enableDhcp):
+	elif(dhcp):
 		topo = dhcpTopo(link_opts = link_opts, filename = filename)
 		net = Mininet(topo, switch = Router, controller = OVSController, link = TCLink)
 	
@@ -35,33 +43,35 @@ def customNet(username, enableBlank, enableBasic, enableDhcp):
 
 	for offset, host in enumerate(net.hosts):
 		#Set up default network with hardcoded ip addresses.
-		if(enableBasic):
+		if(basic == "true"):
 			print "Capturing on hosts...", offset
 			path = "/home/comhghall/Final-Year-Project/resources/" + str(host) + ".pcap"
 			print "path = ", path
 			host.cmd("tcpdump -u -w", path, "&")
+			print "BASIC ---"
 
 		#Set up a blank network.
-		elif(enableBlank or enableDhcp):
+		elif(blank == "true" or dhcp == "true"):
 			print "Capturing on hosts...", offset
 			path = "/home/comhghall/Final-Year-Project/resources/" + str(host) + ".pcap"
 			print "path = ", path
 			host.cmd("tcpdump -u -w", path, "&")
 			interface = host.intf()
+			print "Setting interfaces down..."
 			host.cmd("ifconfig", interface, "down")
 			host.cmd("ifconfig", interface, "0.0.0.0")
 			host.cmd("ifconfig", interface, hex(macs[offset]))
 			host.cmd("ifconfig", interface, "down")
 
 	for offset, switch in enumerate(net.switches):
-		if(enableBasic or enableBlank):
+		if(basic or blank):
 			print "Capturing on switches...", offset
 			print switch
 			path = "/home/comhghall/Final-Year-Project/resources/" + str(switch) + "-eth0.pcap"
 			print "path = ", path
 			switch.cmd("tcpdump -i", switch, "-u -w", path, "&")
 
-		if(enableDhcp):
+		if(dhcp):
 			print "Capturing on switches...", offset
 			print switch
 			path = "/home/comhghall/Final-Year-Project/resources/" + str(switch) + "-eth0.pcap"
@@ -103,6 +113,7 @@ def customNet(username, enableBlank, enableBasic, enableDhcp):
 def main():
 	#pass the username to the custom net function
 	customNet(username = sys.argv[5], enableBlank = sys.argv[1], enableBasic = sys.argv[2], enableDhcp = sys.argv[3])
+	
 	arguments = sys.argv[1:]
 	pcapFiles = []
 	username = sys.argv[5]
