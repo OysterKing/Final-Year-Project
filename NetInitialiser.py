@@ -48,7 +48,6 @@ def customNet(username, enableBlank, enableBasic, enableDhcp):
 			path = "/home/comhghall/Final-Year-Project/resources/" + str(host) + ".pcap"
 			print "path = ", path
 			host.cmd("tcpdump -u -w", path, "&")
-			print "BASIC ---"
 
 		#Set up a blank network.
 		elif(blank == "true" or dhcp == "true"):

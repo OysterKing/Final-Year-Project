@@ -22,7 +22,7 @@ static const uint qt_meta_data_netanim__DemoWriteMode[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       8,   14, // methods
+       9,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -35,9 +35,10 @@ static const uint qt_meta_data_netanim__DemoWriteMode[] = {
       62,   23,   23,   23, 0x08,
       73,   23,   23,   23, 0x08,
       89,   23,   23,   23, 0x08,
-     102,   23,   23,   23, 0x08,
-     113,   23,   23,   23, 0x08,
-     133,  126,   23,   23, 0x08,
+     104,  102,   23,   23, 0x08,
+     122,   23,   23,   23, 0x08,
+     136,  134,   23,   23, 0x08,
+     163,  156,   23,   23, 0x08,
 
        0        // eod
 };
@@ -45,8 +46,9 @@ static const uint qt_meta_data_netanim__DemoWriteMode[] = {
 static const char qt_meta_stringdata_netanim__DemoWriteMode[] = {
     "netanim::DemoWriteMode\0\0saveButtonSlot()\0"
     "addImageButtonSlot()\0textBold()\0"
-    "textUnderline()\0textItalic()\0textSize()\0"
-    "textColour()\0format\0"
+    "textUnderline()\0textItalic()\0p\0"
+    "textSize(QString)\0textColor()\0f\0"
+    "textFamily(QString)\0format\0"
     "currentCharFormatChanged(QTextCharFormat)\0"
 };
 
@@ -61,9 +63,10 @@ void netanim::DemoWriteMode::qt_static_metacall(QObject *_o, QMetaObject::Call _
         case 2: _t->textBold(); break;
         case 3: _t->textUnderline(); break;
         case 4: _t->textItalic(); break;
-        case 5: _t->textSize(); break;
-        case 6: _t->textColour(); break;
-        case 7: _t->currentCharFormatChanged((*reinterpret_cast< const QTextCharFormat(*)>(_a[1]))); break;
+        case 5: _t->textSize((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 6: _t->textColor(); break;
+        case 7: _t->textFamily((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 8: _t->currentCharFormatChanged((*reinterpret_cast< const QTextCharFormat(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -101,9 +104,9 @@ int netanim::DemoWriteMode::qt_metacall(QMetaObject::Call _c, int _id, void **_a
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 8)
+        if (_id < 9)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 8;
+        _id -= 9;
     }
     return _id;
 }

@@ -5,6 +5,9 @@
 #include "xmlmanager.h"
 #include <QTextEdit>
 #include <sys/stat.h>
+#include <QColorDialog>
+
+const QString rsrcPath = "/home/comhghall/Final-Year-Project/netAnim_icons/";
 
 #define SSTR( x ) dynamic_cast< std::ostringstream & >( \
         ( std::ostringstream() << std::dec << x ) ).str()
@@ -123,9 +126,8 @@ DemoWriteMode::setupTextActions()
     QToolBar *tb = new QToolBar();
     m_gLayout->addWidget(tb, 0, 0);
 
-    QLabel * boldLabel = new QLabel();
-    boldLabel->setText("B");
-    actionTextBold = new QAction(boldLabel);
+    actionTextBold = new QAction(QIcon::fromTheme("format-text-bold", QIcon(rsrcPath + "/textbold.png")),
+                                     tr("&Bold"), this);
 
     actionTextBold->setShortcut(Qt::CTRL + Qt::Key_B);
     actionTextBold->setPriority(QAction::LowPriority);
@@ -135,6 +137,56 @@ DemoWriteMode::setupTextActions()
     connect(actionTextBold, SIGNAL(triggered()), this, SLOT(textBold()));
     tb->addAction(actionTextBold);
     actionTextBold->setCheckable(true);
+
+    actionTextItalic = new QAction(QIcon::fromTheme("format-text-italic",
+                                                        QIcon(rsrcPath + "/textitalic.png")),
+                                       tr("&Italic"), this);
+    actionTextItalic->setPriority(QAction::LowPriority);
+    actionTextItalic->setShortcut(Qt::CTRL + Qt::Key_I);
+    QFont italic;
+    italic.setItalic(true);
+    actionTextItalic->setFont(italic);
+    connect(actionTextItalic, SIGNAL(triggered()), this, SLOT(textItalic()));
+    tb->addAction(actionTextItalic);
+//    menu->addAction(actionTextItalic);
+    actionTextItalic->setCheckable(true);
+
+    actionTextUnderline = new QAction(QIcon::fromTheme("format-text-underline",
+                                                           QIcon(rsrcPath + "/textunder.png")),
+                                          tr("&Underline"), this);
+    actionTextUnderline->setShortcut(Qt::CTRL + Qt::Key_U);
+    actionTextUnderline->setPriority(QAction::LowPriority);
+    QFont underline;
+    underline.setUnderline(true);
+    actionTextUnderline->setFont(underline);
+    connect(actionTextUnderline, SIGNAL(triggered()), this, SLOT(textUnderline()));
+    tb->addAction(actionTextUnderline);
+//    menu->addAction(actionTextUnderline);
+    actionTextUnderline->setCheckable(true);
+
+    QPixmap pix(16, 16);
+    pix.fill(Qt::black);
+    actionTextColor = new QAction(pix, tr("&Color..."), this);
+    connect(actionTextColor, SIGNAL(triggered()), this, SLOT(textColor()));
+    tb->addAction(actionTextColor);
+//    menu->addAction(actionTextColor);
+
+    comboFont = new QFontComboBox(tb);
+    tb->addWidget(comboFont);
+    connect(comboFont, SIGNAL(activated(QString)), this, SLOT(textFamily(QString)));
+
+    comboSize = new QComboBox(tb);
+    comboSize->setObjectName("comboSize");
+    tb->addWidget(comboSize);
+    comboSize->setEditable(true);
+
+    QFontDatabase db;
+    foreach(int size, db.standardSizes())
+    comboSize->addItem(QString::number(size));
+
+    connect(comboSize, SIGNAL(activated(QString)), this, SLOT(textSize(QString)));
+    comboSize->setCurrentIndex(comboSize->findText(QString::number(QApplication::font()
+                                                                       .pointSize())));
 }
 
 void
@@ -146,27 +198,50 @@ DemoWriteMode::textBold()
 }
 
 void
-DemoWriteMode::textColour()
+DemoWriteMode::textColor()
 {
-
+   QColor col = QColorDialog::getColor(m_textEditor->textColor(), this);
+   if (!col.isValid())
+       return;
+   QTextCharFormat fmt;
+   fmt.setForeground(col);
+   mergeFormatOnWordOrSelection(fmt);
+   colorChanged(col);
 }
 
 void
 DemoWriteMode::textItalic()
 {
-
+    QTextCharFormat fmt;
+    fmt.setFontItalic(actionTextItalic->isChecked());
+    mergeFormatOnWordOrSelection(fmt);
 }
 
 void
-DemoWriteMode::textSize()
+DemoWriteMode::textSize(const QString &p)
 {
-
+    qreal pointSize = p.toFloat();
+    if (p.toFloat() > 0) {
+        QTextCharFormat fmt;
+        fmt.setFontPointSize(pointSize);
+        mergeFormatOnWordOrSelection(fmt);
+    }
 }
 
 void
 DemoWriteMode::textUnderline()
 {
+    QTextCharFormat fmt;
+    fmt.setFontUnderline(actionTextUnderline->isChecked());
+    mergeFormatOnWordOrSelection(fmt);
+}
 
+void
+DemoWriteMode::textFamily(const QString &f)
+{
+    QTextCharFormat fmt;
+    fmt.setFontFamily(f);
+    mergeFormatOnWordOrSelection(fmt);
 }
 
 void

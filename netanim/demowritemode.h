@@ -83,8 +83,9 @@ private slots:
     void textBold();
     void textUnderline();
     void textItalic();
-    void textSize();
-    void textColour();
+    void textSize(const QString &p);
+    void textColor();
+    void textFamily(const QString &f);
 
     void currentCharFormatChanged(const QTextCharFormat &format);
 

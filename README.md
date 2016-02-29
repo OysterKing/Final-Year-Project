@@ -200,3 +200,6 @@ Added code to the netInitialiser and the netReader to facilitate the different m
 
 27/02/16:
 Fixed an issue in net initialiser that was causing the if statements not to trip. Turns out I was treating the enableDhcp etc. variables as Booleans when they were, in fact, strings.
+
+29/02/16:
+My lesson management module now supports rich text formatting. Users can underline text, change its color, make it bold etc.
