@@ -6,6 +6,7 @@
 
 #include "common.h"
 #include "mode.h"
+#include <QTextEdit>
 
 namespace netanim
 {
@@ -43,7 +44,10 @@ private:
     QWidget * m_centralWidget;
     QHBoxLayout * m_hLayout;
     QVBoxLayout * m_vLayout;
+    QGridLayout * m_gLayout;
+    QTextEdit * m_textEditor;
     QString m_tabName;
+    QString m_parsedHtml;
     QPointF m_minPoint;
     QPointF m_maxPoint;
     std::vector<QString> m_parsedStrings;

@@ -14,6 +14,7 @@ try:
 			switchIDs = []
 			hostCount = 0
 			switchCount = 0
+			routerId = 0
 
 			with open(xmlFilename, 'r') as file:
 				data = file.readlines()
@@ -31,8 +32,11 @@ try:
 					switchCount += 1
 					if(switchCount == 1):
 						name = "r" + str(switchCount)
+						routerId = int(data[i - 1][10])
 					else:
 						name = "s" + str(switchCount)
+
+					print "Adding switch ", name
 					switch = self.addSwitch(name, blocking = blocking)
 					switchIDs.append(int(data[i - 1][10]))
 
@@ -61,11 +65,19 @@ try:
 					for k in range(len(switchIDs)):
 						if switchIDs[k] == fromID:
 							#switchCount += 1
-							fromNode = str("s" + str(k + 1))
+							if switchIDs[k] == routerId:
+								fromNode = str("r" + str(k + 1))
+
+							else:
+								fromNode = str("s" + str(k + 1))
 
 						elif switchIDs[k] == toID:
 							#switchCount += 1
-							toNode = str("s" + str(k + 1))
+							if switchIDs[k] == routerId:
+								toNode = str("r" + str(k + 1))
+
+							else:
+								toNode = str("s" + str(k + 1))
 
 					print "Adding link ", fromNode, " -> ", toNode, " bw: ", bw, " delay: ", delay, " loss: ", loss
 					link_opts['bw'] = float(bw)

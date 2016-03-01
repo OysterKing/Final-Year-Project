@@ -16,6 +16,7 @@ import sys
 from utils import makeTerm, makeTerms, makeTabbedTerm
 from subprocess import Popen
 import getpass
+import socket, struct
 
 def customNet(username, enableBlank, enableBasic, enableDhcp):
 	user = username
@@ -29,11 +30,11 @@ def customNet(username, enableBlank, enableBasic, enableDhcp):
 	print "enableDhcp = ", enableDhcp
 	print "enableBasic = ", enableBasic
 
-	if(basic or blank):
+	if(basic == "true" or blank == "true"):
 		topo = basicTopo(link_opts = link_opts, filename = filename)
 		net = Mininet(topo, switch = BridgeSwitch, controller = OVSController, link = TCLink)
 
-	elif(dhcp):
+	elif(dhcp == "true"):
 		topo = dhcpTopo(link_opts = link_opts, filename = filename)
 		net = Mininet(topo, switch = Router, controller = OVSController, link = TCLink)
 	
@@ -78,6 +79,7 @@ def customNet(username, enableBlank, enableBasic, enableDhcp):
 			print "path = ", path
 			switch.cmd("sysctl -w net.ipv4.ip_forward=1")
 			if str(switch)[0] != "r":
+				print "Bridge switch..."
 				switch.cmd("brctl", switch, "down")
 				switch.cmd("brclt delbr", switch)
 				switch.cmd("brctl addbr", switch)
@@ -92,12 +94,14 @@ def customNet(username, enableBlank, enableBasic, enableDhcp):
 					if interface != "lo":
 						switch.cmd("ifconfig", interface, "up")
 			else:
+				print "Router..."
 				switch.cmd("echo","",">/etc/dnsmasq.conf")
 				for interface in switch.intfNames():
 					if interface != "lo":
 						switch.cmd("ifconfig", interface, "down")
 						prefix,subnet_mask = random_subnet(24)
 						dhcp_entry = "dhcp-range=" + socket.inet_ntoa(struct.pack('!L', prefix+10)) +"," + socket.inet_ntoa(struct.pack('!L', prefix+20))+",30s"
+						print dhcp_entry
 						switch.cmd("echo",dhcp_entry,">>/etc/dnsmasq.conf")
 						switch.cmd("ifconfig", interface, "{0}/{1}".format(prefix+1, subnet_mask))
 						switch.cmd("ifconfig", interface, "up")
@@ -110,6 +114,11 @@ def customNet(username, enableBlank, enableBasic, enableDhcp):
 	net.stop()
 
 def main():
+	import os
+	DEVNULL = open(os.devnull, 'wb')
+
+	Popen(["sudo", "pkill", "ovs"], stdout=DEVNULL, stderr=DEVNULL)
+	Popen(["sudo", "pkill", "dnsmasq"], stdout=DEVNULL, stderr=DEVNULL)
 	#pass the username to the custom net function
 	customNet(username = sys.argv[5], enableBlank = sys.argv[1], enableBasic = sys.argv[2], enableDhcp = sys.argv[3])
 	

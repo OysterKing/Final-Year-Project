@@ -203,3 +203,6 @@ Fixed an issue in net initialiser that was causing the if statements not to trip
 
 29/02/16:
 My lesson management module now supports rich text formatting. Users can underline text, change its color, make it bold etc.
+
+01/02/16:
+Changed the demo mode to now display the rich text that is written in the lesson management module.

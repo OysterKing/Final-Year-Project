@@ -63,49 +63,27 @@ DemoMode::init()
 void
 DemoMode::displayText()
 {
-    m_hLayout = new QHBoxLayout;
-    QGraphicsView * view = new QGraphicsView;
-    QGraphicsScene * scene = new QGraphicsScene(0, 0, 250, 250);
-    m_hLayout->addWidget(view);
-    m_vLayout = new QVBoxLayout;
-    m_vLayout->addLayout(m_hLayout);
+    m_gLayout = new QGridLayout;
+    m_textEditor = new QTextEdit;
+    m_textEditor->setReadOnly(true);
+    m_gLayout->addWidget(m_textEditor, 1, 0);
     m_centralWidget = new QWidget;
-    m_centralWidget->setLayout(m_vLayout);
-
-    m_minPoint.setX(0.0);
-    m_minPoint.setY(0.0);
-    m_maxPoint.setX(1000.0);
-    m_maxPoint.setY(1000.0);
+    m_centralWidget->setLayout(m_gLayout);
     parse();
+    m_textEditor->insertHtml(m_parsedHtml);
 
-    int x = -500;
-    int y = -200;
-    for(int i = 0; i < m_parsedStrings.size(); i++){
-        QPointF pos;
-        pos.setX(x);
-        y = y + 20;
-        pos.setY(y);
-        addTextItem(scene, m_parsedStrings.at(i), m_parsedFonts.at(i), m_parsedColours.at(i), m_parsedSizes.at(i), pos);
-    }
-    //scene->addText("DEMO");
-    view->setScene(scene);
     setWindowTitle("NetAnim");
 }
 
 void
 DemoMode::parse()
 {
-    XmlManager xmlManager;
-    QString demoTextFile = m_tabName + "_text.xml";
-    QString filename = "/home/comhghall/Final-Year-Project/demos/" + m_tabName + "/" + demoTextFile;
-//    QFile xmlFile("/home/comhghall/Final-Year-Project/demos/" + m_tabName + "/" + demoTextFile);
-//    xmlManager.writeXmlFile("/home/comhghall/Final-Year-Project/demos/textXmlFile.xml");
-
-    xmlManager.readXmlFile(filename);
-    m_parsedStrings = xmlManager.getStringVector();
-    m_parsedColours = xmlManager.getColourVector();
-    m_parsedFonts = xmlManager.getFontVector();
-    m_parsedSizes = xmlManager.getSizeVector();
+    QString demoTextFile = m_tabName + "_text.html";
+    QFile htmlFile("/home/comhghall/Final-Year-Project/demos/" + m_tabName + "/" + demoTextFile);
+    htmlFile.open(QIODevice::ReadOnly);
+    QTextStream in(&htmlFile);
+    m_parsedHtml = in.readAll();
+    htmlFile.close();
 }
 
 void

@@ -6,6 +6,7 @@
 #include <QTextEdit>
 #include <sys/stat.h>
 #include <QColorDialog>
+#include <QTextStream>
 
 const QString rsrcPath = "/home/comhghall/Final-Year-Project/netAnim_icons/";
 
@@ -100,18 +101,25 @@ DemoWriteMode::init()
 void
 DemoWriteMode::saveButtonSlot()
 {
-    XmlManager xmlManager;
+//    XmlManager xmlManager;
     QString text = m_textEditor->toPlainText();
+    QString html = m_textEditor->toHtml();
+    qDebug(html.toLatin1());
     QString demoName = "D_" + m_filenameEdit->text();
-    QString xmlTextName = demoName + "_text.xml";
+    QString htmlTextName = demoName + "_text.html";
 
     QString fullDirPath = "/home/comhghall/Final-Year-Project/demos/" + demoName;
-    QString fullWritepath = fullDirPath + "/" + xmlTextName;
+    QString fullWritepath = fullDirPath + "/" + htmlTextName;
     const char * stdDirPath = fullDirPath.toStdString().c_str();
 
     mkdir(stdDirPath, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     qDebug(text.toLatin1());
-    xmlManager.writeXmlFile(fullWritepath, text);
+    QFile file(fullWritepath);
+    file.open(QIODevice::WriteOnly);
+    QTextStream outstream(&file);
+    outstream<<html;
+    file.close();
+//    xmlManager.writeXmlFile(fullWritepath, text);
 }
 
 void
