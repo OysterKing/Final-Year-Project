@@ -7,6 +7,7 @@
 #include "common.h"
 #include "mode.h"
 #include <QTextEdit>
+#include <QTextBrowser>
 
 namespace netanim
 {
@@ -45,7 +46,7 @@ private:
     QHBoxLayout * m_hLayout;
     QVBoxLayout * m_vLayout;
     QGridLayout * m_gLayout;
-    QTextEdit * m_textEditor;
+    QTextBrowser * m_textEditor;
     QString m_tabName;
     QString m_parsedHtml;
     QPointF m_minPoint;

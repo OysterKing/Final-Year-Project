@@ -2,11 +2,12 @@
  * Final Year Project.*/
 
 #include "demowritemode.h"
-#include "xmlmanager.h"
 #include <QTextEdit>
 #include <sys/stat.h>
 #include <QColorDialog>
 #include <QTextStream>
+#include <QUrl>
+#include <QImageReader>
 
 const QString rsrcPath = "/home/comhghall/Final-Year-Project/netAnim_icons/";
 
@@ -125,7 +126,22 @@ DemoWriteMode::saveButtonSlot()
 void
 DemoWriteMode::addImageButtonSlot()
 {
+    QString file = QFileDialog::getOpenFileName(this, tr("Select an image"),
+                                      ".", tr("Bitmap Files (*.bmp)\n"
+                                        "JPEG (*.jpg *jpeg)\n"
+                                        "GIF (*.gif)\n"
+                                        "PNG (*.png)\n"));
+    QUrl Uri ( QString ( "file://%1" ).arg ( file ) );
+    QImage image = QImageReader ( file ).read();
 
+    QTextDocument * textDocument = m_textEditor->document();
+    textDocument->addResource( QTextDocument::ImageResource, Uri, QVariant ( image ) );
+    QTextCursor cursor = m_textEditor->textCursor();
+    QTextImageFormat imageFormat;
+    imageFormat.setWidth( image.width() );
+    imageFormat.setHeight( image.height() );
+    imageFormat.setName( Uri.toString() );
+    cursor.insertImage(imageFormat);
 }
 
 void
@@ -133,6 +149,11 @@ DemoWriteMode::setupTextActions()
 {
     QToolBar *tb = new QToolBar();
     m_gLayout->addWidget(tb, 0, 0);
+
+    m_addImageButton = new QToolButton;
+    m_addImageButton->setText("ADD IMAGE");
+    connect (m_addImageButton, SIGNAL(clicked()), this, SLOT (addImageButtonSlot()));
+    tb->addWidget(m_addImageButton);
 
     actionTextBold = new QAction(QIcon::fromTheme("format-text-bold", QIcon(rsrcPath + "/textbold.png")),
                                      tr("&Bold"), this);

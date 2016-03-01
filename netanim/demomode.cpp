@@ -2,7 +2,6 @@
 Final Year Project*/
 
 #include "demomode.h"
-#include "xmlmanager.h"
 #include "QFile"
 #include "QTextStream"
 
@@ -64,7 +63,7 @@ void
 DemoMode::displayText()
 {
     m_gLayout = new QGridLayout;
-    m_textEditor = new QTextEdit;
+    m_textEditor = new QTextBrowser;
     m_textEditor->setReadOnly(true);
     m_gLayout->addWidget(m_textEditor, 1, 0);
     m_centralWidget = new QWidget;
