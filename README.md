@@ -206,3 +206,4 @@ My lesson management module now supports rich text formatting. Users can underli
 
 01/02/16:
 Changed the demo mode to now display the rich text that is written in the lesson management module.
+Deleted xml manager as it is no longer needed.

@@ -53,7 +53,6 @@ SOURCES += \
     item.cpp \
     dlink.cpp \
     demomode.cpp \
-    xmlmanager.cpp \
     demowritemode.cpp
 HEADERS += \
     log.h \
@@ -161,7 +160,6 @@ HEADERS += \
     item.h \
     dlink.h \
     demomode.h \
-    xmlmanager.h \
     demowritemode.h
 
 
