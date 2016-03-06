@@ -62,12 +62,13 @@ class PacketReader:
 #				tcpSPorts.append(tcp.sport)
 #				tcpData.append(tcp.data)
 #				tcpSeqNos.append(tcp.seq)
+				print tcp.__hdr__
 				tcpCount+=1
 
 			elif type(tcp) is dpkt.udp.UDP:
 #				print "UDP PACKET"
-#				udp = tcp
-#				print udp.__hdr__
+				udp = tcp
+				print udp.__hdr__
 #				print udp.sport
 #				print udp.dport
 				udpCount+=1
@@ -175,9 +176,9 @@ class PacketReader:
 			PacketReader.pktCounter+=1
 
 #		print tcpSeqNos
-#		print "UDP pkts = " + str(udpCount/2)
+		print "UDP pkts = " + str(udpCount)
 		print "TCP pkts = " + str(tcpCount)
-#		print "ICMP pkts = " + str(icmpCount/2)
+		#print "ICMP pkts = " + str(icmpCount)
 
 		for i in range(len(PacketReader.readPktTimes)):
 			if PacketReader.readPktTimes.count(PacketReader.readPktTimes[i]) > 1:

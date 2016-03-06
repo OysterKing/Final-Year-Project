@@ -208,3 +208,6 @@ My lesson management module now supports rich text formatting. Users can underli
 Changed the demo mode to now display the rich text that is written in the lesson management module.
 Deleted xml manager as it is no longer needed.
 Added an add image button to the lesson module to load an image fiel into the text editor. CHanged the text editor in demo mode into a QTextBrowser so that images could be displayed.
+
+06/02/16:
+Changed style of buttons.

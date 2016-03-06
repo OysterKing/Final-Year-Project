@@ -35,6 +35,7 @@ def customNet(username, enableBlank, enableBasic, enableDhcp):
 		net = Mininet(topo, switch = BridgeSwitch, controller = OVSController, link = TCLink)
 
 	elif(dhcp == "true"):
+		print("Setting up dhcp...")
 		topo = dhcpTopo(link_opts = link_opts, filename = filename)
 		net = Mininet(topo, switch = Router, controller = OVSController, link = TCLink)
 	
@@ -64,14 +65,14 @@ def customNet(username, enableBlank, enableBasic, enableDhcp):
 			host.cmd("ifconfig", interface, "down")
 
 	for offset, switch in enumerate(net.switches):
-		if(basic or blank):
+		if(basic == "true" or blank == "true"):
 			print "Capturing on switches...", offset
 			print switch
 			path = "/home/comhghall/Final-Year-Project/resources/" + str(switch) + "-eth0.pcap"
 			print "path = ", path
 			switch.cmd("tcpdump -i", switch, "-u -w", path, "&")
 
-		if(dhcp):
+		if(dhcp == "true"):
 			print "Capturing on switches...", offset
 			print switch
 			path = "/home/comhghall/Final-Year-Project/resources/" + str(switch) + "-eth0.pcap"
@@ -117,6 +118,7 @@ def main():
 	import os
 	DEVNULL = open(os.devnull, 'wb')
 
+	#Kill Previous dnsmasq process.
 	Popen(["sudo", "pkill", "ovs"], stdout=DEVNULL, stderr=DEVNULL)
 	Popen(["sudo", "pkill", "dnsmasq"], stdout=DEVNULL, stderr=DEVNULL)
 	#pass the username to the custom net function
