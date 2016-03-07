@@ -56,13 +56,13 @@ def customNet(username, enableBlank, enableBasic, enableDhcp):
 			print "Capturing on hosts...", offset
 			path = "/home/comhghall/Final-Year-Project/resources/" + str(host) + ".pcap"
 			print "path = ", path
-			host.cmd("tcpdump -u -w", path, "&")
 			interface = host.intf()
 			print "Setting interfaces down..."
 			host.cmd("ifconfig", interface, "down")
 			host.cmd("ifconfig", interface, "0.0.0.0")
 			host.cmd("ifconfig", interface, hex(macs[offset]))
 			host.cmd("ifconfig", interface, "down")
+			host.cmd("tcpdump -u -w", path, "&")
 
 	for offset, switch in enumerate(net.switches):
 		if(basic == "true" or blank == "true"):
@@ -76,7 +76,6 @@ def customNet(username, enableBlank, enableBasic, enableDhcp):
 			print "Capturing on switches...", offset
 			print switch
 			path = "/home/comhghall/Final-Year-Project/resources/" + str(switch) + "-eth0.pcap"
-			switch.cmd("tcpdump -i", switch, "-u -w", path, "&")
 			print "path = ", path
 			switch.cmd("sysctl -w net.ipv4.ip_forward=1")
 			if str(switch)[0] != "r":
@@ -94,6 +93,7 @@ def customNet(username, enableBlank, enableBasic, enableDhcp):
 				for interface in switch.intfNames():
 					if interface != "lo":
 						switch.cmd("ifconfig", interface, "up")
+				switch.cmd("tcpdump -i", switch, "-u -w", path, "&")
 			else:
 				print "Router..."
 				switch.cmd("echo","",">/etc/dnsmasq.conf")
@@ -107,6 +107,7 @@ def customNet(username, enableBlank, enableBasic, enableDhcp):
 						switch.cmd("ifconfig", interface, "{0}/{1}".format(prefix+1, subnet_mask))
 						switch.cmd("ifconfig", interface, "up")
 				switch.cmd("dnsmasq")
+				switch.cmd("tcpdump -i", switch, "-u -w", path, "&")
 
 	net.terms = makeTabbedTerm(net.hosts, term = "xfce")
 	net.terms = makeTabbedTerm(net.switches, term = "xfce")
@@ -120,7 +121,7 @@ def main():
 
 	#Kill Previous dnsmasq process.
 	Popen(["sudo", "pkill", "ovs"], stdout=DEVNULL, stderr=DEVNULL)
-	Popen(["sudo", "pkill", "dnsmasq"], stdout=DEVNULL, stderr=DEVNULL)
+	Popen(["sudo", "killall", "dnsmasq"], stdout=DEVNULL, stderr=DEVNULL)
 	#pass the username to the custom net function
 	customNet(username = sys.argv[5], enableBlank = sys.argv[1], enableBasic = sys.argv[2], enableDhcp = sys.argv[3])
 	
@@ -140,11 +141,11 @@ def main():
 	print packetReader.getFullSrcIPList()
 	print " "
 	print packetReader.getFullDstIPList()
-	translator = Translator(packetReader.getFullSrcIPList(), packetReader.getFullDstIPList(), packetReader.getPktTimes())
-	print sys.argv[4]
-	translator.getHostSwitchIDs(sys.argv[4])
+#	translator = Translator(packetReader.getFullSrcIPList(), packetReader.getFullDstIPList(), packetReader.getPktTimes())
+#	print sys.argv[4]
+#	translator.getHostSwitchIDs(sys.argv[4])
 	#username = getpass.getuser()
-	translator.writeToXML("/home/" + username + "/Final-Year-Project/resources/netanim_topo.xml")
+#	translator.writeToXML("/home/" + username + "/Final-Year-Project/resources/netanim_topo.xml")
 
 if __name__ == '__main__':
 	main()

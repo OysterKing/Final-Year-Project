@@ -211,3 +211,6 @@ Added an add image button to the lesson module to load an image fiel into the te
 
 06/02/16:
 Changed style of buttons.
+
+07/02/16:
+Added a router button that allows users to add a router for the purposes of running dnsmasq. This router doesn't have its traffic captured via tcpdump. Also removed the dpkt parser and replaced with scapy.

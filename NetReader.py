@@ -30,13 +30,20 @@ try:
 				elif data[i].startswith("<nu") and data[i].count('g="255"'):
 					#switch
 					switchCount += 1
-					if(switchCount == 1):
-						name = "r" + str(switchCount)
-						routerId = int(data[i - 1][10])
-					else:
-						name = "s" + str(switchCount)
+					routerId = int(data[i - 1][10])
+					name = "s" + str(switchCount)
 
 					print "Adding switch ", name
+					switch = self.addSwitch(name, blocking = blocking)
+					switchIDs.append(int(data[i - 1][10]))
+
+				elif data[i].startswith("<nu") and data[i].count('b="255"'):
+					#switch
+					switchCount += 1
+					routerId = int(data[i - 1][10])
+					name = "r" + str(switchCount)
+
+					print "Adding router ", name
 					switch = self.addSwitch(name, blocking = blocking)
 					switchIDs.append(int(data[i - 1][10]))
 

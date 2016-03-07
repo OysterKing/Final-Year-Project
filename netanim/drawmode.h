@@ -44,6 +44,7 @@ private:
     QToolBar * m_sideToolBar;
     QToolButton * m_addHostButton;
     QToolButton * m_addSwitchButton;
+    QToolButton * m_addRouterButton;
     QToolButton * m_saveButton;
     QToolButton * m_addLinkButton;
     QToolButton * m_runButton;
@@ -79,6 +80,7 @@ private:
 
 private slots:
     void addHostButtonSlot();
+    void addRouterButtonSlot();
     void addSwitchButtonSlot();
     void saveButtonSlot();
     void addLinkButtonSlot();

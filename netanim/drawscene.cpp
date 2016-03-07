@@ -19,6 +19,7 @@ DrawScene::DrawScene():
     m_enableMousePositionLabel(false),
     m_enableSwitchAddition(false),
     m_enableHostAddition(false),
+    m_enableRouterAddition(false),
     m_numHosts(0),
     m_numSwitches(0),
     m_numNodes(0)
@@ -105,6 +106,12 @@ void
 DrawScene::enableHostAddition(bool enable)
 {
     m_enableHostAddition = enable;
+}
+
+void
+DrawScene::enableRouterAddition(bool enable)
+{
+    m_enableRouterAddition = enable;
 }
 
 void
@@ -310,6 +317,39 @@ DrawScene::addSwitch(QPointF pos)
 }
 
 void
+DrawScene::addRouter(QPointF pos)
+{
+    int switchNumber = getNumSwitches();
+    int nodeNumber = getNumNodes();
+    QString string = "Router";
+    QString mac = "00:00:00:00:00:";
+    dNode * drawnode = 0;
+    drawnode = dNodeMgr::getInstance()->add(switchNumber, nodeNumber, pos.x(), pos.y(), string);
+    drawnode->setSize(100, 100);
+    drawnode->setColor(0, 0, 255);
+    mac = mac + QString::number(nodeNumber);
+    drawnode->addMacAddress(mac);
+
+    QString switchInfo = "r." + QString::number(switchNumber);
+
+    QGraphicsTextItem * switchLabel = new QGraphicsTextItem;
+    switchLabel->setPos(pos);
+    switchLabel->setPlainText(switchInfo);
+
+    m_switchVector.push_back(switchInfo);
+    m_switchSysIdsMap.insert(std::pair<QString, int> (switchInfo, nodeNumber));
+    m_switchMacMap.insert(std::pair<QString, QString> (switchInfo, mac));
+    m_switchLocMap.insert(std::pair<QString, QPointF> (switchInfo, pos));
+
+//    m_posNodeMap.insert(std::pair<QPointF, QString> (pos, "switch"));
+
+    m_numNodes += 1;
+    m_numSwitches += 1;
+    DrawScene::getInstance()->addItem(drawnode);
+    DrawScene::getInstance()->addItem(switchLabel);
+}
+
+void
 DrawScene::addLink(QString toString, QString fromString, QString bw, QString d, QString l)
 {
     uint32_t fromNodeSysId;
@@ -333,11 +373,11 @@ DrawScene::addLink(QString toString, QString fromString, QString bw, QString d, 
         toNodeSysId = m_switchSysIdsMap.find(to)->second;
     }
 
-    if(from.at(0) == 's'){
+    if(from.at(0) == 's' || from.at(0) == 'r'){
         fromNodeSysId = m_switchSysIdsMap.find(from)->second;
     }
 
-    if(to.at(0) == 's'){
+    if(to.at(0) == 's' || to.at(0) == 'r'){
         toNodeSysId = m_switchSysIdsMap.find(to)->second;
     }
 
@@ -420,6 +460,14 @@ DrawScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         QPointF scenePos = event->scenePos();
         if((scenePos.x () > 0) && (scenePos.y () > 0)){
             deleteNode(scenePos);
+        }
+    }
+
+    else if(m_enableRouterAddition){
+        QPointF scenePos = event->scenePos();
+        if((scenePos.x () > 0) && (scenePos.y () > 0)){
+            addRouter(scenePos);
+            m_enableRouterAddition = false;
         }
     }
     return QGraphicsScene::mousePressEvent(event);

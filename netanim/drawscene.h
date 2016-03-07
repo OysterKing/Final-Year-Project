@@ -25,6 +25,7 @@ public:
     void enableHostAddition(bool enable);
     void enableSwitchAddition(bool enable);
     void enableLinkAddition(bool enable);
+    void enableRouterAddition(bool enable);
     void enableDelete(bool enable);
     void addLink(QString from, QString to, QString bw, QString d, QString l);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -67,6 +68,7 @@ private:
     bool m_enableSwitchAddition;
     bool m_enableLinkAddition;
     bool m_enableDelete;
+    bool m_enableRouterAddition;
     QPointF m_minPoint;
     QPointF m_maxPoint;
     QPointF m_sceneMinPoint;
@@ -92,6 +94,7 @@ private:
     void showMousePositionLabel(bool show);
     void addHost(QPointF pos);
     void addSwitch(QPointF pos);
+    void addRouter(QPointF pos);
     void deleteNode(QPointF pos);
 };
 

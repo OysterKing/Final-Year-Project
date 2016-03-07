@@ -119,6 +119,14 @@ DrawMode::initTopToolbar()
     connect (m_addSwitchButton, SIGNAL(clicked()), this, SLOT (addSwitchButtonSlot()));
     m_topToolBar->addWidget(m_addSwitchButton);
 
+    m_addRouterButton = new QToolButton;
+    m_addRouterButton->setToolTip("Add router");
+    m_addRouterButton->setText("ADD ROUTER");
+    m_addRouterButton->setCheckable(true);
+//    m_addSwitchButton->setStyleSheet("border:1px outset #7990c1");
+    connect (m_addRouterButton, SIGNAL(clicked()), this, SLOT (addRouterButtonSlot()));
+    m_topToolBar->addWidget(m_addRouterButton);
+
     m_deleteButton = new QToolButton;
     m_deleteButton->setToolTip("Delete a switch or host.");
     m_deleteButton->setText("DELETE");
@@ -250,6 +258,22 @@ DrawMode::addHostButtonSlot()
 }
 
 void
+DrawMode::addRouterButtonSlot()
+{
+    if(m_addRouterButton->isChecked()){
+        m_addSwitchButton->setDisabled(true);
+        m_saveButton->setDisabled(true);
+    }
+
+    else{
+        m_addSwitchButton->setEnabled(true);
+        m_saveButton->setEnabled(true);
+    }
+    DrawScene::getInstance()->enableMousePositionLabel(m_addRouterButton->isChecked());
+    DrawScene::getInstance()->enableRouterAddition(m_addRouterButton->isChecked());
+}
+
+void
 DrawMode::addSwitchButtonSlot()
 {
     if(m_addSwitchButton->isChecked()){
@@ -321,7 +345,13 @@ DrawMode::saveButtonSlot()
         y = QString::number(position.y());
 
         outStream << "<node id=\"" + id + "\" sysId=\"0\" locX=\"" + x + "\" locY=\"" + y + "\" />\n";
-        outStream << "<nu p=\"c\" t=\"0\" id=\"" + id + "\" r=\"0\" g=\"255\" b=\"0\" />\n";
+
+        if(name[0] == 'r'){
+            outStream << "<nu p=\"c\" t=\"0\" id=\"" + id + "\" r=\"0\" g=\"0\" b=\"255\" />\n";
+        }
+        else{
+            outStream << "<nu p=\"c\" t=\"0\" id=\"" + id + "\" r=\"0\" g=\"255\" b=\"0\" />\n";
+        }
     }
 
     for(int i = 0; i < links.size(); i++){
@@ -340,7 +370,7 @@ DrawMode::saveButtonSlot()
             toMac = hostMacMap.find(toName)->second;
         }
 
-        else if(toName.at(0) == 's'){
+        else if(toName.at(0) == 's' || toName.at(0) == 'r'){
             toId = QString::number(switchSysIdMap.find(toName)->second);
             toIp = "--.--.--";
             toMac = switchMacMap.find(toName)->second;
@@ -352,7 +382,7 @@ DrawMode::saveButtonSlot()
             fromMac = hostMacMap.find(fromName)->second;
         }
 
-        else if(fromName.at(0) == 's'){
+        else if(fromName.at(0) == 's' || toName.at(0) == 'r'){
             fromId = QString::number(switchSysIdMap.find(fromName)->second);
             fromIp = "--.--.--";
             fromMac = switchMacMap.find(fromName)->second;
@@ -449,7 +479,7 @@ DrawMode::launchMN()
 
     hosts = DrawScene::getInstance()->getHostVector();
     switches = DrawScene::getInstance()->getSwitchVector();
-    QString pcapFiles = "";
+    QString pcapFiles = "", name;
     //Get the user's linux username.
     struct passwd *pwd;
     pwd = getpwuid(getuid());
@@ -460,7 +490,13 @@ DrawMode::launchMN()
     }
 
     for(int i = 0; i < switches.size(); i++){
-        pcapFiles += "/home/" + QString::fromUtf8(linuxUsername) + "/Final-Year-Project/resources/s" + QString::number(i + 1) + "-eth0.pcap ";
+        name = switches.at(i);
+        if(name[0] == 's'){
+            pcapFiles += "/home/" + QString::fromUtf8(linuxUsername) + "/Final-Year-Project/resources/s" + QString::number(i + 1) + "-eth0.pcap ";
+        }
+        else{
+            //dont think I should capture on a router.
+        }
     }
 
     char* fileString = new char[pcapFiles.length() + 1];
@@ -500,6 +536,7 @@ DrawMode::launchMN()
     enableBasic = strdup(s_enableBasic.c_str());
     enableBlank = strdup(s_enableBlank.c_str());
     enableDhcp = strdup(s_enableDhcp.c_str());
+    qDebug(fileString);
     char* child_args[] = {"usr/bin/xterm", "-hold", "-e", "/usr/bin/sudo", "/usr/bin/python", netInitPath, enableBlank, enableBasic, enableDhcp, xmlPath, user, fileString, NULL};
 
     int child_status;
