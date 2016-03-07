@@ -476,10 +476,12 @@ DrawMode::launchMN()
 {
     std::vector<QString> hosts;
     std::vector<QString> switches;
+    std::vector<QString> links;
 
     hosts = DrawScene::getInstance()->getHostVector();
     switches = DrawScene::getInstance()->getSwitchVector();
-    QString pcapFiles = "", name;
+    links = DrawScene::getInstance()->getLinksVector();
+    QString pcapFiles = "", name, to, from, linkName;
     //Get the user's linux username.
     struct passwd *pwd;
     pwd = getpwuid(getuid());
@@ -495,7 +497,15 @@ DrawMode::launchMN()
             pcapFiles += "/home/" + QString::fromUtf8(linuxUsername) + "/Final-Year-Project/resources/s" + QString::number(i + 1) + "-eth0.pcap ";
         }
         else{
-            //dont think I should capture on a router.
+            //capture on each router interface.
+            for(int j = 0; j < links.size(); j++){
+                linkName = links.at(j);
+                to = linkName.left(3);
+                from = linkName.right(3);
+                if(to.at(0) == 'r' || from.at(0) == 'r'){
+                    pcapFiles += "/home/" + QString::fromUtf8(linuxUsername) + "/Final-Year-Project/resources/r" + QString::number(i + 1) + "-eth" + QString::number(j + 1) + ".pcap ";
+                }
+            }
         }
     }
 

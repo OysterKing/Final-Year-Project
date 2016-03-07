@@ -106,8 +106,12 @@ def customNet(username, enableBlank, enableBasic, enableDhcp):
 						switch.cmd("echo",dhcp_entry,">>/etc/dnsmasq.conf")
 						switch.cmd("ifconfig", interface, "{0}/{1}".format(prefix+1, subnet_mask))
 						switch.cmd("ifconfig", interface, "up")
+						print interface
+						if interface.count("eth"):
+							print "Capturing on router..."
+							path = "/home/comhghall/Final-Year-Project/resources/" + str(interface) + ".pcap"
+							switch.cmd("tcpdump -i", interface, "-u -w", path, "&")
 				switch.cmd("dnsmasq")
-				switch.cmd("tcpdump -i", switch, "-u -w", path, "&")
 
 	net.terms = makeTabbedTerm(net.hosts, term = "xfce")
 	net.terms = makeTabbedTerm(net.switches, term = "xfce")

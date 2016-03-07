@@ -214,3 +214,4 @@ Changed style of buttons.
 
 07/02/16:
 Added a router button that allows users to add a router for the purposes of running dnsmasq. This router doesn't have its traffic captured via tcpdump. Also removed the dpkt parser and replaced with scapy.
+Added code to capture traffic on all router interfaces.
