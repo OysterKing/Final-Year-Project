@@ -11,19 +11,89 @@ import decimal
 import getpass
 import os
 
+class ARP_pkt:
+	def __init__(self, operation, p_src, p_dst, timestamp):
+		operation = operation
+		p_src = p_src
+		p_dst = p_dst
+		timestamp = timestamp
+
+	def getOp(self):
+		return operation
+
+	def getP_src(self):
+		return p_src
+
+	def getP_dst(self):
+		return p_dst
+
+	def getTimestamp(self):
+		return timestamp
+
+class ICMP_pkt:
+	def __init__(self, p_type, ip_src, ip_dst, p_id, icmp_type, timestamp):
+		p_type = p_type
+		ip_src = ip_src
+		ip_dst = ip_dst
+		p_id = p_id
+		timestamp = timestamp
+		icmp_type = icmp_type
+
+	def getIcmp_type(self):
+		return icmp_type
+
+	def getTimestamp(self):
+		return timestamp
+
+	def getP_type(self):
+		return p_type
+
+	def getIp_src(self):
+		return ip_src
+
+	def getIp_dst(self):
+		return ip_dst
+
+	def getP_id(self):
+		return p_id
+
+class DHCP_pkt:
+	def __init__(self, msgType, p_src, p_dst, p_id, timestamp):
+		msgType = msgType
+		p_src = p_src
+		p_dst = p_dst
+		p_id = p_id
+		timestamp = timestamp
+
+	def getTimestamp(self):
+		return timestamp
+
+	def getMsgType(self):
+		return msgType
+
+	def getP_src(self):
+		return p_src
+
+	def getP_dst(self):
+		return p_dst
+
+	def getP_id(self):
+		return p_id
+
 class PacketReader:
 	'Class to read pcap file.'
 	pktCounter = 0
-	srcIP_list = []
-	dstIP_list = []
+	icmpPkts = []
+	arpPkts = []
+	dhcpPkts = []
 	fullSrcIP_list = []
 	fullDstIP_list = []
 	timePktDict = {}
 	timeFileDict = {}
-	fileIpDict = {}
-	readPktTimes = []
-	pktTimes = []
+	nodeIpDict = {}
 	pcapFiles = []
+	timestamps = []
+
 	username = ''
 
 	def __init__(self, fileNames, username):
@@ -34,115 +104,139 @@ class PacketReader:
 		for i in range(len(PacketReader.pcapFiles)):
 			self.parseFile(PacketReader.pcapFiles[i]);
 			os.remove(PacketReader.pcapFiles[i])
+		PacketReader.calculateTimes(self)
 		return
 
 	def parseFile(self, filename):
 		f = open(filename)
 		print filename
 		pcap = PcapReader(filename)
-		udpCount = 0
-		tcpCount = 0
-		icmpCount = 0
-		arpCount = 0
 		username = getpass.getuser()
 		print "username = ", PacketReader.username
 		pcapFileIndex = filename.rfind(PacketReader.username)
 		pcapFileIndex = pcapFileIndex + 30 + len(PacketReader.username)
 		print "INDEX  =", pcapFileIndex
-#		tcpDPorts = []
-#		tcpSPorts = []
-#		tcpData = []
-#		tcpSeqNos = []
 
 		for p in pcap:
 
 			pkt = p.payload
-			if IP in pkt:
-				ip_src = pkt[IP].src
-				ip_dst = pkt[IP].dst
-				seqNo = pkt[IP].id
-				print str(ip_src)
-				print str(ip_dst)
-				print str(seqNo)
+			timestamp = '%.30f' % p.time
+			PacketReader.timestamps.append(timestamp)
+
+			if ICMP in pkt:
+				pkt.show()
+				icmp_src = pkt[IP].src
+				icmp_dst = pkt[IP].dst
+				icmp_seqNo = pkt[IP].id
+				icmp_type = pkt[ICMP].type
+				icmpPkt = ICMP_pkt(icmp_type, icmp_src, icmp_dst, icmp_seqNo, icmp_type, timestamp)
+				PacketReader.icmpPkts.append(icmpPkt)
+				if not PacketReader.timePktDict.has_key(timestamp):
+					PacketReader.timePktDict[timestamp] = icmpPkt
+				else:
+					print "----- KEY COLLISION -----"
+
+				if not PacketReader.timeFileDict.has_key(timestamp):
+					PacketReader.timeFileDict[timestamp] = icmpPkt
+				else:
+					print "----- KEY COLLISION -----"
+
+			elif DHCP in pkt:
+				pkt.show()
+				options = pkt[DHCP].options
+				#print "+++++++ ", options, " ++++++", type(options)
+				dhcp_msgType = options[0][1]
+				dhcp_src = pkt[IP].src
+				dhcp_dst = pkt[IP].dst
+				dhcp_id = pkt[IP].id
+				dhcpPkt = DHCP_pkt(dhcp_msgType, dhcp_src, dhcp_dst, dhcp_id, timestamp)
+				PacketReader.dhcpPkts.append(dhcpPkt)
+				if not PacketReader.timePktDict.has_key(timestamp):
+					PacketReader.timePktDict[timestamp] = dhcpPkt
+				else:
+					print "----- KEY COLLISION -----"
+
+				if not PacketReader.timeFileDict.has_key(timestamp):
+					PacketReader.timeFileDict[timestamp] = dhcpPkt
+				else:
+					print "----- KEY COLLISION -----"
+				#If we're reading a host, we can track the dhcp acknowledge message to see what ip that host gets.
+				#Otherwise we wouldn't know what host had what ip; we'd just have the ips.
+				if filename[pcapFileIndex] == 'h':
+					nodeName = filename[pcapFileIndex:pcapFileIndex + 2]
+					PacketReader.nodeIpDict[nodeName] = dhcp_dst
+
+				elif filename[pcapFileIndex] == 'r':
+					fileStr = filename[pcapFileIndex:]
+					nodeName = fileStr[:7]
+					PacketReader.nodeIpDict[nodeName] = options[1][1]
+
+			elif ARP in pkt:
+				pkt.show()
+				arp_op = pkt[ARP].op
+				arp_psrc = pkt[ARP].psrc
+				arp_pdst = pkt[ARP].pdst
+				arpPkt = ARP_pkt(arp_op, arp_psrc, arp_pdst, timestamp)
+				PacketReader.arpPkts.append(arpPkt)
+				if not PacketReader.timePktDict.has_key(timestamp):
+					PacketReader.timePktDict[timestamp] = arpPkt
+				else:
+					print "----- KEY COLLISION -----"
+
+		if filename[pcapFileIndex] == 'h':
+			nodeName = filename[pcapFileIndex:pcapFileIndex + 2]
+
+		elif filename[pcapFileIndex] == 'r' or filename[pcapFileIndex] == 's':
+			fileStr = filename[pcapFileIndex:]
+			nodeName = fileStr[:7]
+
+		if not PacketReader.timeFileDict.has_key(timestamp):
+					PacketReader.timeFileDict[timestamp] = nodeName
+		else:
+			print "----- KEY COLLISION -----"
+
+		print PacketReader.nodeIpDict
+		print PacketReader.timestamps
 
 		f.close()
 		return
 
-	def printSrcIPAddrs(self):
-		print PacketReader.srcIP_list
-		return
-
-	def printDstIPAddrs(self):
-		print PacketReader.dstIP_list
-		return
-
-#This function calculates the time it takes each packet to travel from host to switch, switch to switch and switch to host.
-#It also adds a full path in the form of a full source IP list and a full destination IP list. These lists contain the source host
-# and destination host IP addresses but also the dummy IP addresses of the switches inbetween.
 	def calculateTimes(self):
-		j = 0
-		packets = []
-		times = []
-		files = []
-		numberNodes = len(PacketReader.pcapFiles)
-		numberTimes = len(PacketReader.readPktTimes)
-		hostIPCount = 0
+		sortedTimestamps = sorted(PacketReader.timestamps)
+		arpTempTime = []
+		arpSrcIps = []
+		ops = []
+		allTimes = []
+		for i in range(len(sortedTimestamps)):
+			print type(sortedTimestamps[i])
+			if not PacketReader.timePktDict.has_key(sortedTimestamps[i]) or not PacketReader.timeFileDict.has_key(sortedTimestamps[i]):
+				continue
 
-		while len(PacketReader.readPktTimes) > 0:
-			minimum = min(PacketReader.readPktTimes)
-			minPktId = PacketReader.timePktDict[minimum]
-			del PacketReader.timePktDict[minimum]
+			pkt = PacketReader.timePktDict[sortedTimestamps[i]]
+			nodeName = PacketReader.timeFileDict[sortedTimestamps[i]]
+			if type(pkt) == "ARP_pkt":
+				if pkt.getOp == "who-has":
+					ops.append("who-has")
+				elif pkt.getOp == "is-at":
+					ops.append("is-at")
 
-			packets.append(minPktId)
-			times.append(minimum)
-			filename = PacketReader.timeFileDict[minimum]
-			del PacketReader.timeFileDict[minimum]
-			files.append(filename)
+			if type(pkt) == "DHCP_pkt":
+				if pkt.getMsgType == "request":
+					ops.append("request")
+				elif pkt.getMsgType == "ack":
+					ops.append("ack")
+				elif pkt.getMsgType == "offer":
+					ops.append("offer")
+				elif pkt.getMsgType == "discover":
+					ops.append("discover")
 
-			del PacketReader.readPktTimes[PacketReader.readPktTimes.index(minimum)]
+			if type(pkt) == "ICMP_pkt":
+				if pkt.getIcmp_type == "echo-reply":
+					ops.append("echo-reply")
+				elif pkt.getIcmp_type == "echo-request":
+					ops.append("echo-request")
 
-			#get all other instances of that packet.
-			valueKeyTupleList = PacketReader.timePktDict.items()
-			for item in valueKeyTupleList:
-				if item[1] == minPktId:
-					print item
-					time = item[0]
-					times.append(time)
-					#filename = PacketReader.timeFileDict[time]
-					#files.append(filename)
-					del PacketReader.timePktDict[time]
-					#del PacketReader.timeFileDict[time]
-					del PacketReader.readPktTimes[PacketReader.readPktTimes.index(time)]
-
-			print "BEFORE SORT -------- ", times
-			#sort list of times in ascending order
-			times = sorted(times, key = float)
-			print "AFTER SORT -------- ", times
-
-			for i in range(1, len(times)):
-				filename = PacketReader.timeFileDict[times[i]]
-				files.append(filename)
-				del PacketReader.timeFileDict[times[i]]
-
-			for j in range(len(times) - 1):
-				time = (float(times[j+1]) - float(times[j]))
-#				print "TIME: ", time, " = ", times[j+1], " - ", times[j]
-				PacketReader.pktTimes.append(time)
-				print files
-				print times
-				srcIp = PacketReader.fileIpDict[files[j]]
-				PacketReader.fullSrcIP_list.append(srcIp)
-
-			for k in range(1, len(files)):
-				print files
-				dstIp = PacketReader.fileIpDict[files[k]]
-				PacketReader.fullDstIP_list.append(dstIp)
-
-			packets = []
-			times = []
-			files = []
-
-
+		print ops
 
 	def printTimes(self):
 		for i in range (len(PacketReader.pktTimes)):

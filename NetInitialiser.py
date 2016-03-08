@@ -140,11 +140,11 @@ def main():
 	print "pcap files = ", pcapFiles
 	packetReader = PacketReader(pcapFiles, username)
 	packetReader.openFiles()
-	packetReader.calculateTimes()
-	print " "
-	print packetReader.getFullSrcIPList()
-	print " "
-	print packetReader.getFullDstIPList()
+	#packetReader.calculateTimes()
+	#print " "
+	#print packetReader.getFullSrcIPList()
+	#print " "
+	#print packetReader.getFullDstIPList()
 #	translator = Translator(packetReader.getFullSrcIPList(), packetReader.getFullDstIPList(), packetReader.getPktTimes())
 #	print sys.argv[4]
 #	translator.getHostSwitchIDs(sys.argv[4])
