@@ -204,17 +204,20 @@ Fixed an issue in net initialiser that was causing the if statements not to trip
 29/02/16:
 My lesson management module now supports rich text formatting. Users can underline text, change its color, make it bold etc.
 
-01/02/16:
+01/03/16:
 Changed the demo mode to now display the rich text that is written in the lesson management module.
 Deleted xml manager as it is no longer needed.
 Added an add image button to the lesson module to load an image fiel into the text editor. CHanged the text editor in demo mode into a QTextBrowser so that images could be displayed.
 
-06/02/16:
+06/03/16:
 Changed style of buttons.
 
-07/02/16:
+07/03/16:
 Added a router button that allows users to add a router for the purposes of running dnsmasq. This router doesn't have its traffic captured via tcpdump. Also removed the dpkt parser and replaced with scapy.
 Added code to capture traffic on all router interfaces.
 
-08/02/16:
+08/03/16:
 Changed the pcapReader to use scapy instead of dpkt. I can now parse all kinds of packets but I need to figure out a better way of timing them.
+
+09/03/16:
+Managed to filter each packet and save what type of arp, icmp and dhcp packet each is.
