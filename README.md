@@ -221,3 +221,6 @@ Changed the pcapReader to use scapy instead of dpkt. I can now parse all kinds o
 
 09/03/16:
 Managed to filter each packet and save what type of arp, icmp and dhcp packet each is.
+
+10/03/16:
+Added a method to pcapReader to correctly calculate the travel times of all types of packets.

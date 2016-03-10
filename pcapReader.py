@@ -116,6 +116,7 @@ class PacketReader:
 	nodeIpDict = {}
 	pcapFiles = []
 	timestamps = []
+	timePktTupleList = []
 
 	username = ''
 
@@ -207,35 +208,194 @@ class PacketReader:
 
 	def calculateTimes(self):
 		sortedTupleList = sorted(PacketReader.timeFilePktList)
+		whoHasTupleList = []
+		isAtTupleList = []
+		echoReqTupleList = []
+		echoTupleList = []
+		discTupleList = []
+		offerTupleList = []
+		ackTupleList = []
+		reqTupleList = []
+
 		for i in range(len(sortedTupleList)):
 			if sortedTupleList[i][2].getPktType() == "ARP":
 				if sortedTupleList[i][2].getOp() == 1:
 					arp_operation = "who-has"
+					pTo = sortedTupleList[i][2].getP_dst()
+					pFrom = sortedTupleList[i][2].getP_src()
+					pTuple = (sortedTupleList[i][0], arp_operation, sortedTupleList[i][1], pTo, pFrom)
+					whoHasTupleList.append(pTuple)
+					if i != len(sortedTupleList) - 1:
+						if sortedTupleList[i + 1][2].getPktType() != "ARP":
+							self.calcTravelTimes(pkts = whoHasTupleList)
+							whoHasTupleList = []
+						elif sortedTupleList[i + 1][2].getOp() != 1:
+							self.calcTravelTimes(pkts = whoHasTupleList)
+							whoHasTupleList = []
 
 				elif sortedTupleList[i][2].getOp() == 2:
 					arp_operation = "is-at"
+					pTo = sortedTupleList[i][2].getP_dst()
+					pFrom = sortedTupleList[i][2].getP_src()
+					pTuple = (sortedTupleList[i][0], arp_operation, sortedTupleList[i][1], pTo, pFrom)
+					isAtTupleList.append(pTuple)
+					if i != len(sortedTupleList) - 1:
+						if sortedTupleList[i + 1][2].getPktType() != "ARP":
+							self.calcTravelTimes(pkts = isAtTupleList)
+							isAtTupleList = []
+						elif sortedTupleList[i + 1][2].getOp() != 2:
+							self.calcTravelTimes(pkts = isAtTupleList)
+							isAtTupleList = []
 
-				print "ARP:	", arp_operation, "	", sortedTupleList[i][0], "	", sortedTupleList[i][1]
+				print "ARP:	", arp_operation, "	", sortedTupleList[i][0], "	", sortedTupleList[i][1], " ", pFrom, " -> ", pTo
 
 			elif sortedTupleList[i][2].getPktType() == "ICMP":
 				if sortedTupleList[i][2].getIcmp_type() == 0:
 					icmpType = "echo-request"
+					pTo = sortedTupleList[i][2].getIp_dst()
+					pFrom = sortedTupleList[i][2].getIp_src()
+					pTuple = (sortedTupleList[i][0], icmpType, sortedTupleList[i][1], pTo, pFrom)
+					echoReqTupleList.append(pTuple)
+					if i != len(sortedTupleList) - 1:
+						if sortedTupleList[i + 1][2].getPktType() != "ICMP":
+							self.calcTravelTimes(pkts = echoReqTupleList)
+							echoReqTupleList = []
+						elif sortedTupleList[i + 1][2].getIcmp_type() != 0:
+							self.calcTravelTimes(pkts = echoReqTupleList)
+							echoReqTupleList = []
+
 				elif sortedTupleList[i][2].getIcmp_type() == 8:
 					icmpType = "echo"
+					pTo = sortedTupleList[i][2].getIp_dst()
+					pFrom = sortedTupleList[i][2].getIp_src()
+					pTuple = (sortedTupleList[i][0], icmpType, sortedTupleList[i][1], pTo, pFrom)
+					echoTupleList.append(pTuple)
+					if i != len(sortedTupleList) - 1:
+						if sortedTupleList[i + 1][2].getPktType() != "ICMP":
+							self.calcTravelTimes(pkts = echoTupleList)
+							echoTupleList = []
+						elif sortedTupleList[i + 1][2].getIcmp_type() != 8:
+							self.calcTravelTimes(pkts = echoTupleList)
+							echoTupleList = []
 
-				print "ICMP:	", icmpType, "	", sortedTupleList[i][0], "	", sortedTupleList[i][1]
+				print "ICMP:	", icmpType, "	", sortedTupleList[i][0], "	", sortedTupleList[i][1], " ", pFrom, " -> ", pTo
 
 			elif sortedTupleList[i][2].getPktType() == "DHCP":
 				if sortedTupleList[i][2].getMsgType() == 1:
 					dhcpMsgType = "discover"
+					pTo = sortedTupleList[i][2].getP_dst()
+					pFrom = sortedTupleList[i][2].getP_src()
+					pTuple = (sortedTupleList[i][0], dhcpMsgType, sortedTupleList[i][1], pTo, pFrom)
+					discTupleList.append(pTuple)
+					if i != len(sortedTupleList) - 1:
+						if sortedTupleList[i + 1][2].getPktType() != "DHCP":
+							self.calcTravelTimes(pkts = discTupleList)
+							discTupleList = []
+						elif sortedTupleList[i + 1][2].getMsgtype() != 1:
+							self.calcTravelTimes(pkts = discTupleList)
+							discTupleList = []
+
 				elif sortedTupleList[i][2].getMsgType() == 2:
 					dhcpMsgType = "offer"
+					pTo = sortedTupleList[i][2].getP_dst()
+					pFrom = sortedTupleList[i][2].getP_src()
+					pTuple = (sortedTupleList[i][0], dhcpMsgType, sortedTupleList[i][1], pTo, pFrom)
+					offerTupleList.append(pTuple)
+					if i != len(sortedTupleList) - 1:
+						if sortedTupleList[i + 1][2].getPktType() != "DHCP":
+							self.calcTravelTimes(pkts = offerTupleList)
+							offerTupleList = []
+						elif sortedTupleList[i + 1][2].getMsgType() != 2:
+							self.calcTravelTimes(pkts = offerTupleList)
+							offerTupleList = []
+
 				elif sortedTupleList[i][2].getMsgType() == 3:
 					dhcpMsgType = "request"
+					pTo = sortedTupleList[i][2].getP_dst()
+					pFrom = sortedTupleList[i][2].getP_src()
+					pTuple = (sortedTupleList[i][0], dhcpMsgType, sortedTupleList[i][1], pTo, pFrom)
+					reqTupleList.append(pTuple)
+					if i != len(sortedTupleList) - 1:
+						if sortedTupleList[i + 1][2].getPktType() != "DHCP":
+							self.calcTravelTimes(pkts = reqTupleList)
+							reqTupleList = []
+						elif sortedTupleList[i + 1][2].getMsgType() != 3:
+							self.calcTravelTimes(pkts = reqTupleList)
+							reqTupleList = []
+
 				elif sortedTupleList[i][2].getMsgType == 5:
 					dhcpMsgType = "ack"
+					pTo = sortedTupleList[i][2].getP_dst()
+					pFrom = sortedTupleList[i][2].getP_src()
+					pTuple = (sortedTupleList[i][0], dhcpMsgType, sortedTupleList[i][1], pTo, pFrom)
+					ackTupleList.append(pTuple)
+					if i != len(sortedTupleList) - 1:
+						if sortedTupleList[i + 1][2].getPktType() != "DHCP":
+							self.calcTravelTimes(pkts = ackTupleList)
+							ackTupleList = []
+						elif sortedTupleList[i + 1][2].getMsgType() != 5:
+							self.calcTravelTimes(pkts = ackTupleList)
+							ackTupleList = []
 
-				print "DHCP:	", dhcpMsgType, "	", sortedTupleList[i][0], "	", sortedTupleList[i][1]
+				print "DHCP:	", dhcpMsgType, "	", sortedTupleList[i][0], "	", sortedTupleList[i][1], " ", pFrom, " -> ", pTo
+
+		print PacketReader.timePktTupleList
+
+	def calcTravelTimes(self, pkts):
+		if pkts == []:
+			print "empty"
+
+		elif pkts[0][1] == "is-at" or pkts[0][1] == "who-has":
+			for i in range(len(pkts) - 1):
+				if len(pkts) % 2 == 0:
+					if i % 2 == 0 or i == 0:
+						time1 = pkts[i][0]
+						time2 = pkts[i + 1][0]
+						travelTime = float(time2) - float(time1)
+						timeTuple = (time1, pkts[i][1], travelTime, pkts[i][3], pkts[i][4])
+						PacketReader.timePktTupleList.append(timeTuple)
+					else:
+						continue
+				else:
+					time1 = pkts[i][0]
+					time2 = pkts[i + 1][0]
+					travelTime = float(time2) - float(time1)
+					timeTuple = (time1, pkts[i][1], travelTime, pkts[i][3], pkts[i][4])
+					PacketReader.timePktTupleList.append(timeTuple)
+
+		elif pkts[0][1] == "echo-request" or pkts[0][1] == "echo":
+			for i in range(len(pkts) - 1):
+				if i == len(pkts) - 1 and pkts[i][2][0] == 'r':
+					time1 = pkts[i - 1][0]
+				else:
+					time1 = pkts[i][0]
+				time2 = pkts[i + 1][0]
+				if time1 == time2:
+					timeList = list(time1)
+					timeList[len(timeList) - 1] = '1'
+					time1 = "".join(timeList)
+				time2 = pkts[i + 1][0]
+				travelTime = float(time2) - float(time1)
+				timeTuple = (pkts[i][1], travelTime, pkts[i][3], pkts[i][4])
+				PacketReader.timePktTupleList.append(timeTuple)
+
+		elif pkts[0][1] == "request" or pkts[0][1] == "offer" or pkts[0][1] == "ack":
+			for i in range(len(pkts) - 1):
+				if len(pkts) % 2 == 0:
+					if i % 2 == 0 or i == 0:
+						time1 = pkts[i][0]
+						time2 = pkts[i + 1][0]
+						travelTime = float(time2) - float(time1)
+						timeTuple = (time1, pkts[i][1], travelTime, pkts[i][3], pkts[i][4])
+						PacketReader.timePktTupleList.append(timeTuple)
+					else:
+						continue
+				else:
+					time1 = pkts[i][0]
+					time2 = pkts[i + 1][0]
+					travelTime = float(time2) - float(time1)
+					timeTuple = (time1, pkts[i][1], travelTime, pkts[i][3], pkts[i][4])
+					PacketReader.timePktTupleList.append(timeTuple)
 
 	def printTimes(self):
 		for i in range (len(PacketReader.pktTimes)):
