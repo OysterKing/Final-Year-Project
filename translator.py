@@ -9,17 +9,17 @@ class Translator:
 	hostIDs = []
 	switchIDs = []
 
-	def __init__(self, srcIP_Addrs, dstIP_Addrs, pktTimes):
+	def __init__(self, srcIP_Addrs, dstIP_Addrs, pktTimes, ipNodeDict):
 		self.srcIP_Addrs = srcIP_Addrs
 		self.dstIP_Addrs = dstIP_Addrs
 		self.pktTimes = pktTimes
+		self.ipNodeDict = ipNodeDict
 
 	def getHostSwitchIDs(self, filename):
 		with open(filename, 'r') as file:
 			data = file.readlines()
 
 		for i in range (len(data)):
-			print "HEY"
 			if data[i].startswith("<nu") and data[i].count('r="255"'):
 				print "h.", data[i - 1][10]
 				nodeID = int(data[i - 1][10])
@@ -30,24 +30,24 @@ class Translator:
 				nodeID = int(data[i - 1][10])
 				Translator.switchIDs.append(nodeID)
 
-	def convertIP(self, ip): 
-		dotCount = 0		
-		for index in range (len(ip)):
-			if dotCount == 3:	#last part of ip address will tell us which node it is.
-				addr = ip[index:len(ip)]
-				break
-			
-			elif ip[index] == '.':
-				dotCount+=1
-		
-		if ip.startswith("-"):
-			nodeID = int(addr)
-			nodeIDstring = str(Translator.switchIDs[nodeID])
+			elif data[i].startswith("<nu") and data[i].count('b="255"'):
+				print "r.", data[i -1][10]
+				nodeID = int(data[i - 1][10])
+				Translator.switchIDs.append(nodeID)
 
-		#Host ips always are of the form x.x.x.1 to x.x.x.n so we subtract one to get the correct index in the hostIDs list.
-		else:
-			nodeID = int(addr) - 1
-			nodeIDstring = str(Translator.hostIDs[nodeID])
+	def convertIP(self, ip): 
+		node = self.ipNodeDict[ip]
+		nodeIDstring = ""
+		if node[0] == 'r':
+			nodeIDstring = str(self.switchIDs[0])
+
+		elif node[0] == 's':
+			num = int(node[1])
+			nodeIDstring = str(self.switchIDs[num - 1])
+
+		elif node[0] == 'h':
+			num = int(node[1])
+			nodeIDstring = str(self.hostIDs[num - 1])
 
 		return nodeIDstring
 

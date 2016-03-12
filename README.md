@@ -224,3 +224,6 @@ Managed to filter each packet and save what type of arp, icmp and dhcp packet ea
 
 10/03/16:
 Added a method to pcapReader to correctly calculate the travel times of all types of packets.
+
+12/03/16:
+Added code to animate all types of packets. Still a couple of odd animations here and there but just a little bit of cleanup required.

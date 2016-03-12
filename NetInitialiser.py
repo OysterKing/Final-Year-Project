@@ -145,11 +145,11 @@ def main():
 	#print packetReader.getFullSrcIPList()
 	#print " "
 	#print packetReader.getFullDstIPList()
-#	translator = Translator(packetReader.getFullSrcIPList(), packetReader.getFullDstIPList(), packetReader.getPktTimes())
-#	print sys.argv[4]
-#	translator.getHostSwitchIDs(sys.argv[4])
+	translator = Translator(packetReader.getFullSrcIPList(), packetReader.getFullDstIPList(), packetReader.getPktTimes(), packetReader.getIpNodeDict())
+	print sys.argv[4]
+	translator.getHostSwitchIDs(sys.argv[4])
 	#username = getpass.getuser()
-#	translator.writeToXML("/home/" + username + "/Final-Year-Project/resources/netanim_topo.xml")
+	translator.writeToXML("/home/comhghall/Final-Year-Project/resources/netanim_topo.xml")
 
 if __name__ == '__main__':
 	main()

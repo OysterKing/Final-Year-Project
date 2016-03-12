@@ -107,12 +107,14 @@ class DHCP_pkt:
 class PacketReader:
 	'Class to read pcap file.'
 	pktCounter = 0
-	icmpPkts = []
 	arpPkts = []
+	icmpPkts = []
 	dhcpPkts = []
 	fullSrcIP_list = []
 	fullDstIP_list = []
+	pktTimes = []
 	timeFilePktList = []
+	ipNodeDict = {}
 	nodeIpDict = {}
 	pcapFiles = []
 	timestamps = []
@@ -144,9 +146,16 @@ class PacketReader:
 		if filename[pcapFileIndex] == 'h':
 			nodeName = filename[pcapFileIndex:pcapFileIndex + 2]
 
-		elif filename[pcapFileIndex] == 'r' or filename[pcapFileIndex] == 's':
+		elif filename[pcapFileIndex] == 'r':
 			fileStr = filename[pcapFileIndex:]
 			nodeName = fileStr[:7]
+
+		elif filename[pcapFileIndex] == 's':
+			fileStr = filename[pcapFileIndex:]
+			nodeName = fileStr[:7]
+			switchIp = "--.--.-" + fileStr[1]
+			PacketReader.nodeIpDict[nodeName] = switchIp
+			PacketReader.ipNodeDict[switchIp] = nodeName
 
 		for p in pcap:
 
@@ -171,9 +180,11 @@ class PacketReader:
 				#Otherwise we wouldn't know what host had what ip; we'd just have the ips.
 				if filename[pcapFileIndex] == 'h':
 					PacketReader.nodeIpDict[nodeName] = dhcp_dst
+					PacketReader.ipNodeDict[dhcp_dst] = nodeName
 
 				elif filename[pcapFileIndex] == 'r':
 					PacketReader.nodeIpDict[nodeName] = options[1][1]
+					PacketReader.ipNodeDict[options[1][1]] = nodeName
 
 			elif ARP in pkt:
 				pkt.show()
@@ -291,7 +302,7 @@ class PacketReader:
 						if sortedTupleList[i + 1][2].getPktType() != "DHCP":
 							self.calcTravelTimes(pkts = discTupleList)
 							discTupleList = []
-						elif sortedTupleList[i + 1][2].getMsgtype() != 1:
+						elif sortedTupleList[i + 1][2].getMsgType() != 1:
 							self.calcTravelTimes(pkts = discTupleList)
 							discTupleList = []
 
@@ -340,6 +351,7 @@ class PacketReader:
 				print "DHCP:	", dhcpMsgType, "	", sortedTupleList[i][0], "	", sortedTupleList[i][1], " ", pFrom, " -> ", pTo
 
 		print PacketReader.timePktTupleList
+		self.calcFullSrcDstIps()
 
 	def calcTravelTimes(self, pkts):
 		if pkts == []:
@@ -352,16 +364,18 @@ class PacketReader:
 						time1 = pkts[i][0]
 						time2 = pkts[i + 1][0]
 						travelTime = float(time2) - float(time1)
-						timeTuple = (time1, pkts[i][1], travelTime, pkts[i][3], pkts[i][4])
+						timeTuple = (time1, pkts[i][1], travelTime, pkts[i][3], pkts[i][4], pkts[i][2])
 						PacketReader.timePktTupleList.append(timeTuple)
+						PacketReader.pktTimes.append(travelTime)
 					else:
 						continue
 				else:
 					time1 = pkts[i][0]
 					time2 = pkts[i + 1][0]
 					travelTime = float(time2) - float(time1)
-					timeTuple = (time1, pkts[i][1], travelTime, pkts[i][3], pkts[i][4])
+					timeTuple = (time1, pkts[i][1], travelTime, pkts[i][3], pkts[i][4], pkts[i][2])
 					PacketReader.timePktTupleList.append(timeTuple)
+					PacketReader.pktTimes.append(travelTime)
 
 		elif pkts[0][1] == "echo-request" or pkts[0][1] == "echo":
 			for i in range(len(pkts) - 1):
@@ -376,8 +390,9 @@ class PacketReader:
 					time1 = "".join(timeList)
 				time2 = pkts[i + 1][0]
 				travelTime = float(time2) - float(time1)
-				timeTuple = (pkts[i][1], travelTime, pkts[i][3], pkts[i][4])
+				timeTuple = (time1, pkts[i][1], travelTime, pkts[i][3], pkts[i][4], pkts[i][2])
 				PacketReader.timePktTupleList.append(timeTuple)
+				PacketReader.pktTimes.append(travelTime)
 
 		elif pkts[0][1] == "request" or pkts[0][1] == "offer" or pkts[0][1] == "ack":
 			for i in range(len(pkts) - 1):
@@ -386,21 +401,63 @@ class PacketReader:
 						time1 = pkts[i][0]
 						time2 = pkts[i + 1][0]
 						travelTime = float(time2) - float(time1)
-						timeTuple = (time1, pkts[i][1], travelTime, pkts[i][3], pkts[i][4])
+						timeTuple = (time1, pkts[i][1], travelTime, pkts[i][3], pkts[i][4], pkts[i][2])
 						PacketReader.timePktTupleList.append(timeTuple)
+						PacketReader.pktTimes.append(travelTime)
 					else:
 						continue
 				else:
 					time1 = pkts[i][0]
 					time2 = pkts[i + 1][0]
 					travelTime = float(time2) - float(time1)
-					timeTuple = (time1, pkts[i][1], travelTime, pkts[i][3], pkts[i][4])
+					timeTuple = (time1, pkts[i][1], travelTime, pkts[i][3], pkts[i][4], pkts[i][2])
 					PacketReader.timePktTupleList.append(timeTuple)
+					PacketReader.pktTimes.append(travelTime)
+
+	def calcFullSrcDstIps(self):
+		for i in range(len(PacketReader.timePktTupleList) - 1):
+			currentNode = PacketReader.timePktTupleList[i][5]
+			print currentNode, ", ", PacketReader.timePktTupleList[i + 1][5]
+			if PacketReader.timePktTupleList[i + 1][5][0] == 's' and currentNode[0] == 'h':
+				srcIp = PacketReader.timePktTupleList[i][4]
+				dstIp = PacketReader.nodeIpDict[PacketReader.timePktTupleList[i + 1][5]]
+				PacketReader.fullSrcIP_list.append(srcIp)
+				PacketReader.fullDstIP_list.append(dstIp)
+
+			elif PacketReader.timePktTupleList[i + 1][5][0] == 's' and currentNode[0] == 's':
+				srcIp = PacketReader.nodeIpDict[PacketReader.timePktTupleList[i][5]]
+				dstIp = PacketReader.nodeIpDict[PacketReader.timePktTupleList[i + 1][5]]
+				PacketReader.fullSrcIP_list.append(srcIp)
+				PacketReader.fullDstIP_list.append(dstIp)
+
+			elif currentNode[0] == 's' and PacketReader.timePktTupleList[i + 1][5][0] == 'h':
+				srcIp = PacketReader.nodeIpDict[PacketReader.timePktTupleList[i][5]]
+				dstIp = PacketReader.timePktTupleList[i + 1][4]
+				PacketReader.fullSrcIP_list.append(srcIp)
+				PacketReader.fullDstIP_list.append(dstIp)
+
+			elif currentNode[0] == 'r' and PacketReader.timePktTupleList[i + 1][5][0] == 'h':
+				srcIp = PacketReader.nodeIpDict["r1-eth1"]
+				dstIp = PacketReader.nodeIpDict[PacketReader.timePktTupleList[i + 1][5]]
+				PacketReader.fullSrcIP_list.append(srcIp)
+				PacketReader.fullDstIP_list.append(dstIp)
+
+			elif currentNode[0] == 'h' and PacketReader.timePktTupleList[i + 1][5][0] == 'r':
+				srcIp = PacketReader.nodeIpDict[PacketReader.timePktTupleList[i][5]]
+				dstIp = PacketReader.nodeIpDict["r1-eth1"]
+				PacketReader.fullSrcIP_list.append(srcIp)
+				PacketReader.fullDstIP_list.append(dstIp)
+
+		print PacketReader.fullSrcIP_list
+		print PacketReader.fullDstIP_list
 
 	def printTimes(self):
 		for i in range (len(PacketReader.pktTimes)):
 			print PacketReader.pktTimes[i], " (", PacketReader.srcIP_list[i], " -> ", PacketReader.dstIP_list[i], ")"
 		return
+
+	def getTimePktTuples(self):
+		return PacketReader.timePktTupleList
 
 	def getPktTimes(self):
 		return PacketReader.pktTimes
@@ -410,6 +467,9 @@ class PacketReader:
 
 	def getFullDstIPList(self):
 		return PacketReader.fullDstIP_list
+
+	def getIpNodeDict(self):
+		return PacketReader.ipNodeDict
 
 #	def printNumPkts(self):
 #		print "Number of packets = ", PacketReader.pktCounter/2
