@@ -142,7 +142,6 @@ private:
   QToolButton * m_batteryCapacityButton;
   QSpinBox * m_gridLinesSpinBox;
   QComboBox * m_nodeSizeComboBox;
-  QToolButton * m_testButton;
   QToolButton * m_showIpButton;
   QToolButton * m_showMacButton;
   QToolButton * m_showNodeIdButton;
@@ -231,7 +230,6 @@ private:
 
 
 private slots:
-  void testSlot ();
   void clickTraceFileOpenSlot ();
   void reloadFileSlot ();
   void clickZoomInSlot ();
@@ -262,7 +260,6 @@ private slots:
   void pauseAtTimeSlot ();
   void stepSlot ();
   void enableMousePositionSlot ();
-  void myButtonSlot ();
 };
 
 

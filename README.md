@@ -227,3 +227,6 @@ Added a method to pcapReader to correctly calculate the travel times of all type
 
 12/03/16:
 Added code to animate all types of packets. Still a couple of odd animations here and there but just a little bit of cleanup required.
+
+13/03/16:
+Removed some useless test code from animatormode. Added a check to correctly match ips with host names.

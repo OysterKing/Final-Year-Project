@@ -215,7 +215,6 @@ AnimatorMode::setVerticalToolbarWidgets ()
   m_verticalToolbar->addWidget (m_showPropertiesButton);
   m_verticalToolbar->addWidget (m_batteryCapacityButton);
   m_verticalToolbar->addWidget (m_mousePositionButton);
-  m_verticalToolbar->addWidget (m_mybutton);
 }
 
 void
@@ -246,7 +245,6 @@ AnimatorMode::setTopToolbarWidgets ()
   m_topToolBar->addWidget (m_showIpButton);
   m_topToolBar->addWidget (m_showMacButton);
   //m_topToolBar->addWidget (m_showRoutePathButton);
-  m_topToolBar->addWidget (m_testButton);
 }
 
 
@@ -319,10 +317,6 @@ AnimatorMode::initControls ()
             << "20";
   m_nodeSizeComboBox->addItems (nodeSizes);
   connect (m_nodeSizeComboBox, SIGNAL (currentIndexChanged (QString)), this, SLOT (updateNodeSizeSlot (QString)));
-
-  m_testButton = new QToolButton;
-  m_testButton->setText ("T");
-  connect (m_testButton, SIGNAL (clicked ()), this, SLOT (testSlot ()));
 
   m_showIpButton = new QToolButton;
   m_showIpButton->setText ("IP");
@@ -442,12 +436,6 @@ AnimatorMode::initControls ()
   m_mousePositionButton->setIcon (QIcon (":/resources/animator_mouseposition.png"));
   m_mousePositionButton->setCheckable (true);
   connect (m_mousePositionButton, SIGNAL(clicked()), this, SLOT (enableMousePositionSlot()));
-
-  m_mybutton = new QToolButton;
-  m_mybutton->setToolTip ("This is a test button.");
-  m_mybutton->setText ("TEST");
-  m_mybutton->setCheckable (true);
-  connect (m_mybutton, SIGNAL (clicked()), this, SLOT (myButtonSlot()));
 
   m_parseProgressBar = new QProgressBar;
   //m_animationGroup  = new QParallelAnimationGroup;
@@ -1052,48 +1040,6 @@ void
  }
 
 void
-AnimatorMode::myButtonSlot()
-{
-    pid_t child_pid;
-    char* child_args[] = {"usr/bin/xterm", "-e", "/usr/bin/sudo", "/usr/bin/python", "/home/comhghall/MN_Python_Scripts/week2/task_1-host-discovery.py", "300594", NULL};
-    int child_status;
-    pid_t wait_result;
-    child_pid = fork();
-
-    switch(child_pid){
-        case -1:
-            break;
-
-        case 0:
-            execvp("/usr/bin/xterm", child_args);
-            abort();
-
-        default:
-            wait_result = waitpid(child_pid, &child_status, 0);
-            if(wait_result != child_pid){
-                //something went wrong
-//                m_mybutton->setToolTip("X");
-            }
-
-            else{
-                //child terminated successfully
-//                m_mybutton->setToolTip("Y");
-            }
-    }
-
-    wait_result = waitpid(child_pid, &child_status, WUNTRACED | WCONTINUED);
-    if(wait_result != child_pid){
-        //same as above
-  //      m_mybutton->setToolTip("Z");
-    }
-
-    if(WIFEXITED(child_status)){
-        //child's exit code = WEXITSTATUS(child_status);
- //       m_mybutton->setToolTip("A");
-    }
-}
-
-void
 AnimatorMode::updateTimelineSlot (int value)
 {
   purgeWiredPackets ();
@@ -1671,12 +1617,6 @@ AnimatorMode::buttonAnimationGroupFinishedSlot ()
     {
       m_buttonAnimationGroup->deleteLater ();
     }
-
-}
-
-void
-AnimatorMode::testSlot ()
-{
 
 }
 

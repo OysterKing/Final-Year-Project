@@ -206,6 +206,11 @@ class PacketReader:
 				icmpPkt = ICMP_pkt(p_type=icmp_type, ip_src=icmp_src, ip_dst=icmp_dst, p_id=icmp_seqNo, icmp_type=icmp_type, timestamp=timestamp)
 				pktTuple = (timestamp, nodeName, icmpPkt)
 				PacketReader.timeFilePktList.append(pktTuple)
+				print nodeName, " ", icmp_src[:6]
+				if icmp_src[:6] == "10.0.0" and nodeName[0] == 'h':
+					if nodeName[1] == icmp_src[7]:
+						PacketReader.ipNodeDict[icmp_src] = nodeName
+				print PacketReader.ipNodeDict
 
 		if filename[pcapFileIndex] == 'h':
 			nodeName = filename[pcapFileIndex:pcapFileIndex + 2]
