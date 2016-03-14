@@ -230,3 +230,6 @@ Added code to animate all types of packets. Still a couple of odd animations her
 
 13/03/16:
 Removed some useless test code from animatormode. Added a check to correctly match ips with host names.
+
+14/03/16:
+Added code to deal with broadcast packets such as ARP who-has. Not fully working yet."
