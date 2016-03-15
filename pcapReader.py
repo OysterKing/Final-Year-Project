@@ -468,7 +468,7 @@ class PacketReader:
 					dstIp = PacketReader.nodeIpDict[switchId]
 					PacketReader.fullSrcIP_list.append(srcIp)
 					PacketReader.fullDstIP_list.append(dstIp)
-					metaInfo = "ns3::ArpHeader(request source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3] + ")"
+					metaInfo = "ns3::ArpHeader (request source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3] + ")"
 					print metaInfo
 					PacketReader.metaInfoList.append(metaInfo)
 
@@ -539,7 +539,7 @@ class PacketReader:
 					print time2, " - ", time1, " = ", travelTime
 					PacketReader.pktTimes.append(travelTime)
 					if pkts[0][1] == "is-at":
-						metaInfo = "ns3::ArpHeader (reply source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3]
+						metaInfo = "ns3::ArpHeader (reply source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3] + ")"
 					elif pkts[0][1] == "echo-request":
 						metaInfo = "ns3::Icmpv4Header (type=0, code=0)"
 					elif pkts[0][1] == "echo":
@@ -566,7 +566,7 @@ class PacketReader:
 					print time2, " - ", time1, " = ", travelTime
 					PacketReader.pktTimes.append(travelTime)
 					if pkts[0][1] == "is-at":
-						metaInfo = "ns3::ArpHeader (reply source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3]
+						metaInfo = "ns3::ArpHeader (reply source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3] + ")"
 					elif pkts[0][1] == "echo-request":
 						metaInfo = "ns3::Icmpv4Header (type=0, code=0)"
 					elif pkts[0][1] == "echo":
@@ -591,7 +591,7 @@ class PacketReader:
 					print time2, " - ", time1, " = ", travelTime
 					PacketReader.pktTimes.append(travelTime)
 					if pkts[0][1] == "is-at":
-						metaInfo = "ns3::ArpHeader (reply source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3]
+						metaInfo = "ns3::ArpHeader (reply source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3] + ")"
 					elif pkts[0][1] == "echo-request":
 						metaInfo = "ns3::Icmpv4Header (type=0, code=0)"
 					elif pkts[0][1] == "echo":
@@ -615,7 +615,7 @@ class PacketReader:
 					print time2, " - ", time1, " = ", travelTime
 					PacketReader.pktTimes.append(travelTime)
 					if pkts[0][1] == "is-at":
-						metaInfo = "ns3::ArpHeader (reply source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3]
+						metaInfo = "ns3::ArpHeader (reply source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3] + ")"
 					elif pkts[0][1] == "echo-request":
 						metaInfo = "ns3::Icmpv4Header (type=0, code=0)"
 					elif pkts[0][1] == "echo":
@@ -639,7 +639,7 @@ class PacketReader:
 					print time2, " - ", time1, " = ", travelTime
 					PacketReader.pktTimes.append(travelTime)
 					if pkts[0][1] == "is-at":
-						metaInfo = "ns3::ArpHeader (reply source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3]
+						metaInfo = "ns3::ArpHeader (reply source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3] + ")"
 					elif pkts[0][1] == "echo-request":
 						metaInfo = "ns3::Icmpv4Header (type=0, code=0)"
 					elif pkts[0][1] == "echo":
