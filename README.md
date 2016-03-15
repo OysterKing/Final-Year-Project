@@ -233,3 +233,6 @@ Removed some useless test code from animatormode. Added a check to correctly mat
 
 14/03/16:
 Added code to deal with broadcast packets such as ARP who-has. Not fully working yet."
+
+15/03/16:
+Tweaked pcapReader to correctly track packets in a bridge switch network. Working on the router network now."

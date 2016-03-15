@@ -49,6 +49,7 @@ try:
 
 			#Need to wait until all hosts and switches have been added before
 			# adding links. Need to find proper way of getting host and switch ids.
+			links = []
 			for i in range(len(data)):
 				if data[i].startswith("<link"):
 					#link
@@ -87,6 +88,13 @@ try:
 								toNode = str("s" + str(k + 1))
 
 					print "Adding link ", fromNode, " -> ", toNode, " bw: ", bw, " delay: ", delay, " loss: ", loss
+					link = fromNode + " " + toNode + "\n"
+					links.append(str(link))
+					with open("/home/comhghall/Final-Year-Project/resources/linkMap.txt", 'w') as file:
+						for i in range(len(links)):
+							file.writelines(links[i])
+						file.close()
+
 					link_opts['bw'] = float(bw)
 					link_opts['delay'] = float(delay)
 					link_opts['loss'] = float(loss)
@@ -166,6 +174,7 @@ try:
 			with open("/home/comhghall/Final-Year-Project/resources/linkMap.txt", 'w') as file:
 				for i in range(len(links)):
 					file.writelines(links[i])
+				file.close()
 
 except ImportError:
 	pass

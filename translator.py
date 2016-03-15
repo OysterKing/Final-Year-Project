@@ -1,8 +1,10 @@
 #Comhghall McKeating
 #xml translator
 
+from __future__ import division
 import sys
 from pcapReader import PacketReader
+
 
 class Translator:
 	'Translates packets into xml lines.'
@@ -53,6 +55,7 @@ class Translator:
 
 	def writeToXML(self, filename): #lets assume that information regarding topology and packet travel time is already in XML file.
 		j = 0
+		print self.pktTimes
 		with open(filename, 'r') as file:
 			data = file.readlines()
 
@@ -62,13 +65,13 @@ class Translator:
 				data[i] = data[i][0:indexOfEnd + 1] + "\n"
 
 		entryIndex = len(data)-2
-		fbtx = 2
+		fbtx = 2.00000000000000000000000000000
 		for i in range (len(self.srcIP_Addrs)):
 			fid = self.convertIP(self.srcIP_Addrs[i])
 			tid = self.convertIP(self.dstIP_Addrs[i])
-			lbtx = str(self.pktTimes[j]/4 + fbtx)
-			fbrx = str(self.pktTimes[j]/2 + fbtx)
-			lbrx = str(self.pktTimes[j] + fbtx)
+			lbtx = str(float(self.pktTimes[j]/4.0) + fbtx)
+			fbrx = str(float(self.pktTimes[j]/2.0) + fbtx)
+			lbrx = str(float(self.pktTimes[j]) + fbtx)
 			fbtx_str = str(fbtx)
 #			need to find out how to time the packets.
 			packetLine = '<p fId="' + fid + '" fbTx="' + fbtx_str + '" lbTx="' + lbtx + '" tId="' + tid + '" fbRx="' + fbrx + '" lbRx="' + lbrx + '" />\n'
