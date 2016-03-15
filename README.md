@@ -237,3 +237,4 @@ Added code to deal with broadcast packets such as ARP who-has. Not fully working
 15/03/16:
 Tweaked pcapReader to correctly track packets in a bridge switch network. Working on the router network now."
 Added code to correctly track all types of packets on networks with a router.
+Added packet meta-info. Only works for arp and icmp packets. Need to get the format correct for the udp packets."

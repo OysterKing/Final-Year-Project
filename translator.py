@@ -11,11 +11,12 @@ class Translator:
 	hostIDs = []
 	switchIDs = []
 
-	def __init__(self, srcIP_Addrs, dstIP_Addrs, pktTimes, ipNodeDict):
+	def __init__(self, srcIP_Addrs, dstIP_Addrs, pktTimes, ipNodeDict, metaInfoList):
 		self.srcIP_Addrs = srcIP_Addrs
 		self.dstIP_Addrs = dstIP_Addrs
 		self.pktTimes = pktTimes
 		self.ipNodeDict = ipNodeDict
+		self.metaInfoList = metaInfoList
 
 	def getHostSwitchIDs(self, filename):
 		with open(filename, 'r') as file:
@@ -74,7 +75,7 @@ class Translator:
 			lbrx = str(float(self.pktTimes[j]) + fbtx)
 			fbtx_str = str(fbtx)
 #			need to find out how to time the packets.
-			packetLine = '<p fId="' + fid + '" fbTx="' + fbtx_str + '" lbTx="' + lbtx + '" tId="' + tid + '" fbRx="' + fbrx + '" lbRx="' + lbrx + '" />\n'
+			packetLine = '<p fId="' + fid + '" fbTx="' + fbtx_str + '" lbTx="' + lbtx + '" meta-info="' + self.metaInfoList[i] + '" tId="' + tid + '" fbRx="' + fbrx + '" lbRx="' + lbrx + '" />\n'
 			fbtx = float(lbrx)
 			j+=1
 

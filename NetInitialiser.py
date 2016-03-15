@@ -145,7 +145,7 @@ def main():
 	#print packetReader.getFullSrcIPList()
 	#print " "
 	#print packetReader.getFullDstIPList()
-	translator = Translator(packetReader.getFullSrcIPList(), packetReader.getFullDstIPList(), packetReader.getPktTimes(), packetReader.getIpNodeDict())
+	translator = Translator(packetReader.getFullSrcIPList(), packetReader.getFullDstIPList(), packetReader.getPktTimes(), packetReader.getIpNodeDict(), packetReader.getMetaInfo())
 	print sys.argv[4]
 	translator.getHostSwitchIDs(sys.argv[4])
 	#username = getpass.getuser()
