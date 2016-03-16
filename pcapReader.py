@@ -545,7 +545,7 @@ class PacketReader:
 					elif pkts[0][1] == "echo":
 						metaInfo = "ns3::Icmpv4Header (type=8, code=0)"
 					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack":
-						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + ">" + pkts[0][1] + ")"
+						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + " &gt; " + pkts[0][1] + ")"
 					print metaInfo
 					PacketReader.metaInfoList.append(metaInfo)
 
@@ -572,7 +572,7 @@ class PacketReader:
 					elif pkts[0][1] == "echo":
 						metaInfo = "ns3::Icmpv4Header (type=8, code=0)"
 					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack":
-						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + ">" + pkts[0][1] + ")"
+						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + " &gt; " + pkts[0][1] + ")"
 					print metaInfo
 					PacketReader.metaInfoList.append(metaInfo)
 
@@ -597,7 +597,7 @@ class PacketReader:
 					elif pkts[0][1] == "echo":
 						metaInfo = "ns3::Icmpv4Header (type=8, code=0)"
 					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack":
-						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + ">" + pkts[0][1] + ")"
+						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + " &gt; " + pkts[0][1] + ")"
 					print metaInfo
 					PacketReader.metaInfoList.append(metaInfo)
 
@@ -621,7 +621,7 @@ class PacketReader:
 					elif pkts[0][1] == "echo":
 						metaInfo = "ns3::Icmpv4Header (type=8, code=0)"
 					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack":
-						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + ">" + pkts[0][1] + ")"
+						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + " &gt; " + pkts[0][1] + ")"
 					print metaInfo
 					PacketReader.metaInfoList.append(metaInfo)
 
@@ -645,32 +645,12 @@ class PacketReader:
 					elif pkts[0][1] == "echo":
 						metaInfo = "ns3::Icmpv4Header (type=8, code=0)"
 					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack":
-						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + ">" + pkts[0][1] + ")"
+						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + " &gt; " + pkts[0][1] + ")"
 					print metaInfo
 					PacketReader.metaInfoList.append(metaInfo)			
 
 				elif pkts[i][2][0] == 'h' and pkts[i + 1][2][0] == 'h':
 					continue
-
-	#	elif pkts[0][1] == "request" or pkts[0][1] == "offer" or pkts[0][1] == "ack":
-	#		for i in range(len(pkts) - 1):
-	#			if len(pkts) % 2 == 0:
-	#				if i % 2 == 0 or i == 0:
-	#					time1 = pkts[i][0]
-	#					time2 = pkts[i + 1][0]
-	#					travelTime = float(time2) - float(time1)
-	#					timeTuple = (time1, pkts[i][1], travelTime, pkts[i][3], pkts[i][4], pkts[i][2])
-	#					PacketReader.timePktTupleList.append(timeTuple)
-	#					PacketReader.pktTimes.append(travelTime)
-	#				else:
-	#					continue
-	#			else:
-	#				time1 = pkts[i][0]
-	#				time2 = pkts[i + 1][0]
-	#				travelTime = float(time2) - float(time1)
-	#				timeTuple = (time1, pkts[i][1], travelTime, pkts[i][3], pkts[i][4], pkts[i][2])
-	#				PacketReader.timePktTupleList.append(timeTuple)
-	#				PacketReader.pktTimes.append(travelTime)
 
 	def printTimes(self):
 		for i in range (len(PacketReader.pktTimes)):

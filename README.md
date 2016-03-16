@@ -239,3 +239,6 @@ Tweaked pcapReader to correctly track packets in a bridge switch network. Workin
 Added code to correctly track all types of packets on networks with a router.
 Added packet meta-info. Only works for arp and icmp packets. Need to get the format correct for the udp packets."
 Fixed a small bug.
+
+16/03/16:
+Fixed a bug with the udp meta information that was causing it to not display in the animations.
