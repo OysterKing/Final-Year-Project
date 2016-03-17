@@ -104,6 +104,35 @@ class DHCP_pkt:
 	def getP_id(self):
 		return self.p_id
 
+class TCP_pkt:
+	srcPrt = ""
+	dstPrt = ""
+	srcIp = ""
+	dstIp = ""
+	timestamp = 0.0
+
+	def __init__(self, srcPrt, dstPrt, srcIp, dstIp, timestamp):
+		self.srcPrt = srcPrt
+		self.dstPrt = dstPrt
+		self.timestamp = timestamp
+		self.srcIp = srcIp
+		self.dstIp = dstIp
+
+	def getPktType(self):
+		return "TCP"
+
+	def getSrcPrt(self):
+		return self.srcPrt
+
+	def getDstPrt(self):
+		return self.srcPrt
+
+	def getSrcIp(self):
+		return self.srcIp
+
+	def getDstIp(self):
+		return self.dstIp
+
 class PacketReader:
 	'Class to read pcap file.'
 	pktCounter = 0
@@ -140,13 +169,10 @@ class PacketReader:
 
 	def parseFile(self, filename):
 		f = open(filename)
-		print filename
 		pcap = PcapReader(filename)
 		username = getpass.getuser()
-		print "username = ", PacketReader.username
 		pcapFileIndex = filename.rfind(PacketReader.username)
 		pcapFileIndex = pcapFileIndex + 30 + len(PacketReader.username)
-		print "INDEX  =", pcapFileIndex
 
 		if filename[pcapFileIndex] == 'h':
 			nodeName = filename[pcapFileIndex:pcapFileIndex + 2]
@@ -177,9 +203,7 @@ class PacketReader:
 			if DHCP in pkt:
 				pkt.show()
 				options = pkt[DHCP].options
-				print "+++++++ ", options, " ++++++", type(options)
 				dhcp_msgType = options[0][1]
-				print dhcp_msgType, " -----------"
 				dhcp_src = pkt[IP].src
 				dhcp_dst = pkt[IP].dst
 				dhcp_id = pkt[IP].id
@@ -197,10 +221,19 @@ class PacketReader:
 					PacketReader.nodeIpDict[nodeName] = options[1][1]
 					PacketReader.ipNodeDict[options[1][1]] = nodeName
 
+			elif TCP in pkt:
+				pkt.show()
+				srcPrt = pkt[TCP].sport
+				dstPrt = pkt[TCP].dport
+				srcIp = pkt[IP].src
+				dstIp = pkt[IP].dst
+				tcpPkt = TCP_pkt(srcPrt = srcPrt, dstPrt = dstPrt, srcIp = srcIp, dstIp = dstIp, timestamp = timestamp)
+				pktTuple = (timestamp, nodeName, tcpPkt)
+				PacketReader.timeFilePktList.append(pktTuple)
+
 			elif ARP in pkt:
 				pkt.show()
 				arp_op = pkt[ARP].op
-				print arp_op
 				arp_psrc = pkt[ARP].psrc
 				arp_pdst = pkt[ARP].pdst
 				arpPkt = ARP_pkt(operation=arp_op, p_src=arp_psrc, p_dst=arp_pdst, timestamp=timestamp)
@@ -217,12 +250,10 @@ class PacketReader:
 				icmpPkt = ICMP_pkt(p_type=icmp_type, ip_src=icmp_src, ip_dst=icmp_dst, p_id=icmp_seqNo, icmp_type=icmp_type, timestamp=timestamp)
 				pktTuple = (timestamp, nodeName, icmpPkt)
 				PacketReader.timeFilePktList.append(pktTuple)
-				print nodeName, " ", icmp_src[:6]
 				if icmp_src[:6] == "10.0.0" and nodeName[0] == 'h':
 					if nodeName[1] == icmp_src[7]:
 						PacketReader.ipNodeDict[icmp_src] = nodeName
 						PacketReader.nodeIpDict[nodeName] = icmp_src
-				print PacketReader.ipNodeDict
 
 		if filename[pcapFileIndex] == 'h':
 			nodeName = filename[pcapFileIndex:pcapFileIndex + 2]
@@ -244,6 +275,7 @@ class PacketReader:
 		offerTupleList = []
 		ackTupleList = []
 		reqTupleList = []
+		tcpTupleList = []
 
 		for i in range(len(sortedTupleList)):
 			if sortedTupleList[i][2].getPktType() == "ARP":
@@ -281,7 +313,23 @@ class PacketReader:
 						self.calcTravelTimes(pkts = isAtTupleList)
 						isAtTupleList = []
 
-				print "ARP:	", arp_operation, "	", sortedTupleList[i][0], "	", sortedTupleList[i][1], " ", pFrom, " -> ", pTo
+				#print "ARP:	", arp_operation, "	", sortedTupleList[i][0], "	", sortedTupleList[i][1], " ", pFrom, " -> ", pTo
+
+			elif sortedTupleList[i][2].getPktType() == "TCP":
+				tcpType = "TCP"
+				pTo = sortedTupleList[i][2].getDstIp()
+				pFrom = sortedTupleList[i][2].getSrcIp()
+				pTuple = (sortedTupleList[i][0], tcpType, sortedTupleList[i][1], pTo, pFrom)
+				tcpTupleList.append(pTuple)
+				if i != len(sortedTupleList) - 1:
+					if sortedTupleList[i + 1][2].getPktType() != "TCP":
+						self.calcTravelTimes(pkts = tcpTupleList)
+						tcpTupleList = []
+					else:
+						continue
+				elif i == len(sortedTupleList) - 1:
+					self.calcTravelTimes(pkts = tcpTupleList)
+					tcpTupleList = []
 
 			elif sortedTupleList[i][2].getPktType() == "ICMP":
 				if sortedTupleList[i][2].getIcmp_type() == 0:
@@ -318,7 +366,7 @@ class PacketReader:
 						self.calcTravelTimes(pkts = echoTupleList)
 						echoTupleList = []
 
-				print "ICMP:	", icmpType, "	", sortedTupleList[i][0], "	", sortedTupleList[i][1], " ", pFrom, " -> ", pTo
+				#print "ICMP:	", icmpType, "	", sortedTupleList[i][0], "	", sortedTupleList[i][1], " ", pFrom, " -> ", pTo
 
 			elif sortedTupleList[i][2].getPktType() == "DHCP":
 				if sortedTupleList[i][2].getMsgType() == 1:
@@ -389,7 +437,7 @@ class PacketReader:
 						self.calcTravelTimes(pkts = ackTupleList)
 						ackTupleList = []
 
-				print "DHCP:	", dhcpMsgType, "	", sortedTupleList[i][0], "	", sortedTupleList[i][1], " ", pFrom, " -> ", pTo
+				#print "DHCP:	", dhcpMsgType, "	", sortedTupleList[i][0], "	", sortedTupleList[i][1], " ", pFrom, " -> ", pTo
 
 	def calcTravelTimes(self, pkts):
 		if pkts == []:
@@ -405,7 +453,7 @@ class PacketReader:
 	#		hostTs = []
 			
 			links = PacketReader.linksList
-			print links
+			#print links
 			for i in range(len(links)):
 				if links[i][:2] == bcastNode:
 					bcastSwitch = links[i][3:5]
@@ -457,7 +505,7 @@ class PacketReader:
 
 					else:
 						travelTime = float(time2) - float(time1)
-					print time2, " - ", time1, " = ", travelTime
+					#print time2, " - ", time1, " = ", travelTime
 				
 					PacketReader.pktTimes.append(travelTime)
 
@@ -469,7 +517,7 @@ class PacketReader:
 					PacketReader.fullSrcIP_list.append(srcIp)
 					PacketReader.fullDstIP_list.append(dstIp)
 					metaInfo = "ns3::ArpHeader (request source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3] + ")"
-					print metaInfo
+					#print metaInfo
 					PacketReader.metaInfoList.append(metaInfo)
 
 				elif fullBcast[i][0] == 'h' and fullBcast[i + 1][0] == 'r':
@@ -479,7 +527,7 @@ class PacketReader:
 					PacketReader.fullSrcIP_list.append(srcIp)
 					PacketReader.fullDstIP_list.append(dstIp)
 					metaInfo = "ns3::ArpHeader (request source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3] + ")"
-					print metaInfo
+					#print metaInfo
 					PacketReader.metaInfoList.append(metaInfo)
 
 				elif fullBcast[i][0] == 's' and fullBcast[i + 1][0] == 's':
@@ -490,7 +538,7 @@ class PacketReader:
 					PacketReader.fullSrcIP_list.append(srcIp)
 					PacketReader.fullDstIP_list.append(dstIp)
 					metaInfo = "ns3::ArpHeader (request source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3] + ")"
-					print metaInfo
+					#print metaInfo
 					PacketReader.metaInfoList.append(metaInfo)
 
 				elif fullBcast[i][0] == 'r' and fullBcast[i + 1][0] == 'h':
@@ -500,7 +548,7 @@ class PacketReader:
 					PacketReader.fullSrcIP_list.append(srcIp)
 					PacketReader.fullDstIP_list.append(dstIp)
 					metaInfo = "ns3::ArpHeader (request source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3] + ")"
-					print metaInfo
+					#print metaInfo
 					PacketReader.metaInfoList.append(metaInfo)								
 
 				elif fullBcast[i][0] == 's' and fullBcast[i + 1][0] == 'h':
@@ -510,7 +558,7 @@ class PacketReader:
 					PacketReader.fullSrcIP_list.append(srcIp)
 					PacketReader.fullDstIP_list.append(dstIp)
 					metaInfo = "ns3::ArpHeader (request source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3] + ")"
-					print metaInfo
+					#print metaInfo
 					PacketReader.metaInfoList.append(metaInfo)				
 
 				elif fullBcast[i][0] == 'h' and fullBcast[i + 1][0] == 'h':
@@ -518,7 +566,7 @@ class PacketReader:
 
 
 
-		elif pkts[0][1] == "is-at" or pkts[0][1] == "echo-request" or pkts[0][1] == "echo" or pkts[0][1] == "request" or pkts[0][1] == "offer" or pkts[0][1] == "ack":
+		elif pkts[0][1] == "is-at" or pkts[0][1] == "echo-request" or pkts[0][1] == "echo" or pkts[0][1] == "request" or pkts[0][1] == "offer" or pkts[0][1] == "ack" or pkts[0][1] == "TCP":
 			for i in range(len(pkts) - 1):
 				
 				time1 = pkts[i][0]
@@ -536,7 +584,7 @@ class PacketReader:
 
 					else:
 						travelTime = float(time2) - float(time1)
-					print time2, " - ", time1, " = ", travelTime
+					#print time2, " - ", time1, " = ", travelTime
 					PacketReader.pktTimes.append(travelTime)
 					if pkts[0][1] == "is-at":
 						metaInfo = "ns3::ArpHeader (reply source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3] + ")"
@@ -546,7 +594,9 @@ class PacketReader:
 						metaInfo = "ns3::Icmpv4Header (type=8, code=0)"
 					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack":
 						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + " &gt; " + pkts[0][1] + ")"
-					print metaInfo
+					elif pkts[0][1] == "TCP":
+						metaInfo = "ns3::TcpHeader (0000 &gt; 0000 Seq=0 Ack=0 Win=0)"
+					#print metaInfo
 					PacketReader.metaInfoList.append(metaInfo)
 
 				elif pkts[i][2][0] == 'r' and pkts[i + 1][2][0] == 'r':
@@ -563,7 +613,7 @@ class PacketReader:
 
 					else:
 						travelTime = float(time2) - float(time1)
-					print time2, " - ", time1, " = ", travelTime
+					#print time2, " - ", time1, " = ", travelTime
 					PacketReader.pktTimes.append(travelTime)
 					if pkts[0][1] == "is-at":
 						metaInfo = "ns3::ArpHeader (reply source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3] + ")"
@@ -573,7 +623,9 @@ class PacketReader:
 						metaInfo = "ns3::Icmpv4Header (type=8, code=0)"
 					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack":
 						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + " &gt; " + pkts[0][1] + ")"
-					print metaInfo
+					elif pkts[0][1] == "TCP":
+						metaInfo = "ns3::TcpHeader (0000 &gt; 0000 Seq=0 Ack=0 Win=0)"
+					#print metaInfo
 					PacketReader.metaInfoList.append(metaInfo)
 
 				elif pkts[i][2][0] == 's' and pkts[i + 1][2][0] == 's':
@@ -588,7 +640,7 @@ class PacketReader:
 
 					else:
 						travelTime = float(time2) - float(time1)
-					print time2, " - ", time1, " = ", travelTime
+					#print time2, " - ", time1, " = ", travelTime
 					PacketReader.pktTimes.append(travelTime)
 					if pkts[0][1] == "is-at":
 						metaInfo = "ns3::ArpHeader (reply source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3] + ")"
@@ -598,7 +650,9 @@ class PacketReader:
 						metaInfo = "ns3::Icmpv4Header (type=8, code=0)"
 					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack":
 						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + " &gt; " + pkts[0][1] + ")"
-					print metaInfo
+					elif pkts[0][1] == "TCP":
+						metaInfo = "ns3::TcpHeader (0000 &gt; 0000 Seq=0 Ack=0 Win=0)"
+					#print metaInfo
 					PacketReader.metaInfoList.append(metaInfo)
 
 				elif pkts[i][2][0] == 'r' and pkts[i + 1][2][0] == 'h':
@@ -612,7 +666,7 @@ class PacketReader:
 
 					else:
 						travelTime = float(time2) - float(time1)
-					print time2, " - ", time1, " = ", travelTime
+					#print time2, " - ", time1, " = ", travelTime
 					PacketReader.pktTimes.append(travelTime)
 					if pkts[0][1] == "is-at":
 						metaInfo = "ns3::ArpHeader (reply source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3] + ")"
@@ -622,7 +676,9 @@ class PacketReader:
 						metaInfo = "ns3::Icmpv4Header (type=8, code=0)"
 					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack":
 						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + " &gt; " + pkts[0][1] + ")"
-					print metaInfo
+					elif pkts[0][1] == "TCP":
+						metaInfo = "ns3::TcpHeader (0000 &gt; 0000 Seq=0 Ack=0 Win=0)"
+					#print metaInfo
 					PacketReader.metaInfoList.append(metaInfo)
 
 				elif pkts[i][2][0] == 's' and pkts[i + 1][2][0] == 'h':
@@ -636,7 +692,7 @@ class PacketReader:
 
 					else:
 						travelTime = float(time2) - float(time1)
-					print time2, " - ", time1, " = ", travelTime
+					#print time2, " - ", time1, " = ", travelTime
 					PacketReader.pktTimes.append(travelTime)
 					if pkts[0][1] == "is-at":
 						metaInfo = "ns3::ArpHeader (reply source mac: ..-..-..:..:..:..:..:.. source ipv4: " + pkts[0][4] + " dest mac: ..-..-..:..:..:..:..:.. dest ipv4: " + pkts[0][3] + ")"
@@ -646,7 +702,9 @@ class PacketReader:
 						metaInfo = "ns3::Icmpv4Header (type=8, code=0)"
 					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack":
 						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + " &gt; " + pkts[0][1] + ")"
-					print metaInfo
+					elif pkts[0][1] == "TCP":
+						metaInfo = "ns3::TcpHeader (0000 &gt; 0000 Seq=0 Ack=0 Win=0)"
+					#print metaInfo
 					PacketReader.metaInfoList.append(metaInfo)			
 
 				elif pkts[i][2][0] == 'h' and pkts[i + 1][2][0] == 'h':

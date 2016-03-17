@@ -242,3 +242,6 @@ Fixed a small bug.
 
 16/03/16:
 Fixed a bug with the udp meta information that was causing it to not display in the animations.
+
+17/03/16:
+Added code to track tcp packets.
