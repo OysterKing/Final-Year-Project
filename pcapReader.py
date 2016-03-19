@@ -133,6 +133,35 @@ class TCP_pkt:
 	def getDstIp(self):
 		return self.dstIp
 
+class UDP_pkt:
+	srcPrt = ""
+	dstPrt = ""
+	srcIp = ""
+	dstIp = ""
+	timestamp = 0.0
+
+	def __init__(self, srcPrt, dstPrt, srcIp, dstIp, timestamp):
+		self.srcPrt = srcPrt
+		self.dstPrt = dstPrt
+		self.timestamp = timestamp
+		self.srcIp = srcIp
+		self.dstIp = dstIp
+
+	def getPktType(self):
+		return "UDP"
+
+	def getSrcPrt(self):
+		return self.srcPrt
+
+	def getDstPrt(self):
+		return self.srcPrt
+
+	def getSrcIp(self):
+		return self.srcIp
+
+	def getDstIp(self):
+		return self.dstIp
+
 class PacketReader:
 	'Class to read pcap file.'
 	pktCounter = 0
@@ -201,7 +230,7 @@ class PacketReader:
 			PacketReader.timestamps.append(timestamp)
 
 			if DHCP in pkt:
-				pkt.show()
+				#pkt.show()
 				options = pkt[DHCP].options
 				dhcp_msgType = options[0][1]
 				dhcp_src = pkt[IP].src
@@ -222,7 +251,7 @@ class PacketReader:
 					PacketReader.ipNodeDict[options[1][1]] = nodeName
 
 			elif TCP in pkt:
-				pkt.show()
+				#pkt.show()
 				srcPrt = pkt[TCP].sport
 				dstPrt = pkt[TCP].dport
 				srcIp = pkt[IP].src
@@ -231,8 +260,18 @@ class PacketReader:
 				pktTuple = (timestamp, nodeName, tcpPkt)
 				PacketReader.timeFilePktList.append(pktTuple)
 
+			elif UDP in pkt and IP in pkt:
+			#	pkt.show()
+				srcPrt = pkt[UDP].sport
+				dstPrt = pkt[UDP].dport
+				srcIp = pkt[IP].src
+				dstIp = pkt[IP].dst
+				udpPkt = UDP_pkt(srcPrt = srcPrt, dstPrt = dstPrt, srcIp = srcIp, dstIp = dstIp, timestamp = timestamp)
+				pktTuple = (timestamp, nodeName, udpPkt)
+				PacketReader.timeFilePktList.append(pktTuple)
+
 			elif ARP in pkt:
-				pkt.show()
+				#pkt.show()
 				arp_op = pkt[ARP].op
 				arp_psrc = pkt[ARP].psrc
 				arp_pdst = pkt[ARP].pdst
@@ -242,7 +281,7 @@ class PacketReader:
 				PacketReader.timeFilePktList.append(pktTuple)
 
 			elif ICMP in pkt:
-				pkt.show()
+				#pkt.show()
 				icmp_src = pkt[IP].src
 				icmp_dst = pkt[IP].dst
 				icmp_seqNo = pkt[IP].id
@@ -276,6 +315,7 @@ class PacketReader:
 		ackTupleList = []
 		reqTupleList = []
 		tcpTupleList = []
+		udpTupleList = []
 
 		for i in range(len(sortedTupleList)):
 			if sortedTupleList[i][2].getPktType() == "ARP":
@@ -330,6 +370,22 @@ class PacketReader:
 				elif i == len(sortedTupleList) - 1:
 					self.calcTravelTimes(pkts = tcpTupleList)
 					tcpTupleList = []
+
+			elif sortedTupleList[i][2].getPktType() == "UDP":
+				udpType = "UDP"
+				pTo = sortedTupleList[i][2].getDstIp()
+				pFrom = sortedTupleList[i][2].getSrcIp()
+				pTuple = (sortedTupleList[i][0], udpType, sortedTupleList[i][1], pTo, pFrom)
+				udpTupleList.append(pTuple)
+				if i != len(sortedTupleList) - 1:
+					if sortedTupleList[i + 1][2].getPktType() != "UDP":
+						self.calcTravelTimes(pkts = udpTupleList)
+						udpTupleList = []
+					else:
+						continue
+				elif i == len(sortedTupleList) - 1:
+					self.calcTravelTimes(pkts = udpTupleList)
+					udpTupleList = []
 
 			elif sortedTupleList[i][2].getPktType() == "ICMP":
 				if sortedTupleList[i][2].getIcmp_type() == 0:
@@ -566,7 +622,7 @@ class PacketReader:
 
 
 
-		elif pkts[0][1] == "is-at" or pkts[0][1] == "echo-request" or pkts[0][1] == "echo" or pkts[0][1] == "request" or pkts[0][1] == "offer" or pkts[0][1] == "ack" or pkts[0][1] == "TCP":
+		else:
 			for i in range(len(pkts) - 1):
 				
 				time1 = pkts[i][0]
@@ -592,7 +648,7 @@ class PacketReader:
 						metaInfo = "ns3::Icmpv4Header (type=0, code=0)"
 					elif pkts[0][1] == "echo":
 						metaInfo = "ns3::Icmpv4Header (type=8, code=0)"
-					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack":
+					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack" or pkts[0][1] == "UDP":
 						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + " &gt; " + pkts[0][1] + ")"
 					elif pkts[0][1] == "TCP":
 						metaInfo = "ns3::TcpHeader (0000 &gt; 0000 Seq=0 Ack=0 Win=0)"
@@ -621,7 +677,7 @@ class PacketReader:
 						metaInfo = "ns3::Icmpv4Header (type=0, code=0)"
 					elif pkts[0][1] == "echo":
 						metaInfo = "ns3::Icmpv4Header (type=8, code=0)"
-					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack":
+					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack" or pkts[0][1] == "UDP":
 						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + " &gt; " + pkts[0][1] + ")"
 					elif pkts[0][1] == "TCP":
 						metaInfo = "ns3::TcpHeader (0000 &gt; 0000 Seq=0 Ack=0 Win=0)"
@@ -648,7 +704,7 @@ class PacketReader:
 						metaInfo = "ns3::Icmpv4Header (type=0, code=0)"
 					elif pkts[0][1] == "echo":
 						metaInfo = "ns3::Icmpv4Header (type=8, code=0)"
-					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack":
+					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack" or pkts[0][1] == "UDP":
 						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + " &gt; " + pkts[0][1] + ")"
 					elif pkts[0][1] == "TCP":
 						metaInfo = "ns3::TcpHeader (0000 &gt; 0000 Seq=0 Ack=0 Win=0)"
@@ -674,7 +730,7 @@ class PacketReader:
 						metaInfo = "ns3::Icmpv4Header (type=0, code=0)"
 					elif pkts[0][1] == "echo":
 						metaInfo = "ns3::Icmpv4Header (type=8, code=0)"
-					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack":
+					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack" or pkts[0][1] == "UDP":
 						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + " &gt; " + pkts[0][1] + ")"
 					elif pkts[0][1] == "TCP":
 						metaInfo = "ns3::TcpHeader (0000 &gt; 0000 Seq=0 Ack=0 Win=0)"
@@ -700,7 +756,7 @@ class PacketReader:
 						metaInfo = "ns3::Icmpv4Header (type=0, code=0)"
 					elif pkts[0][1] == "echo":
 						metaInfo = "ns3::Icmpv4Header (type=8, code=0)"
-					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack":
+					elif pkts[0][1] == "offer" or pkts[0][1] == "request" or pkts[0][1] == "ack" or pkts[0][1] == "UDP":
 						metaInfo = "ns3::UdpHeader (length: 512 " + pkts[0][1] + " &gt; " + pkts[0][1] + ")"
 					elif pkts[0][1] == "TCP":
 						metaInfo = "ns3::TcpHeader (0000 &gt; 0000 Seq=0 Ack=0 Win=0)"
