@@ -1,0 +1,2 @@
+#!/bin/bash
+iperf -s -u -mss 160 -b 65000 -S 184 -P 1 -fk -i 10 -t 10
