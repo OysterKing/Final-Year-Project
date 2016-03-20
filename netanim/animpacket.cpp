@@ -507,7 +507,7 @@ AnimPacket::parseTcp (QString metaInfo, bool & result)
 {
   TcpInfo tcpInfo;
 
-  QRegExp rx ("ns3::TcpHeader \\((\\d+) > (\\d+) \\[([^\\]]*)\\] Seq=(\\d+) Ack=(\\d+) Win=(\\d+)");
+  QRegExp rx ("ns3::TcpHeader \\((\\d+) > (\\d+) Seq=(\\d+) Ack=(\\d+) Win=(\\d+)");
   int pos = 0;
   if ((pos = rx.indexIn (metaInfo)) == -1)
     {

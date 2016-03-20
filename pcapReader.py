@@ -326,13 +326,24 @@ class PacketReader:
 					pTuple = (sortedTupleList[i][0], arp_operation, sortedTupleList[i][1], pTo, pFrom)
 					whoHasTupleList.append(pTuple)
 					if i != len(sortedTupleList) - 1:
-						if sortedTupleList[i + 1][2].getPktType() != "ARP":
+						if sortedTupleList[i + 1][2].getPktType() == "TCP":
+							tcpType = "TCP"
+							pTo = sortedTupleList[i + 1][2].getDstIp()
+							pFrom = sortedTupleList[i + 1][2].getSrcIp()
+							pTuple = (sortedTupleList[i + 1][0], tcpType, sortedTupleList[i + 1][1], pTo, pFrom)
+							tcpTupleList.append(pTuple)
+							continue
+
+						elif sortedTupleList[i + 1][2].getPktType() != "ARP":
+							print sortedTupleList[i + 1], " -------- "
 							self.calcTravelTimes(pkts = whoHasTupleList)
 							whoHasTupleList = []
 						elif sortedTupleList[i + 1][2].getOp() != 1:
+							print sortedTupleList[i + 1], " -------- "
 							self.calcTravelTimes(pkts = whoHasTupleList)
 							whoHasTupleList = []
 					elif i == len(sortedTupleList) - 1:
+						print sortedTupleList[i + 1], " -------- "
 						self.calcTravelTimes(pkts = whoHasTupleList)
 						whoHasTupleList = []
 
@@ -501,6 +512,7 @@ class PacketReader:
 
 		#Deal with broadcast packets.
 		elif pkts[0][1] == "who-has":
+			print pkts
 			bcastNode = pkts[0][2]
 			bcastSwitch = ""
 			bcastSwitch2 = ""
@@ -541,6 +553,7 @@ class PacketReader:
 					if pkts[j][2][:2] == fullBcast[i]:
 						currentPktIndex = j
 				for j in range(len(pkts)):
+					print pkts[j][2][:2], " ", fullBcast[i + 1]
 					if pkts[j][2][:2] == fullBcast[i + 1]:
 						nextPktIndex = j
 
@@ -552,6 +565,8 @@ class PacketReader:
 						if fullBcast[j][0] == 'h' and fullBcast[j][:2] != bcastNode:
 							toIp = PacketReader.nodeIpDict[fullBcast[j]]
 							break
+
+					print fullBcast
 
 					time1 = pkts[currentPktIndex][0]
 					time2 = pkts[nextPktIndex][0]

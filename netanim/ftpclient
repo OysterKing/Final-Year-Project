@@ -1,0 +1,2 @@
+#!/bin/bash
+iperf -c $1 -fk -i 10 -m -t 5 

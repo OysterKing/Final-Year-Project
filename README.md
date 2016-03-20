@@ -249,3 +249,6 @@ Added code to track tcp packets.
 19/03/16:
 Added code to track udp packets.
 Added two bash scripts to simulate voip calls.
+
+20/03/16:
+Added two bash scripts to simualte file transfers. Added code to pcapReader to deal with when tcp packets are sent before an arp packet has finished it's transit.
