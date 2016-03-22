@@ -1,2 +1,2 @@
 #!/bin/bash
-iperf -c $1 -fk -i 10 -m -t 5 
+iperf -c $1 -F transferFile.txt -fk -i 10 -m -t 5 

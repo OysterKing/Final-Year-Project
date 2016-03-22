@@ -259,6 +259,7 @@ class PacketReader:
 				tcpPkt = TCP_pkt(srcPrt = srcPrt, dstPrt = dstPrt, srcIp = srcIp, dstIp = dstIp, timestamp = timestamp)
 				pktTuple = (timestamp, nodeName, tcpPkt)
 				PacketReader.timeFilePktList.append(pktTuple)
+				#print "TCP: ", srcPrt, " -> ", dstPrt, " ", srcIp, " -> ", dstIp, " in ", nodeName
 
 			elif UDP in pkt and IP in pkt:
 			#	pkt.show()
@@ -335,15 +336,12 @@ class PacketReader:
 							continue
 
 						elif sortedTupleList[i + 1][2].getPktType() != "ARP":
-							print sortedTupleList[i + 1], " -------- "
 							self.calcTravelTimes(pkts = whoHasTupleList)
 							whoHasTupleList = []
 						elif sortedTupleList[i + 1][2].getOp() != 1:
-							print sortedTupleList[i + 1], " -------- "
 							self.calcTravelTimes(pkts = whoHasTupleList)
 							whoHasTupleList = []
 					elif i == len(sortedTupleList) - 1:
-						print sortedTupleList[i + 1], " -------- "
 						self.calcTravelTimes(pkts = whoHasTupleList)
 						whoHasTupleList = []
 
@@ -372,6 +370,7 @@ class PacketReader:
 				pFrom = sortedTupleList[i][2].getSrcIp()
 				pTuple = (sortedTupleList[i][0], tcpType, sortedTupleList[i][1], pTo, pFrom)
 				tcpTupleList.append(pTuple)
+				print "TCP:		", tcpType, " ", sortedTupleList[i][0], " ", sortedTupleList[i][1], " ", pFrom, " -> ", pTo
 				if i != len(sortedTupleList) - 1:
 					if sortedTupleList[i + 1][2].getPktType() != "TCP":
 						self.calcTravelTimes(pkts = tcpTupleList)
@@ -512,7 +511,6 @@ class PacketReader:
 
 		#Deal with broadcast packets.
 		elif pkts[0][1] == "who-has":
-			print pkts
 			bcastNode = pkts[0][2]
 			bcastSwitch = ""
 			bcastSwitch2 = ""
@@ -553,7 +551,6 @@ class PacketReader:
 					if pkts[j][2][:2] == fullBcast[i]:
 						currentPktIndex = j
 				for j in range(len(pkts)):
-					print pkts[j][2][:2], " ", fullBcast[i + 1]
 					if pkts[j][2][:2] == fullBcast[i + 1]:
 						nextPktIndex = j
 
@@ -565,8 +562,6 @@ class PacketReader:
 						if fullBcast[j][0] == 'h' and fullBcast[j][:2] != bcastNode:
 							toIp = PacketReader.nodeIpDict[fullBcast[j]]
 							break
-
-					print fullBcast
 
 					time1 = pkts[currentPktIndex][0]
 					time2 = pkts[nextPktIndex][0]
@@ -755,7 +750,11 @@ class PacketReader:
 				elif pkts[i][2][0] == 's' and pkts[i + 1][2][0] == 'h':
 					switchId = pkts[i][2]
 					srcIp = PacketReader.nodeIpDict[switchId]
-					dstIp = PacketReader.nodeIpDict[pkts[i + 1][2]]
+					#dstIp = PacketReader.nodeIpDict[pkts[i + 1][2]]
+					dstIp = pkts[i][3]
+
+					print srcIp, " -> ", dstIp
+
 					PacketReader.fullSrcIP_list.append(srcIp)
 					PacketReader.fullDstIP_list.append(dstIp)	
 					if time1 == time2:

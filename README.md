@@ -252,3 +252,6 @@ Added two bash scripts to simulate voip calls.
 
 20/03/16:
 Added two bash scripts to simualte file transfers. Added code to pcapReader to deal with when tcp packets are sent before an arp packet has finished it's transit.
+
+22/03/16:
+Edited the ftp bash script to simulate the file transfer of a smaller file. This smaller file is a txt file caled transferFile.txt. Edited some code in pcap reader to cope with one host sending two packets before one arrives at its destination.
